@@ -36,5 +36,4 @@ yarn-error.log*
 next-env.d.ts
 
 # other
-/.idea/vcs.xml
-/.idea/inspectionProfiles/*
+/.idea/**/*
