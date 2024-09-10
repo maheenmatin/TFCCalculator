@@ -4,6 +4,8 @@ import { CaretCircleLeft } from "@phosphor-icons/react";
 import { useState } from 'react';
 import { Alloy } from '@/app/types';
 import { AlloySelectionGrid } from './components/AlloySelectionGrid';
+import { AlloyComponentDisplay } from './components/AlloyComponentDisplay'
+
 
 export default function Home() {
   const [selectedAlloy, setSelectedAlloy] = useState<Alloy | null>(null);
@@ -34,12 +36,7 @@ export default function Home() {
           </div>
 
           {!selectedAlloy && <AlloySelectionGrid onAlloySelect={handleAlloySelect}/>}
-
-          {selectedAlloy && (
-              <div className="text-primary">
-                {/* Calculator content will be added here later */}<p>Calculator view for {selectedAlloy.name} - content to be added.</p>
-              </div>
-          )}
+          {selectedAlloy && <AlloyComponentDisplay alloy={selectedAlloy.name}/>}
         </div>
       </main>
   );
