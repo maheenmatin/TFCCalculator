@@ -1,0 +1,36 @@
+{
+	"alloys": [
+		{
+			"name": "Bronze",
+			"components": [
+				{
+					"metal": "copper",
+					"min": 88,
+					"max": 92
+				},
+				{
+					"metal": "tin",
+					"min": 8,
+					"max": 12
+				}
+			],
+			"yield": 144
+		},
+		{
+			"name": "Brass",
+			"components": [
+				{
+					"metal": "copper",
+					"min": 60,
+					"max": 70
+				},
+				{
+					"metal": "zinc",
+					"min": 30,
+					"max": 40
+				}
+			],
+			"yield": 144
+		}
+	]
+}

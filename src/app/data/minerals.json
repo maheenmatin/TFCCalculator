@@ -1,0 +1,48 @@
+{
+	"copper": [
+		{
+			"name": "Raw Tetrahedrite",
+			"yield": 31
+		},
+		{
+			"name": "Raw Copper",
+			"yield": 36
+		},
+		{
+			"name": "Poor Tetrahedrite",
+			"yield": 21
+		},
+		{
+			"name": "Poor Copper",
+			"yield": 24
+		},
+		{
+			"name": "Normal Tetrahedrite",
+			"yield": 41
+		},
+		{
+			"name": "Normal Copper",
+			"yield": 48
+		},
+		{
+			"name": "Rich Tetrahedrite",
+			"yield": 51
+		},
+		{
+			"name": "Rich Copper",
+			"yield": 60
+		},
+		{
+			"name": "Native Copper",
+			"yield": 144
+		},
+		{
+			"name": "Copper Ingot",
+			"yield": 144
+		},
+		{
+			"name": "Small Copper Ore",
+			"yield": 36
+		}
+	]
+}
