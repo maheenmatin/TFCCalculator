@@ -1,19 +1,21 @@
-import { Alloy } from '@/app/types';
+import {Alloy} from "@/app/types";
 import {useEffect, useState} from "react";
 
+
 interface AlloyGridProps {
-	onAlloySelect: (alloy: Alloy) => void;
+	onAlloySelect : (alloy : Alloy) => void;
 }
 
-export function AlloySelectionGrid({ onAlloySelect }: Readonly<AlloyGridProps>) {
+export function AlloySelectionGrid({onAlloySelect} : Readonly<AlloyGridProps>) {
 	const [alloys, setAlloys] = useState<Alloy[]>([]);
 
 	useEffect(() => {
 		async function fetchAlloys() {
-			const response = await fetch('/api/alloy');
+			const response = await fetch("/api/alloy");
 			const data = await response.json();
 			setAlloys(data);
 		}
+
 		fetchAlloys();
 	}, []);
 
