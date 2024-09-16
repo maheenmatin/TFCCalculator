@@ -16,7 +16,7 @@ export function AlloyComponentDisplay({ alloy }: Readonly<AlloyDisplayProps>) {
 		async function fetchAlloyDetails() {
 			if (!alloy) return;
 
-			const response = await fetch(`/api/alloys?name=${encodeURIComponent(alloy)}`);
+			const response = await fetch(`/api/alloy?name=${encodeURIComponent(alloy)}`);
 			const data = await response.json();
 			setAlloyDetails(data);
 		}
