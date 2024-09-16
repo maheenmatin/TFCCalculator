@@ -1,9 +1,49 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+![Maintainability Badge](https://sonarcloud.io/api/project_badges/measure?project=Supermarcel10_TFGCalculator&metric=sqale_rating)
+![Reliability Badge](https://sonarcloud.io/api/project_badges/measure?project=Supermarcel10_TFGCalculator&metric=reliability_rating)
+![Bug Badge](https://sonarcloud.io/api/project_badges/measure?project=Supermarcel10_TFGCalculator&metric=bugs)
+![Tech Debt Badge](https://sonarcloud.io/api/project_badges/measure?project=Supermarcel10_TFGCalculator&metric=sqale_index)
 
-## Getting Started
+# TeraFirmaGreg Alloy Calculator
 
-First, run the development server:
+## 📖 Table of Contents
+- [About](#about)
+- [Features](#features)
+- [Usage](#usage)
+- [Contributing](#contributing)
+- [Local Setup](#local-setup)
+- [Deployment](#deployment)
+- [License](#license)
 
+## 🔍 About
+The TerafirmaGreg Alloy Calculator is a powerful tool designed to help players calculate alloy compositions for the TeraFirmaGreg modpack.
+This calculator streamlines the process of determining optimal alloy ratios, saving time and resources.
+
+## ✨ Features
+- **Inventory Based**: Input what you have available, and the calculator does the rest!
+- **Accurate**: Precise calculations based on the latest TeraFirmaGreg alloys and minerals
+- **Time-saving**: Quickly determine the optimal alloy compositions
+- **No Waste**: Calculated alloy composition creates no leftover metal
+
+## 🛠️ Usage
+1. Input desired alloy type and quantity
+2. Enter your available minerals
+3. View the calculated optimal composition
+
+## 👥 Contributing
+Contributions to the TeraFirmaGreg Alloy Calculator are more than welcome!
+
+Here's how you can help:
+1. Fork the repository
+2. Open your IDE of choice
+3. Commit and push your changes to your forked branch
+4. Open a Pull Request targeting `dev` branch
+5. Fill out important information
+
+Please read and respect the [code of condutc](https://github.com/Supermarcel10/TFGCalculator?tab=coc-ov-file) and process for submitting pull requests.
+
+## 💻 Local Setup
+1. Pull the latest version of `main`
+2. Run the development server:
 ```bash
 npm run dev
 # or
@@ -13,24 +53,16 @@ pnpm dev
 # or
 bun dev
 ```
+3. Open [http://localhost:3000](http://localhost:3000) with your browser to see the result
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 🚀 Deployment
+This project is set up for automatic deployment on Vercel.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+> [!CAUTION]
+> Every push to the `main` branch will trigger a new production deployment.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+> [!NOTE]
+> Pull requests and `dev` (acts as a staging branch), will trigger a preview deployment.
 
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 📄 License
+TBD
