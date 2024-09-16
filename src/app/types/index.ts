@@ -1,12 +1,12 @@
 export interface AlloyComponent {
-	mineral: string;
-	min: number;
-	max: number;
+	mineral : string;
+	min : number;
+	max : number;
 }
 
 export interface Alloy {
-	name: string;
-	components: AlloyComponent[];
+	name : string;
+	components : AlloyComponent[];
 }
 
 export enum MineralUse {
@@ -17,7 +17,7 @@ export enum MineralUse {
 }
 
 export interface Mineral {
-	name: string;
-	yield: number;
-	uses?: MineralUse[]
+	name : string;
+	yield : number;
+	uses? : MineralUse[];
 }
