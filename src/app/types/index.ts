@@ -1,5 +1,5 @@
 export interface AlloyComponent {
-	metal: string;
+	mineral: string;
 	min: number;
 	max: number;
 }
