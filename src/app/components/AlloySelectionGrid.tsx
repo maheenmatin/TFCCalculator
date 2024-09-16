@@ -10,7 +10,7 @@ export function AlloySelectionGrid({ onAlloySelect }: Readonly<AlloyGridProps>) 
 
 	useEffect(() => {
 		async function fetchAlloys() {
-			const response = await fetch('/api/alloys');
+			const response = await fetch('/api/alloy');
 			const data = await response.json();
 			setAlloys(data);
 		}
