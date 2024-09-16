@@ -1,0 +1,56 @@
+name: Bug Report
+description: File a bug report
+title: ""
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to fill out this bug report!
+  - type: input
+    id: version
+    attributes:
+      label: TerafirmaGreg Alloy Calculator Version
+      description: What version of the calculator are you using? The version can be found at the bottom of the website.
+      placeholder: ex. 1.0.0
+    validations:
+      required: true
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: what did you expect to happen?
+      placeholder: I expected to see a cat.png
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: How do you trigger this bug?
+      value: |
+        1.
+        2.
+        3.
+        ...
+    validations:
+      required: true
+  - type: dropdown
+    id: browsers
+    attributes:
+      label: What browsers are you seeing the problem on?
+      multiple: true
+      options:
+        - Firefox
+        - Chrome
+        - Safari
+        - Microsoft Edge
+        - Opera
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Code of Conduct
+      description: By submitting this issue, you agree to follow the [Code of Conduct](TBD)
+      options:
+        - label: I agree to follow this project's Code of Conduct
+          required: true
