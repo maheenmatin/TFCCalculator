@@ -7,5 +7,4 @@ export interface AlloyComponent {
 export interface Alloy {
 	name: string;
 	components: AlloyComponent[];
-	yield: number;
 }
