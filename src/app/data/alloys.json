@@ -1,36 +1,224 @@
 {
 	"alloys": [
 		{
-			"name": "Bronze",
-			"components": [
-				{
-					"metal": "copper",
-					"min": 88,
-					"max": 92
-				},
-				{
-					"metal": "tin",
-					"min": 8,
-					"max": 12
-				}
-			],
-			"yield": 144
-		},
-		{
 			"name": "Brass",
 			"components": [
 				{
 					"metal": "copper",
-					"min": 60,
-					"max": 70
+					"min": 88.0,
+					"max": 92.0
 				},
 				{
 					"metal": "zinc",
-					"min": 30,
-					"max": 40
+					"min": 8.0,
+					"max": 12.0
 				}
-			],
-			"yield": 144
+			]
+		},
+		{
+			"name": "Bronze",
+			"components": [
+				{
+					"metal": "copper",
+					"min": 88.0,
+					"max": 92.0
+				},
+				{
+					"metal": "tin",
+					"min": 8.0,
+					"max": 12.0
+				}
+			]
+		},
+		{
+			"name": "Black Bronze",
+			"components": [
+				{
+					"metal": "copper",
+					"min": 50.0,
+					"max": 70.0
+				},
+				{
+					"metal": "silver",
+					"min": 10.0,
+					"max": 25.0
+				},
+				{
+					"metal": "gold",
+					"min": 10.0,
+					"max": 25.0
+				}
+			]
+		},
+		{
+			"name": "Bismuth Bronze",
+			"components": [
+				{
+					"metal": "copper",
+					"min": 50.0,
+					"max": 65.0
+				},
+				{
+					"metal": "zinc",
+					"min": 20.0,
+					"max": 30.0
+				},
+				{
+					"metal": "bismuth",
+					"min": 10.0,
+					"max": 20.0
+				}
+			]
+		},
+		{
+			"name": "Red Alloy",
+			"components": [
+				{
+					"metal": "copper",
+					"min": 75.0,
+					"max": 85.0
+				},
+				{
+					"metal": "redstone",
+					"min": 15.0,
+					"max": 25.0
+				}
+			]
+		},
+		{
+			"name": "Red Steel",
+			"components": [
+				{
+					"metal": "steel",
+					"min": 20.0,
+					"max": 25.0
+				},
+				{
+					"metal": "black_steel",
+					"min": 50.0,
+					"max": 55.0
+				},
+				{
+					"metal": "brass",
+					"min": 10.0,
+					"max": 15.0
+				},
+				{
+					"metal": "rose_gold",
+					"min": 10.0,
+					"max": 15.0
+				}
+			]
+		},
+		{
+			"name": "Rose Gold",
+			"components": [
+				{
+					"metal": "copper",
+					"min": 15.0,
+					"max": 30.0
+				},
+				{
+					"metal": "gold",
+					"min": 70.0,
+					"max": 85.0
+				}
+			]
+		},
+		{
+			"name": "Stainless Steel",
+			"components": [
+				{
+					"metal": "steel",
+					"min": 60.0,
+					"max": 80.0
+				},
+				{
+					"metal": "nickel",
+					"min": 10.0,
+					"max": 20.0
+				},
+				{
+					"metal": "chromium",
+					"min": 20.0,
+					"max": 30.0
+				}
+			]
+		},
+		{
+			"name": "Sterling Silver",
+			"components": [
+				{
+					"metal": "copper",
+					"min": 20.0,
+					"max": 40.0
+				},
+				{
+					"metal": "silver",
+					"min": 60.0,
+					"max": 80.0
+				}
+			]
+		},
+		{
+			"name": "Tin Alloy",
+			"components": [
+				{
+					"metal": "tin",
+					"min": 45.0,
+					"max": 55.0
+				},
+				{
+					"metal": "iron",
+					"min": 45.0,
+					"max": 55.0
+				}
+			]
+		},
+		{
+			"name": "Weak Blue Steel",
+			"components": [
+				{
+					"metal": "steel",
+					"min": 30.0,
+					"max": 35.0
+				},
+				{
+					"metal": "black_steel",
+					"min": 50.0,
+					"max": 55.0
+				},
+				{
+					"metal": "bismuth_bronze",
+					"min": 10.0,
+					"max": 15.0
+				},
+				{
+					"metal": "sterling_silver",
+					"min": 10.0,
+					"max": 15.0
+				}
+			]
+		},
+		{
+			"name": "Weak Steel",
+			"components": [
+				{
+					"metal": "steel",
+					"min": 50.0,
+					"max": 70.0
+				},
+				{
+					"metal": "black_bronze",
+					"min": 15.0,
+					"max": 25.0
+				},
+				{
+					"metal": "nickel",
+					"min": 15.0,
+					"max": 25.0
+				}
+			]
 		}
 	]
 }
