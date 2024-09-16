@@ -13,7 +13,7 @@ export async function GET(
 	const uses = searchParams.getAll("uses");
 
 	const alloyList = alloys as Alloy[];
-	const alloy = alloyList.find((a) => a.name.toLowerCase() === alloyName.toLowerCase());
+	const alloy = alloyList.find((a) => a.name.toLowerCase() === decodeURIComponent(alloyName).toLowerCase());
 
 	if (!alloy) {
 		return NextResponse.json({message : "Alloy not found"}, {status : 404});
