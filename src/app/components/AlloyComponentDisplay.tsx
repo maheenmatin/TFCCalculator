@@ -8,7 +8,7 @@ interface AlloyDisplayProps {
 
 export function AlloyComponentDisplay({ alloy }: Readonly<AlloyDisplayProps>) {
 	const [alloyDetails, setAlloyDetails] = useState<Alloy | null>(null);
-	const [ingotCount, setIngotCount] = useState<number>(0);
+	const [ingotCount, setIngotCount] = useState<number>();
 
 	const mbPerIngot : number = 144;
 
@@ -51,7 +51,9 @@ export function AlloyComponentDisplay({ alloy }: Readonly<AlloyDisplayProps>) {
 										className="w-full p-2 border border-gray-300 rounded text-black"
 								/>
 							</div>
+							{ingotCount &&
 							<p>Total yield: {ingotCount * mbPerIngot} mB</p>
+							}
 						</div>
 				)}
 			</div>
