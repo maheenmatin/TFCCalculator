@@ -6,13 +6,13 @@
 # TeraFirmaGreg Alloy Calculator
 
 ## 📖 Table of Contents
-- [About](#about)
-- [Features](#features)
-- [Usage](#usage)
-- [Contributing](#contributing)
-- [Local Setup](#local-setup)
-- [Deployment](#deployment)
-- [License](#license)
+- [About](#-about)
+- [Features](#-features)
+- [Usage](#-usage)
+- [Contributing](#-contributing)
+- [Local Setup](#-local-setup)
+- [Deployment](#-deployment)
+- [License](#-license)
 
 ## 🔍 About
 The TerafirmaGreg Alloy Calculator is a powerful tool designed to help players calculate alloy compositions for the TeraFirmaGreg modpack.
