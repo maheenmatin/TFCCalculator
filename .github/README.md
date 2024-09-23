@@ -5,6 +5,8 @@
 
 # TeraFirmaGreg Alloy Calculator
 
+# ❗ This project is still a WIP ❗
+
 ## 📖 Table of Contents
 - [About](#-about)
 - [Features](#-features)
