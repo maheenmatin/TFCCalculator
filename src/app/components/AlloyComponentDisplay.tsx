@@ -15,7 +15,7 @@ export function AlloyComponentDisplay({alloy} : Readonly<AlloyDisplayProps>) {
 	useEffect(() => {
 		if (!alloy) return;
 
-		fetch(`/api/alloy?name=${encodeURIComponent(alloy)}`)
+		fetch(`/api/alloy/${encodeURIComponent(alloy)}`)
 				.then(response => response.json())
 				.then(data => setAlloyDetails(data))
 				.catch(error => console.error("Error fetching alloy details:", error));
