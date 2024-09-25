@@ -13,17 +13,12 @@ export function AlloyComponentDisplay({alloy} : Readonly<AlloyDisplayProps>) {
 	const mbPerIngot : number = 144;
 
 	useEffect(() => {
-		async function fetchAlloyDetails() {
-			if (!alloy) {
-				return;
-			}
+		if (!alloy) return;
 
-			const response = await fetch(`/api/alloy?name=${encodeURIComponent(alloy)}`);
-			const data = await response.json();
-			setAlloyDetails(data);
-		}
-
-		fetchAlloyDetails();
+		fetch(`/api/alloy/${encodeURIComponent(alloy)}`)
+				.then(response => response.json())
+				.then(data => setAlloyDetails(data))
+				.catch(error => console.error("Error fetching alloy details:", error));
 	}, [alloy]);
 
 	const handleIngotCountChange = (e : React.ChangeEvent<HTMLInputElement>) => {
