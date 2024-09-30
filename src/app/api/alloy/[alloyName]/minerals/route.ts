@@ -30,7 +30,8 @@ export async function GET(
 			if (uses.length === 0) {
 				return true;
 			}
-			return uses.every((use) => m.uses?.includes(use as MineralUse));
+
+			return uses.some((use) => m.uses?.includes(use as MineralUse));
 		});
 
 		return {
