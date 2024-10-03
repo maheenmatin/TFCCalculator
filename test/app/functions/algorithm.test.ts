@@ -121,6 +121,18 @@ describe('calculateAlloy algorithm', () => {
 		expect(result.message).toContain('Not enough copper for minimum requirement');
 	});
 
+	it('should return fail when component has no minerals', () => {
+		const availableMinerals: MineralWithQuantity[] = [
+			{mineral: mediumCopperVariant, quantity: 8},
+			{mineral: largeCopperVariant, quantity: 8}
+		];
+
+		const result = calculateAlloy(432, bronzeAlloy, availableMinerals);
+
+		expect(result.success).toBe(false);
+		expect(result.message).toContain('Not enough tin for minimum requirement');
+	});
+
 	it('should return fail when enough total minerals but impossible ratio constraints', () => {
 		// This combination can't work because you can't achieve the correct ratio
 		const availableMinerals: MineralWithQuantity[] = [
