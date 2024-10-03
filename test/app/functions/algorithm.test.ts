@@ -95,6 +95,15 @@ describe('calculateAlloy algorithm', () => {
 		expect(result.outputMb).toBe(432);
 	})
 
+	it('should return fail when no minerals provided', () => {
+		const availableMinerals: MineralWithQuantity[] = [];
+
+		const result = calculateAlloy(432, bronzeAlloy, availableMinerals);
+
+		expect(result.success).toBe(false);
+		expect(result.message).toContain('Not enough total material available');
+	});
+
 	it('should return fail when not enough minerals', () => {
 		const availableMinerals: MineralWithQuantity[] = [
 			{mineral: smallTinVariant, quantity: 2},
