@@ -56,6 +56,45 @@ describe('calculateAlloy algorithm', () => {
 		expect(result.usedMinerals.find(m => m.mineral.produces === 'tin')?.quantity).toBe(3);
 	});
 
+	it('should return success when a variety of minerals are available', () => {
+		const availableMinerals: MineralWithQuantity[] = [
+			// Required minerals
+			{mineral: smallTinVariant, quantity: 3},
+			{mineral: mediumCopperVariant, quantity: 7},
+			{mineral: largeCopperVariant, quantity: 6},
+
+			// Misc variety
+			{mineral: {name: 'large tin variant', produces: 'tin', yield: 48}, quantity: 3},
+			{mineral: {name: 'very large tin variant', produces: 'tin', yield: 72}, quantity: 7},
+			{mineral: {name: 'very large copper variant', produces: 'copper', yield: 72}, quantity: 8},
+			{mineral: {name: 'medium-large copper variant', produces: 'copper', yield: 48}, quantity: 6},
+		];
+
+		const result = calculateAlloy(432, bronzeAlloy, availableMinerals);
+
+		expect(result.success).toBe(true);
+		expect(result.outputMb).toBe(432);
+	})
+
+	it('should return success when unused minerals are availabe', () => {
+		const availableMinerals: MineralWithQuantity[] = [
+			// Required minerals
+			{mineral: smallTinVariant, quantity: 3},
+			{mineral: mediumCopperVariant, quantity: 7},
+			{mineral: largeCopperVariant, quantity: 6},
+
+			// Misc minerals
+			{mineral: {name: 'small iron variant', produces: 'iron', yield: 24}, quantity: 3},
+			{mineral: {name: 'silver variant', produces: 'silver', yield: 36}, quantity: 2},
+			{mineral: {name: 'large lead variant', produces: 'lead', yield: 48}, quantity: 3},
+		];
+
+		const result = calculateAlloy(432, bronzeAlloy, availableMinerals);
+
+		expect(result.success).toBe(true);
+		expect(result.outputMb).toBe(432);
+	})
+
 	it('should return fail when not enough minerals', () => {
 		const availableMinerals: MineralWithQuantity[] = [
 			{mineral: smallTinVariant, quantity: 2},
