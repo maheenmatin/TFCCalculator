@@ -13,6 +13,11 @@ export interface AlloyProductionResult {
 	message?: string;
 }
 
+interface MineralCombination {
+	minerals: MineralWithQuantity[];
+	outputMb: number;
+}
+
 /**
  * Groups minerals by their production type.
  * For example groups all copper producing minerals.
@@ -50,6 +55,93 @@ function calculateAvailableMbByType(mineralsByType : Map<string, MineralWithQuan
 	});
 
 	return totalAvailableByType;
+}
+
+function findValidCombination(
+		targetMb: number,
+		components: AlloyComponent[],
+		mineralsByType: Map<string, MineralWithQuantity[]>
+): MineralWithQuantity[] | null {
+	let result: MineralWithQuantity[] = [];
+	let totalMb = 0;
+
+	// For each component, try to find a combination that works
+	for (const component of components) {
+		const mineralType = component.mineral.toLowerCase();
+		const minerals = mineralsByType.get(mineralType) || [];
+		const minMb = (component.min / 100) * targetMb;
+		const maxMb = (component.max / 100) * targetMb;
+
+		// Sort minerals by yield (largest to smallest)
+		const sortedMinerals = [...minerals].sort(
+				(a, b) => b.mineral.yield - a.mineral.yield
+		);
+
+		// Try different valid combinations
+		let bestCombination: MineralCombination | null = null;
+		let bestDifference = Infinity;
+
+		// Function to try combinations recursively
+		function tryCombination(
+				index: number,
+				currentMinerals: MineralWithQuantity[],
+				accumulatedMb: number
+		) {
+			// If we're within the valid range
+			if (accumulatedMb >= minMb && accumulatedMb <= maxMb) {
+				const totalMbWithThis = totalMb + accumulatedMb;
+				const difference = Math.abs(targetMb - (totalMbWithThis));
+
+				// If this is the best combination so far
+				if (difference < bestDifference) {
+					bestDifference = difference;
+					bestCombination = {
+						minerals: [...currentMinerals] as MineralWithQuantity[],
+						outputMb: accumulatedMb
+					} as MineralCombination;
+				}
+			}
+
+			// If we exhausted all minerals or exceeded max, return
+			if (index >= sortedMinerals.length || accumulatedMb > maxMb) {
+				return;
+			}
+
+			const mineral = sortedMinerals[index];
+			const mineralMb = mineral.mineral.yield;
+
+			// Try using different quantities of this mineral
+			for (let qty = 0; qty <= mineral.quantity; qty++) {
+				const newMb = accumulatedMb + (mineralMb * qty);
+				if (newMb > maxMb) break;
+
+				const newMinerals = qty > 0 ? [
+					...currentMinerals,
+					{ mineral: mineral.mineral, quantity: qty }
+				] : currentMinerals;
+
+				tryCombination(index + 1, newMinerals, newMb);
+			}
+		}
+
+		// Start the recursive combination search
+		tryCombination(0, [], 0);
+
+		// If we couldn't find a valid combination
+		if (!bestCombination) {
+			return null;
+		}
+
+		result = [...result, ...(bestCombination as MineralCombination).minerals];
+		totalMb += (bestCombination as MineralCombination).outputMb;
+	}
+
+	// Final check if we got exactly the target amount
+	if (Math.abs(totalMb - targetMb) > 0) {
+		return null;
+	}
+
+	return result;
 }
 
 export function calculateAlloy(
@@ -111,62 +203,4 @@ export function calculateAlloy(
 		usedMinerals: result,
 		success: true
 	};
-}
-
-function findValidCombination(
-		targetMb: number,
-		components: AlloyComponent[],
-		mineralsByType: Map<string, MineralWithQuantity[]>
-): MineralWithQuantity[] | null {
-	let result: MineralWithQuantity[] = [];
-	let totalMb = 0;
-
-	// For each component, try to find a combination that works
-	for (const component of components) {
-		const mineralType = component.mineral.toLowerCase();
-		const minerals = mineralsByType.get(mineralType) || [];
-		const minMb = (component.min / 100) * targetMb;
-		const maxMb = (component.max / 100) * targetMb;
-
-		// Sort minerals by yield (larger to smaller)
-		const sortedMinerals = [...minerals].sort(
-				(a, b) => b.mineral.yield - a.mineral.yield
-		);
-
-		let componentMb = 0;
-		const usedMinerals: MineralWithQuantity[] = [];
-
-		// Try to get as close to the minimum requirement as possible
-		for (const mineral of sortedMinerals) {
-			const mineralMb = mineral.mineral.yield;
-			let quantityToUse = 0;
-
-			// Calculate how many of this mineral we need
-			while (quantityToUse < mineral.quantity &&
-			componentMb + mineralMb <= maxMb &&
-			componentMb < minMb) {
-				componentMb += mineralMb;
-				quantityToUse++;
-			}
-
-			if (quantityToUse > 0) {
-				usedMinerals.push({ mineral: mineral.mineral, quantity: quantityToUse});
-			}
-		}
-
-		// Check if we met the minimum requirement
-		if (componentMb < minMb) {
-			return null;
-		}
-
-		result = [...result, ...usedMinerals];
-		totalMb += componentMb;
-	}
-
-	// Check if we got exactly the target amount
-	if (Math.abs(Math.round(totalMb) - Math.round(targetMb)) > 0) {
-		return null;
-	}
-
-	return result;
 }
