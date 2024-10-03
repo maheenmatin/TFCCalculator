@@ -55,8 +55,8 @@ describe('GET /api/alloy/[alloyName]/minerals', () => {
 
 		expect(response.status).toBe(200);
 		expect(data).toEqual([
-			                     { name: 'Iron', details: [{ name: 'Hematite', uses: ['vessel', 'bloomery'] }] },
-			                     { name: 'Carbon', details: [{ name: 'Coal', uses: ['bloomery'] }] },
+			                     { name: 'Hematite', produces: 'Iron', uses: ['vessel', 'bloomery'] },
+			                     { name: 'Coal', produces: 'Carbon', uses: ['bloomery'] },
 		                     ]);
 	});
 
@@ -80,8 +80,8 @@ describe('GET /api/alloy/[alloyName]/minerals', () => {
 
 		expect(response.status).toBe(200);
 		expect(data).toEqual([
-			                     { name: 'Copper', details: [{ name: 'Chalcopyrite', uses: ['vessel', 'crucible'] }] },
-			                     { name: 'Tin', details: [{ name: 'Cassiterite', uses: ['vessel', 'crucible'] }] },
+			                     { name: 'Chalcopyrite', produces: 'Copper', uses: ['vessel', 'crucible'] },
+			                     { name: 'Cassiterite', produces: 'Tin', uses: ['vessel', 'crucible'] },
 		                     ]);
 	});
 
@@ -94,8 +94,7 @@ describe('GET /api/alloy/[alloyName]/minerals', () => {
 
 		expect(response.status).toBe(200);
 		expect(data).toEqual([
-			                     { name: 'Iron', details: [{ name: 'Hematite', uses: ['vessel', 'bloomery'] }] },
-			                     { name: 'Carbon', details: [] },
+			                     { name: 'Hematite', produces: 'Iron',  uses: ['vessel', 'bloomery'] },
 		                     ]);
 	});
 
@@ -108,8 +107,8 @@ describe('GET /api/alloy/[alloyName]/minerals', () => {
 
 		expect(response.status).toBe(200);
 		expect(data).toEqual([
-			                     { name: 'Iron', details: [{ name: 'Hematite', uses: ['vessel', 'bloomery'] }] },
-			                     { name: 'Carbon', details: [{ name: 'Coal', uses: ['bloomery'] }] },
+			                     { name: 'Hematite', produces: 'Iron', uses: ['vessel', 'bloomery'] },
+			                     { name: 'Coal', produces: 'Carbon', uses: ['bloomery'] },
 		                     ]);
 	});
 });
