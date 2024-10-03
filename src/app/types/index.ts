@@ -18,6 +18,7 @@ export enum MineralUse {
 
 export interface Mineral {
 	name : string;
+	produces : string;
 	yield : number;
 	uses? : MineralUse[];
 }
