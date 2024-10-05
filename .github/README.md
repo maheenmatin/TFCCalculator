@@ -67,4 +67,4 @@ This project is set up for automatic deployment on Vercel.
 > Pull requests and `dev` (acts as a staging branch), will trigger a preview deployment.
 
 ## 📄 License
-TBD
+This project is licensed under the [GNU GPL v3](https://github.com/Supermarcel10/TFGCalculator?tab=license).
