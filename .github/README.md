@@ -10,7 +10,7 @@
 ## 📖 Table of Contents
 - [About](#-about)
 - [Features](#-features)
-- [Usage](#-usage)
+- [Usage](#%EF%B8%8F-usage)
 - [Contributing](#-contributing)
 - [Local Setup](#-local-setup)
 - [Deployment](#-deployment)
@@ -41,7 +41,7 @@ Here's how you can help:
 4. Open a Pull Request targeting `dev` branch
 5. Fill out important information
 
-Please read and respect the [code of conduct](https://github.com/Supermarcel10/TFGCalculator?tab=coc-ov-file) and process for submitting pull requests.
+Please read and respect the [code of conduct](?tab=coc-ov-file) and process for submitting pull requests.
 
 ## 💻 Local Setup
 1. Pull the latest version of `main`
@@ -67,4 +67,4 @@ This project is set up for automatic deployment on Vercel.
 > Pull requests and `dev` (acts as a staging branch), will trigger a preview deployment.
 
 ## 📄 License
-This project is licensed under the [GNU GPL v3](https://github.com/Supermarcel10/TFGCalculator/tab=License-1-ov-file).
+This project is licensed under the [GNU GPL v3](?tab=AGPL-3.0-1-ov-file).
