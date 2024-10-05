@@ -13,10 +13,10 @@ export interface AlloyProductionResult {
 	message?: string;
 }
 
-interface MineralCombination {
-	minerals: MineralWithQuantity[];
-	outputMb: number;
-}
+// interface MineralCombination {
+// 	minerals: MineralWithQuantity[];
+// 	outputMb: number;
+// }
 
 /**
  * Groups minerals by their production type.
@@ -62,86 +62,143 @@ function findValidCombination(
 		components: AlloyComponent[],
 		mineralsByType: Map<string, MineralWithQuantity[]>
 ): MineralWithQuantity[] | null {
-	let result: MineralWithQuantity[] = [];
-	let totalMb = 0;
+	 /**
+	 Helper function to calculate total mB from a combination
+	 */
+	function calculateTotalMb(minerals: MineralWithQuantity[]): number {
+		return minerals.reduce((sum, m) => sum + (m.mineral.yield * m.quantity), 0);
+	}
 
-	// For each component, try to find a combination that works
+	/**
+	 * Helper function to check if combination is valid
+ 	 */
+	function isValidCombination(minerals: MineralWithQuantity[]): boolean {
+		const totalMb = calculateTotalMb(minerals);
+
+		if (Math.abs(Math.round(totalMb) - Math.round(targetMb)) > 0) {
+			return false;
+		}
+
+		// Group minerals by type and calculate mB for each
+		const mbByType = new Map<string, number>();
+		for (const mineral of minerals) {
+			const type = mineral.mineral.produces;
+			const mb = mineral.mineral.yield * mineral.quantity;
+			mbByType.set(type, (mbByType.get(type) || 0) + mb);
+		}
+
+		// Check percentages
+		for (const component of components) {
+			const mineralType = component.mineral.toLowerCase();
+			const mb = mbByType.get(mineralType) || 0;
+			const percentage = (mb / totalMb) * 100;
+
+			if (percentage < component.min || percentage > component.max) {
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	let currentCombination: MineralWithQuantity[] = [];
+
+	// Process one component at a time
 	for (const component of components) {
 		const mineralType = component.mineral.toLowerCase();
 		const minerals = mineralsByType.get(mineralType) || [];
 		const minMb = (component.min / 100) * targetMb;
 		const maxMb = (component.max / 100) * targetMb;
 
-		// Sort minerals by yield (largest to smallest)
+		// Get all possible combinations for this component
+		const componentCombinations: MineralWithQuantity[][] = [];
+
+		// Sort minerals by yield for efficiency
 		const sortedMinerals = [...minerals].sort(
 				(a, b) => b.mineral.yield - a.mineral.yield
 		);
 
-		// Try different valid combinations
-		let bestCombination: MineralCombination | null = null;
-		let bestDifference = Infinity;
-
-		// Function to try combinations recursively
-		function tryCombination(
+		// Generate combinations iteratively
+		function generateComponentCombinations() {
+			const stack: Array<{
+				minerals: MineralWithQuantity[],
 				index: number,
-				currentMinerals: MineralWithQuantity[],
-				accumulatedMb: number
-		) {
-			// If we're within the valid range
-			if (accumulatedMb >= minMb && accumulatedMb <= maxMb) {
-				const totalMbWithThis = totalMb + accumulatedMb;
-				const difference = Math.abs(targetMb - (totalMbWithThis));
+				mb: number
+			}> = [{
+				minerals: [],
+				index: 0,
+				mb: 0
+			}];
 
-				// If this is the best combination so far
-				if (difference < bestDifference) {
-					bestDifference = difference;
-					bestCombination = {
-						minerals: [...currentMinerals] as MineralWithQuantity[],
-						outputMb: accumulatedMb
-					} as MineralCombination;
+			while (stack.length > 0) {
+				const current = stack.pop()!;
+
+				// If we have a valid amount for this component, save it
+				if (current.mb >= minMb && current.mb <= maxMb) {
+					componentCombinations.push([...current.minerals]);
 				}
-			}
 
-			// If we exhausted all minerals or exceeded max, return
-			if (index >= sortedMinerals.length || accumulatedMb > maxMb) {
-				return;
-			}
+				// If we've processed all minerals or exceeded max, continue
+				if (current.index >= sortedMinerals.length || current.mb > maxMb) {
+					continue;
+				}
 
-			const mineral = sortedMinerals[index];
-			const mineralMb = mineral.mineral.yield;
+				const mineral = sortedMinerals[current.index];
 
-			// Try using different quantities of this mineral
-			for (let qty = 0; qty <= mineral.quantity; qty++) {
-				const newMb = accumulatedMb + (mineralMb * qty);
-				if (newMb > maxMb) break;
+				// Try using different quantities of this mineral
+				for (let qty = 0; qty <= mineral.quantity; qty++) {
+					const newMb = current.mb + (mineral.mineral.yield * qty);
+					if (newMb > maxMb) break;
 
-				const newMinerals = qty > 0 ? [
-					...currentMinerals,
-					{ mineral: mineral.mineral, quantity: qty }
-				] : currentMinerals;
+					const newMinerals = qty > 0 ? [
+						...current.minerals,
+						{ mineral: mineral.mineral, quantity: qty }
+					] : current.minerals;
 
-				tryCombination(index + 1, newMinerals, newMb);
+					stack.push(
+							{
+								minerals: newMinerals,
+								index: current.index + 1,
+								mb: newMb
+							}
+					);
+				}
 			}
 		}
 
-		// Start the recursive combination search
-		tryCombination(0, [], 0);
+		generateComponentCombinations();
 
-		// If we couldn't find a valid combination
-		if (!bestCombination) {
+		// If no valid combinations for this component, return null
+		if (componentCombinations.length === 0) {
 			return null;
 		}
 
-		result = [...result, ...(bestCombination as MineralCombination).minerals];
-		totalMb += (bestCombination as MineralCombination).outputMb;
+		// Try each combination with current combination
+		let foundValidCombination = false;
+		for (const combination of componentCombinations) {
+			const testCombination = [...currentCombination, ...combination];
+
+			// For the last component, check if the entire combination is valid
+			if (component === components[components.length - 1]) {
+				if (isValidCombination(testCombination)) {
+					currentCombination = testCombination;
+					foundValidCombination = true;
+					break;
+				}
+			} else {
+				// For other components, add them and continue
+				currentCombination = testCombination;
+				foundValidCombination = true;
+				break;
+			}
+		}
+
+		if (!foundValidCombination) {
+			return null;
+		}
 	}
 
-	// Final check if we got exactly the target amount
-	if (Math.abs(totalMb - targetMb) > 0) {
-		return null;
-	}
-
-	return result;
+	return currentCombination;
 }
 
 export function calculateAlloy(
