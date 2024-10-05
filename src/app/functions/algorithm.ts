@@ -84,13 +84,13 @@ function findValidCombination(
 		for (const mineral of minerals) {
 			const type = mineral.mineral.produces;
 			const mb = mineral.mineral.yield * mineral.quantity;
-			mbByType.set(type, (mbByType.get(type) || 0) + mb);
+			mbByType.set(type, (mbByType.get(type) ?? 0) + mb);
 		}
 
 		// Check percentages
 		for (const component of components) {
 			const mineralType = component.mineral.toLowerCase();
-			const mb = mbByType.get(mineralType) || 0;
+			const mb = mbByType.get(mineralType) ?? 0;
 			const percentage = (mb / totalMb) * 100;
 
 			if (percentage < component.min || percentage > component.max) {
@@ -228,7 +228,7 @@ export function calculateAlloy(
 	for (const component of targetAlloyComponents) {
 		const mineralType = component.mineral.toLowerCase();
 		const minRequired = (component.min / 100) * targetMb;
-		const available = totalAvailableByType.get(mineralType) || 0;
+		const available = totalAvailableByType.get(mineralType) ?? 0;
 
 		if (available < minRequired) {
 			return {
