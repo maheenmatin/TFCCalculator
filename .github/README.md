@@ -67,4 +67,4 @@ This project is set up for automatic deployment on Vercel.
 > Pull requests and `dev` (acts as a staging branch), will trigger a preview deployment.
 
 ## 📄 License
-This project is licensed under the [GNU GPL v3](?tab=AGPL-3.0-1-ov-file) license.
+This project is licensed under the [GNU GPL v3](/LICENSE) license.
