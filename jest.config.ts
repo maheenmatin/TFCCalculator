@@ -13,10 +13,13 @@ const createJestConfig = nextJest({
 const customJestConfig: Config = {
 	setupFilesAfterEnv: ['<rootDir>/jest.config.ts'],
 	testEnvironment: 'jest-environment-jsdom',
-	collectCoverage: false,
+	collectCoverage: true,
+	coverageReporters: ["json", "lcov", "text", "clover", "html"],
+	coverageDirectory: "coverage",
+	coverageProvider: "v8",
 	restoreMocks: true,
-	slowTestThreshold: 3,
 	errorOnDeprecated: true,
+	slowTestThreshold: 3,
 	bail: 5,
 	moduleNameMapper: {
 		'^@/(.*)$': '<rootDir>/src/$1',
