@@ -1,7 +1,7 @@
-![Maintainability Badge](https://sonarcloud.io/api/project_badges/measure?project=Supermarcel10_TFGCalculator&metric=sqale_rating)
-![Reliability Badge](https://sonarcloud.io/api/project_badges/measure?project=Supermarcel10_TFGCalculator&metric=reliability_rating)
-![Bug Badge](https://sonarcloud.io/api/project_badges/measure?project=Supermarcel10_TFGCalculator&metric=bugs)
-![Tech Debt Badge](https://sonarcloud.io/api/project_badges/measure?project=Supermarcel10_TFGCalculator&metric=sqale_index)
+![Maintainability Badge](https://sonarcloud.io/api/project_badges/measure?project=TFGCalculator&metric=sqale_rating)
+![Reliability Badge](https://sonarcloud.io/api/project_badges/measure?project=TFGCalculator&metric=reliability_rating)
+![Bug Badge](https://sonarcloud.io/api/project_badges/measure?project=TFGCalculator&metric=bugs)
+![Tech Debt Badge](https://sonarcloud.io/api/project_badges/measure?project=TFGCalculator&metric=sqale_index)
 
 # TeraFirmaGreg Alloy Calculator
 
@@ -41,7 +41,7 @@ Here's how you can help:
 4. Open a Pull Request targeting `dev` branch
 5. Fill out important information
 
-Please read and respect the [code of condutc](https://github.com/Supermarcel10/TFGCalculator?tab=coc-ov-file) and process for submitting pull requests.
+Please read and respect the [code of conduct](https://github.com/Supermarcel10/TFGCalculator?tab=coc-ov-file) and process for submitting pull requests.
 
 ## 💻 Local Setup
 1. Pull the latest version of `main`
@@ -67,4 +67,4 @@ This project is set up for automatic deployment on Vercel.
 > Pull requests and `dev` (acts as a staging branch), will trigger a preview deployment.
 
 ## 📄 License
-TBD
+This project is licensed under the [GNU GPL v3](https://github.com/Supermarcel10/TFGCalculator/tab=License-1-ov-file).
