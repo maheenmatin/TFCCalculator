@@ -41,7 +41,7 @@ Here's how you can help:
 4. Open a Pull Request targeting `dev` branch
 5. Fill out important information
 
-Please read and respect the [code of condutc](https://github.com/Supermarcel10/TFGCalculator?tab=coc-ov-file) and process for submitting pull requests.
+Please read and respect the [code of conduct](https://github.com/Supermarcel10/TFGCalculator?tab=coc-ov-file) and process for submitting pull requests.
 
 ## 💻 Local Setup
 1. Pull the latest version of `main`
