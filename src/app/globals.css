@@ -39,3 +39,13 @@ body {
   .bg-green-dark { background-color: rgb(var(--color-green) / 1.2); }
   .bg-blue-dark { background-color: rgb(var(--color-blue) / 1.2); }
 }
+
+.no-spinners {
+  appearance: textfield;
+}
+
+.no-spinners::-webkit-outer-spin-button,
+.no-spinners::-webkit-inner-spin-button {
+  appearance: none;
+  margin: 0;
+}
