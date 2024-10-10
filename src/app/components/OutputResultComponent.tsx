@@ -10,15 +10,14 @@ interface OutputResultProps {
 	mbPerIngot : number;
 }
 
-export function OutputResultComponent(props : OutputResultProps) {
-	const output = props.output;
+export function OutputResultComponent({output, mbPerIngot} : OutputResultProps) {
 	if (!output) return;
 
 	const success = output.success;
 	return (
 			<div className={`rounded-lg shadow p-6 ${success ? successFormatting : failureFormatting}`}>
 				<h2 className="text-xl text-center font-bold mb-4">OUTPUT</h2>
-				{GetInnerOutput(output, props.mbPerIngot)}
+				{GetInnerOutput(output, mbPerIngot)}
 			</div>
 	)
 }
