@@ -19,6 +19,7 @@ export function AlloyComponentDisplay({alloy} : Readonly<AlloyDisplayProps>) {
 
 	const [isCalculating, setIsCalculating] = useState<boolean>(false);
 	const [result, setResult] = useState<AlloyProductionResult | null>(null);
+	const [isResultAlteredSinceLastCalculation, setResultAlteredSinceLastCalculation] = useState<boolean>(false);
 	const [error, setError] = useState<Error | string | null>(null);
 
 	const mbPerIngot : number = 144;
@@ -41,11 +42,13 @@ export function AlloyComponentDisplay({alloy} : Readonly<AlloyDisplayProps>) {
 	const handleIngotCountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const value = e.target.value === '' ? 0 : parseInt(e.target.value, 10);
 		setTargetIngotCount(isNaN(value) ? 0 : value);
+		setResultAlteredSinceLastCalculation(true);
 	};
 
 	const handleMineralQuantityChange = (mineralName: string, e: React.ChangeEvent<HTMLInputElement>) => {
 		const value = e.target.value === '' ? 0 : parseInt(e.target.value, 10);
 		setMineralQuantities(prev => new Map(prev).set(mineralName, isNaN(value) ? 0 : value));
+		setResultAlteredSinceLastCalculation(true);
 	};
 
 	const handleCalculate = () => {
@@ -70,6 +73,7 @@ export function AlloyComponentDisplay({alloy} : Readonly<AlloyDisplayProps>) {
 			}
 		} finally {
 			setIsCalculating(false);
+			setResultAlteredSinceLastCalculation(false);
 		}
 	};
 
@@ -95,12 +99,13 @@ export function AlloyComponentDisplay({alloy} : Readonly<AlloyDisplayProps>) {
 	}, [alloyMinerals]);
 
 	const isReadyToShowInputs : boolean =
-			alloyMixture !== null
-			&& alloyMinerals !== null
-			&& targetIngotCount !== 0;
+			targetIngotCount !== 0
+			&& alloyMixture !== null
+			&& alloyMinerals !== null;
 
 	const isReadyToShowOutputs : boolean =
 			targetIngotCount !== 0
+			&& !isResultAlteredSinceLastCalculation
 			&& !error;
 
 	return (
