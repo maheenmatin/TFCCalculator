@@ -104,14 +104,16 @@ export function AlloyComponentDisplay({alloy} : Readonly<AlloyDisplayProps>) {
 				<div className="grid grid-cols-1 gap-6">
 					<div className="bg-white text-black rounded-lg shadow p-6">
 						<h2 className="text-xl text-center font-bold mb-4">CONSTRAINTS</h2>
+						<p className="text-lg text-center mb-8">Enter any constraints and target ingot count!</p>
 
 						{/* Ingot Count Input */}
 						<div className="mb-6">
-							<label htmlFor="ingotCount" className="block mb-2"> How many ingots do you want to make? </label>
+							<label htmlFor="ingotCount" className="text-gray-700 block mb-2">Desired Ingot Quantity</label>
 							<input
 								type="number"
 								id="ingotCount"
 								value={targetIngotCount === 0 ? '' : targetIngotCount}
+								placeholder="0"
 								onChange={handleIngotCountChange}
 								min="0"
 								className="w-full p-2 border border-gray-300 rounded"
@@ -124,6 +126,8 @@ export function AlloyComponentDisplay({alloy} : Readonly<AlloyDisplayProps>) {
 
 					{alloyMixture && alloyMinerals && <div className="bg-white text-black rounded-lg shadow p-6">
 						<h2 className="text-xl text-center font-bold mb-4">INPUT</h2>
+						<p className="text-lg text-center mb-8">Enter all available minerals in your inventory!</p>
+
 						{/* Minerals */}
 						{alloyMixture?.components.map(component => {
 							const componentMinerals = groupedMinerals.get(component.mineral.toLowerCase()) || [];
@@ -142,10 +146,10 @@ export function AlloyComponentDisplay({alloy} : Readonly<AlloyDisplayProps>) {
 							<button
 									onClick={handleCalculate}
 									disabled={isCalculating}
-									className={`px-4 py-2 rounded transition-colors ${
+									className={`px-4 py-2 mt-6 rounded transition-colors ${
 											isCalculating
 											? "bg-gray-400 cursor-not-allowed"
-											: "bg-blue-500 hover:bg-blue-600"
+											: "bg-blue-600 hover:bg-blue-700"
 									} text-white`}
 							>
 								{isCalculating ? "Calculating..." : "Calculate"}
