@@ -11,7 +11,7 @@ export function ErrorComponent(props : Readonly<ErrorProps>) {
 	return (
 			<div className="bg-red-700 text-white text-center rounded-lg shadow p-6">
 				<h2 className="text-xl font-bold mb-4">ERROR</h2>
-				<p>{error instanceof Error ? error.message : error as string}</p>
+				<p>{error instanceof Error ? error.message : error}</p>
 				<div className="bg-white text-black rounded-lg mt-4">
 					<h2 className="text-xl font-bold pt-4">Struggling?</h2>
 					<p className="text-lg pt-2 p-4">
