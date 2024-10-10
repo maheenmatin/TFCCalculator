@@ -4,8 +4,7 @@ interface ErrorProps {
 	error : Error | string | null;
 }
 
-export function ErrorComponent(props : Readonly<ErrorProps>) {
-	const error = props.error;
+export function ErrorComponent({error} : Readonly<ErrorProps>) {
 	if (!error) return;
 
 	return (
