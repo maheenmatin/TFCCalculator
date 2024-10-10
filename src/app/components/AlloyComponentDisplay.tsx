@@ -51,11 +51,6 @@ export function AlloyComponentDisplay({alloy} : Readonly<AlloyDisplayProps>) {
 	const handleCalculate = () => {
 		if (!alloyMixture || !alloyMinerals || isCalculating) return;
 
-		// TODO: Handle target ingot count 0 as separate case!
-		if (targetIngotCount === 0) {
-			return;
-		}
-
 		setIsCalculating(true);
 
 		try {
@@ -99,6 +94,15 @@ export function AlloyComponentDisplay({alloy} : Readonly<AlloyDisplayProps>) {
 		return grouped;
 	}, [alloyMinerals]);
 
+	const isReadyToShowInputs : boolean =
+			alloyMixture !== null
+			&& alloyMinerals !== null
+			&& targetIngotCount !== 0;
+
+	const isReadyToShowOutputs : boolean =
+			targetIngotCount !== 0
+			&& !error;
+
 	return (
 			<div className="container mx-auto p-4" onKeyDown={handleKeyPress}>
 				<div className="grid grid-cols-1 gap-6">
@@ -122,9 +126,9 @@ export function AlloyComponentDisplay({alloy} : Readonly<AlloyDisplayProps>) {
 					</div>
 
 					<ErrorComponent error={error}/>
-					{!error && <OutputResultComponent output={result} mbPerIngot={mbPerIngot}/>}
+					{isReadyToShowOutputs && <OutputResultComponent output={result} mbPerIngot={mbPerIngot}/>}
 
-					{alloyMixture && alloyMinerals && <div className="bg-white text-black rounded-lg shadow p-6">
+					{isReadyToShowInputs && <div className="bg-white text-black rounded-lg shadow p-6">
 						<h2 className="text-xl text-center font-bold mb-4">INPUT</h2>
 						<p className="text-lg text-center mb-8">Enter all available minerals in your inventory!</p>
 
