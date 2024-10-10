@@ -33,7 +33,7 @@ export function MineralAccordion({ title, minerals, mineralQuantities, onQuantit
 												type="number"
 												id={mineral.name}
 												value={mineralQuantities.get(mineral.name) === 0 ? '' :
-												       mineralQuantities.get(mineral.name) || ''}
+												       mineralQuantities.get(mineral.name) ?? ''}
 												onChange={(e) => onQuantityChange(mineral.name, e)}
 												min="0"
 												className="w-full p-2 border border-gray-300 rounded no-spinners"
