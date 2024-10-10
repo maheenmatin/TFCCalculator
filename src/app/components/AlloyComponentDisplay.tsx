@@ -158,7 +158,7 @@ export function AlloyComponentDisplay({alloy} : Readonly<AlloyDisplayProps>) {
 									className={`px-4 py-2 mt-6 rounded transition-colors ${
 											isCalculating
 											? "bg-gray-400 cursor-not-allowed"
-											: "bg-blue-600 hover:bg-blue-700"
+											: "bg-green-600 hover:bg-green-700"
 									} text-white`}
 							>
 								{isCalculating ? "Calculating..." : "Calculate"}
