@@ -1,5 +1,5 @@
 import {Mineral} from "@/app/types";
-import {useState} from "react";
+import React, {useState} from "react";
 
 
 interface MineralAccordionProps {
@@ -9,7 +9,7 @@ interface MineralAccordionProps {
 	onQuantityChange: (mineralName: string, e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-export function MineralAccordion({ title, minerals, mineralQuantities, onQuantityChange }: MineralAccordionProps) {
+export function MineralAccordion({ title, minerals, mineralQuantities, onQuantityChange }: Readonly<MineralAccordionProps>) {
 	const [isOpen, setIsOpen] = useState(false);
 
 	return (
