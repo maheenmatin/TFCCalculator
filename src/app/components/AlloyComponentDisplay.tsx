@@ -1,4 +1,4 @@
-import {ErrorComponent} from "@/app/components/Error";
+import {ErrorComponent} from "@/app/components/ErrorComponent";
 import {MineralAccordion} from "@/app/components/MineralAccordion";
 import {AlloyProductionResult, calculateAlloy, MineralWithQuantity} from "@/app/functions/algorithm";
 import {Alloy, Mineral} from "@/app/types";
