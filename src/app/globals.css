@@ -4,10 +4,6 @@
 
 :root {
   --color-background: 21 21 21;
-  --color-red: 166 61 64;
-  --color-yellow: 233 184 114;
-  --color-green: 144 169 89;
-  --color-blue: 100 148 170;
   --color-text: 255 255 255;
 }
 
@@ -17,25 +13,13 @@ body {
 }
 
 @layer utilities {
-  .bg-primary { background-color: rgb(var(--color-background)); }
-  .bg-red { background-color: rgb(var(--color-red)); }
-  .bg-yellow { background-color: rgb(var(--color-yellow)); }
-  .bg-green { background-color: rgb(var(--color-green)); }
-  .bg-blue { background-color: rgb(var(--color-blue)); }
+  .no-spinners {
+    appearance: textfield;
+  }
 
-  .text-primary { color: rgb(var(--color-text)); }
-  .text-red { color: rgb(var(--color-red)); }
-  .text-yellow { color: rgb(var(--color-yellow)); }
-  .text-green { color: rgb(var(--color-green)); }
-  .text-blue { color: rgb(var(--color-blue)); }
-
-  .bg-red-light { background-color: rgb(var(--color-red) / 0.8); }
-  .bg-yellow-light { background-color: rgb(var(--color-yellow) / 0.8); }
-  .bg-green-light { background-color: rgb(var(--color-green) / 0.8); }
-  .bg-blue-light { background-color: rgb(var(--color-blue) / 0.8); }
-
-  .bg-red-dark { background-color: rgb(var(--color-red) / 1.2); }
-  .bg-yellow-dark { background-color: rgb(var(--color-yellow) / 1.2); }
-  .bg-green-dark { background-color: rgb(var(--color-green) / 1.2); }
-  .bg-blue-dark { background-color: rgb(var(--color-blue) / 1.2); }
+  .no-spinners::-webkit-outer-spin-button,
+  .no-spinners::-webkit-inner-spin-button {
+    appearance: none;
+    margin: 0;
+  }
 }

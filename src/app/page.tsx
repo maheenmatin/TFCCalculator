@@ -24,18 +24,19 @@ export default function Home() {
 					<div className="flex items-center mb-8">
 						{selectedAlloy && (
 								<button onClick={handleBack} className="mr-4">
-									<CaretCircleLeft size={40} weight="bold" className="text-primary hover:text-blue transition-colors duration-200"/>
+									<CaretCircleLeft size={40} weight="bold" className="text-primary text-teal-100 hover:text-teal-300 transition-colors duration-200"/>
 								</button>
 						)}
 
 						<h1 className="text-3xl font-bold text-primary flex-grow text-center">
-							{selectedAlloy ? selectedAlloy.name : "CHOOSE TARGET ALLOY"}
+							{selectedAlloy ? selectedAlloy.name.toUpperCase() : "CHOOSE TARGET ALLOY"}
 						</h1>
 
 						{selectedAlloy && <div className="w-10"></div>}
 					</div>
 
-					{!selectedAlloy && <AlloySelectionGrid onAlloySelect={handleAlloySelect}/>} {selectedAlloy && <AlloyComponentDisplay alloy={selectedAlloy.name}/>}
+					{!selectedAlloy && <AlloySelectionGrid onAlloySelect={handleAlloySelect}/>}
+					{selectedAlloy && <AlloyComponentDisplay alloy={selectedAlloy.name}/>}
 				</div>
 			</main>
 	);
