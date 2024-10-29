@@ -140,6 +140,16 @@ export function AlloyComponentDisplay({alloy} : Readonly<AlloyDisplayProps>) {
 						{/* Minerals */}
 						{alloyMixture?.components.map(component => {
 							const componentMinerals = groupedMinerals.get(component.mineral.toLowerCase()) || [];
+
+							if (componentMinerals.length == 0) {
+								return (
+										<ErrorComponent
+												key={component.mineral.toLowerCase()}
+												error={`Failed to retrieve mineral ${component.mineral.toLowerCase()}`}
+												className={"mb-8"}
+										/>
+								);
+							}
 							return (
 									<MineralAccordion
 											key={component.mineral}
