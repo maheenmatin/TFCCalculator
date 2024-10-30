@@ -1,5 +1,7 @@
 export interface AlloyComponent {
 	mineral : string;
+	hasIngot? : boolean;
+	hasNugget? : boolean;
 	min : number;
 	max : number;
 }

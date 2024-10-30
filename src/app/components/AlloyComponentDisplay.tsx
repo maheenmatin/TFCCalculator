@@ -2,7 +2,8 @@ import {ErrorComponent} from "@/app/components/ErrorComponent";
 import {MineralAccordion} from "@/app/components/MineralAccordion";
 import {OutputResultComponent} from "@/app/components/OutputResultComponent";
 import {AlloyProductionResult, calculateAlloy, MineralWithQuantity} from "@/app/functions/algorithm";
-import {Alloy, Mineral} from "@/app/types";
+import {capitaliseFirstLetter} from "@/app/functions/utils";
+import {Alloy, AlloyComponent, Mineral, MineralUse} from "@/app/types";
 import React, {useEffect, useState} from "react";
 
 
@@ -10,33 +11,40 @@ interface AlloyDisplayProps {
 	alloy? : string;
 }
 
-// TODO: Add overrides for ingots and nuggets!
+
 export function AlloyComponentDisplay({alloy} : Readonly<AlloyDisplayProps>) {
 	const [alloyMixture, setAlloyMixture] = useState<Alloy | null>(null);
 	const [alloyMinerals, setAlloyMinerals] = useState<Mineral[]>([]);
 	const [targetIngotCount, setTargetIngotCount] = useState<number>(0);
 	const [mineralQuantities, setMineralQuantities] = useState<Map<string, number>>(new Map());
 
+	const [isLoading, setIsLoading] = useState<boolean>(true);
 	const [isCalculating, setIsCalculating] = useState<boolean>(false);
 	const [result, setResult] = useState<AlloyProductionResult | null>(null);
 	const [isResultAlteredSinceLastCalculation, setIsResultAlteredSinceLastCalculation] = useState<boolean>(false);
 	const [error, setError] = useState<Error | string | null>(null);
 
 	const mbPerIngot : number = 144;
+	const mbPerNugget : number = 16;
 
 	useEffect(() => {
 		if (!alloy) return;
 		if (alloyMixture && alloyMinerals) return;
 
-		fetch(`/api/alloy/${encodeURIComponent(alloy)}`)
+		const fetchAlloyDetails = fetch(`/api/alloy/${encodeURIComponent(alloy)}`)
 				.then(response => response.json())
 				.then(data => setAlloyMixture(data))
 				.catch(error => console.error("Error fetching alloy details:", error));
 
-		fetch(`api/alloy/${encodeURIComponent(alloy)}/minerals`)
+		const fetchAlloyMinerals = fetch(`api/alloy/${encodeURIComponent(alloy)}/minerals`)
 				.then(response => response.json())
 				.then(data => setAlloyMinerals(data))
 				.catch(error => console.error("Error fetching alloy minerals:", error))
+
+		Promise.all([fetchAlloyDetails, fetchAlloyMinerals])
+		       .then(() => {
+			       setIsLoading(false);
+		       })
 	}, [alloy, alloyMixture, alloyMinerals]);
 
 	const handleIngotCountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -100,13 +108,20 @@ export function AlloyComponentDisplay({alloy} : Readonly<AlloyDisplayProps>) {
 
 	const isReadyToShowInputs : boolean =
 			targetIngotCount !== 0
-			&& alloyMixture !== null
-			&& alloyMinerals !== null;
+			&& !isLoading;
 
 	const isReadyToShowOutputs : boolean =
 			targetIngotCount !== 0
 			&& !isResultAlteredSinceLastCalculation
 			&& !error;
+
+	function componentIngotAvailable(component : AlloyComponent) : boolean {
+		return component.hasIngot == null || component.hasIngot;
+	}
+
+	function componentNugetAvailable(component : AlloyComponent) : boolean {
+		return component.hasNugget == null || component.hasNugget;
+	}
 
 	return (
 			<div className="container mx-auto p-4" onKeyDown={handleKeyPress}>
@@ -139,21 +154,53 @@ export function AlloyComponentDisplay({alloy} : Readonly<AlloyDisplayProps>) {
 
 						{/* Minerals */}
 						{alloyMixture?.components.map(component => {
-							const componentMinerals = groupedMinerals.get(component.mineral.toLowerCase()) || [];
+							const mineral = component.mineral.toLowerCase();
+							let componentMinerals = groupedMinerals.get(mineral) || [];
 
-							if (componentMinerals.length == 0) {
+							if (componentMinerals.length === 0) {
 								return (
 										<ErrorComponent
-												key={component.mineral.toLowerCase()}
-												error={`Failed to retrieve mineral ${component.mineral.toLowerCase()}`}
-												className={"mb-8"}
+												key={mineral}
+												error={`Failed to retrieve mineral ${mineral}`}
+												className="mb-8"
 										/>
 								);
 							}
+
+							componentMinerals = [...componentMinerals];
+
+							const hasIngot = componentMinerals.some(m => m.name.toLowerCase().includes('ingot'));
+							const hasNugget = componentMinerals.some(m => m.name.toLowerCase().includes('nugget'));
+
+							if (!hasIngot && componentIngotAvailable(component)) {
+								componentMinerals.push({
+									name: `${capitaliseFirstLetter(mineral)} Ingot`,
+									produces: mineral,
+									yield: mbPerIngot,
+									uses: [
+										MineralUse.Vessel,
+										MineralUse.Crucible
+									],
+								});
+							}
+
+							if (!hasNugget && componentNugetAvailable(component)) {
+								componentMinerals.push({
+									name: `${capitaliseFirstLetter(mineral)} Nugget`,
+									produces: mineral,
+									yield: mbPerNugget,
+									uses: [
+											MineralUse.Vessel,
+											MineralUse.Crucible
+									],
+								});
+							}
+
 							return (
 									<MineralAccordion
-											key={component.mineral}
-											title={component.mineral} minerals={componentMinerals}
+											key={mineral}
+											title={mineral}
+											minerals={componentMinerals}
 											mineralQuantities={mineralQuantities}
 											onQuantityChange={handleMineralQuantityChange}
 									/>
