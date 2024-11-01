@@ -86,6 +86,7 @@ export function AlloyComponentDisplay({alloy} : Readonly<AlloyDisplayProps>) {
 					}).filter(m => m.quantity > 0);
 			setResult(calculateAlloy(targetIngotCount * mbPerIngot, alloyMixture, mineralWithQuantities));
 		} catch (e) {
+			console.log(e);
 			if (e instanceof Error) {
 				setError(e);
 			} else {
