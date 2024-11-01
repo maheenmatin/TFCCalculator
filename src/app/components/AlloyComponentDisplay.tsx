@@ -75,7 +75,7 @@ export function AlloyComponentDisplay({alloy} : Readonly<AlloyDisplayProps>) {
 							if (mineralName.toLowerCase().includes('ingot')) {
 								mineral = ingotOverride(baseMineralName);
 							} else if (mineralName.toLowerCase().includes('nugget')) {
-								mineral = mineral = nuggetOverride(baseMineralName);
+								mineral = nuggetOverride(baseMineralName);
 							}
 						}
 
