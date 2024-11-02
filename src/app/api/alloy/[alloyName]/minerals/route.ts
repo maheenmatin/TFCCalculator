@@ -1,5 +1,5 @@
-import {alloys} from "@/data/alloys.json";
-import minerals from "@/data/minerals.json";
+import alloysJson from "@/data/alloys.json";
+import mineralsJson from "@/data/minerals.json";
 import {Alloy, Mineral, MineralUse} from "@/types";
 import {NextResponse} from "next/server";
 
@@ -12,7 +12,7 @@ export async function GET(
 	const {searchParams} = new URL(request.url);
 	const uses = searchParams.getAll("uses");
 
-	const alloyList = alloys as Alloy[];
+	const alloyList = alloysJson.alloys as Alloy[];
 	const alloy = alloyList.find(
 			(a) => a.name.toLowerCase() === decodeURIComponent(alloyName).toLowerCase()
 	);
@@ -22,7 +22,7 @@ export async function GET(
 	}
 
 	const alloyMinerals = alloy.components.flatMap((component) => {
-		const rawMinerals = minerals[component.mineral as keyof typeof minerals];
+		const rawMinerals = mineralsJson[component.mineral as keyof typeof mineralsJson];
 
 		if (!rawMinerals) {
 			return null;
