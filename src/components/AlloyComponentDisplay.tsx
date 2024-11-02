@@ -159,7 +159,7 @@ export function AlloyComponentDisplay({alloy} : Readonly<AlloyDisplayProps>) {
 	}
 
 	return (
-			<div className="container mx-auto p-4" onKeyDown={handleKeyPress} role="button">
+			<div className="container mx-auto p-4">
 				<div className="grid grid-cols-1 gap-6">
 					<div className="bg-white text-black rounded-lg shadow p-6">
 						<h2 className="text-xl text-center font-bold mb-4">CONSTRAINTS</h2>
@@ -174,6 +174,7 @@ export function AlloyComponentDisplay({alloy} : Readonly<AlloyDisplayProps>) {
 								value={targetIngotCount === 0 ? '' : targetIngotCount}
 								placeholder="0"
 								onChange={handleIngotCountChange}
+								onKeyDown={handleKeyPress}
 								min="0"
 								className="w-full p-2 border border-gray-300 rounded"
 						/>
@@ -222,6 +223,7 @@ export function AlloyComponentDisplay({alloy} : Readonly<AlloyDisplayProps>) {
 											minerals={componentMinerals}
 											mineralQuantities={mineralQuantities}
 											onQuantityChange={handleMineralQuantityChange}
+											onInputKeyPress={handleKeyPress}
 									/>
 							);
 						})}
