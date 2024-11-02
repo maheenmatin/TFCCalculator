@@ -59,31 +59,30 @@ export function AlloyComponentDisplay({alloy} : Readonly<AlloyDisplayProps>) {
 		setIsResultAlteredSinceLastCalculation(true);
 	};
 
-	const handleCalculate = () => {
+	const handleCalculate = async () => {
 		if (!alloyMixture || !alloyMinerals || isCalculating) return;
 
 		setIsCalculating(true);
+		await new Promise(resolve => setTimeout(resolve, 0));
 
 		try {
 			const mineralWithQuantities: MineralWithQuantity[] = Array.from(mineralQuantities.entries()).map(
 					([mineralName, quantity]) => {
 						let mineral = alloyMinerals.find(m => m.name === mineralName);
-
 						if (!mineral) {
 							const baseMineralName = getBaseMineralFromOverride(mineralName);
-
 							if (mineralName.toLowerCase().includes('ingot')) {
 								mineral = ingotOverride(baseMineralName);
 							} else if (mineralName.toLowerCase().includes('nugget')) {
 								mineral = nuggetOverride(baseMineralName);
 							}
 						}
-
 						return {
 							mineral: mineral!,
 							quantity
 						};
 					}).filter(m => m.quantity > 0);
+
 			setResult(calculateAlloy(targetIngotCount * mbPerIngot, alloyMixture, mineralWithQuantities));
 		} catch (e) {
 			console.log(e);
@@ -98,9 +97,9 @@ export function AlloyComponentDisplay({alloy} : Readonly<AlloyDisplayProps>) {
 		}
 	};
 
-	const handleKeyPress = (e: React.KeyboardEvent) => {
+	const handleKeyPress = async (e: React.KeyboardEvent) => {
 		if (e.key === 'Enter') {
-			handleCalculate();
+			await handleCalculate();
 		}
 	};
 
