@@ -1,4 +1,4 @@
-import {Alloy} from "@/app/types";
+import {Alloy} from "@/types";
 import {useEffect, useState} from "react";
 
 

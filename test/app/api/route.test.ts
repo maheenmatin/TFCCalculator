@@ -1,7 +1,7 @@
-import {GET} from "@/app/api/alloy/route";
-import {Alloy} from "@/app/types";
+import {GET} from "@/api/alloy/route";
+import {Alloy} from "@/types";
 import {NextResponse} from 'next/server';
-import alloys from '@/app/data/alloys.json';
+import alloys from '@/data/alloys.json';
 
 
 jest.mock('next/server', () => ({

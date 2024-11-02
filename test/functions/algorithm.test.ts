@@ -1,5 +1,5 @@
-import {calculateAlloy, MineralWithQuantity} from "@/app/functions/algorithm";
-import {Alloy, Mineral} from "@/app/types";
+import {calculateAlloy, MineralWithQuantity} from "@/functions/algorithm";
+import {Alloy, Mineral} from "@/types";
 
 
 const smallTinVariant : Mineral = { name: 'small tin variant', produces: 'tin', yield: 16 };

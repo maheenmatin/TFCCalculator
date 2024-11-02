@@ -1,4 +1,4 @@
-import {Alloy, AlloyComponent, Mineral} from "@/app/types";
+import {Alloy, AlloyComponent, Mineral} from "@/types";
 
 
 export interface MineralWithQuantity {

@@ -1,4 +1,4 @@
-import { GET } from '@/app/api/alloy/[alloyName]/route';
+import { GET } from '@/api/alloy/[alloyName]/route';
 
 
 // Mock Request
@@ -15,7 +15,7 @@ jest.mock('next/server', () => ({
 }));
 
 // Mock production alloys JSON
-jest.mock('@/app/data/alloys.json', () => ({
+jest.mock('@/data/alloys.json', () => ({
 	alloys: [
 		{ name: 'Stainless Steel', composition: { iron: 98, carbon: 2 } },
 		{ name: 'Bronze', composition: { copper: 88, tin: 12 } },

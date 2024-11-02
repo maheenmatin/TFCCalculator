@@ -1,16 +1,15 @@
-import {ErrorComponent} from "@/app/components/ErrorComponent";
-import {MineralAccordion} from "@/app/components/MineralAccordion";
-import {OutputResultComponent} from "@/app/components/OutputResultComponent";
-import {AlloyProductionResult, calculateAlloy, MineralWithQuantity} from "@/app/functions/algorithm";
-import {capitaliseFirstLetterOfEachWord, getBaseMineralFromOverride} from "@/app/functions/utils";
-import {Alloy, AlloyComponent, Mineral, MineralUse} from "@/app/types";
+import {ErrorComponent} from "@/components/ErrorComponent";
+import {MineralAccordion} from "@/components/MineralAccordion";
+import {OutputResultComponent} from "@/components/OutputResultComponent";
+import {AlloyProductionResult, calculateAlloy, MineralWithQuantity} from "@/functions/algorithm";
+import {capitaliseFirstLetterOfEachWord, getBaseMineralFromOverride} from "@/functions/utils";
+import {Alloy, AlloyComponent, Mineral, MineralUse} from "@/types";
 import React, {useEffect, useState} from "react";
 
 
 interface AlloyDisplayProps {
 	alloy? : string;
 }
-
 
 export function AlloyComponentDisplay({alloy} : Readonly<AlloyDisplayProps>) {
 	const [alloyMixture, setAlloyMixture] = useState<Alloy | null>(null);
@@ -160,7 +159,7 @@ export function AlloyComponentDisplay({alloy} : Readonly<AlloyDisplayProps>) {
 	}
 
 	return (
-			<div className="container mx-auto p-4" onKeyDown={handleKeyPress}>
+			<div className="container mx-auto p-4">
 				<div className="grid grid-cols-1 gap-6">
 					<div className="bg-white text-black rounded-lg shadow p-6">
 						<h2 className="text-xl text-center font-bold mb-4">CONSTRAINTS</h2>
@@ -175,6 +174,7 @@ export function AlloyComponentDisplay({alloy} : Readonly<AlloyDisplayProps>) {
 								value={targetIngotCount === 0 ? '' : targetIngotCount}
 								placeholder="0"
 								onChange={handleIngotCountChange}
+								onKeyDown={handleKeyPress}
 								min="0"
 								className="w-full p-2 border border-gray-300 rounded"
 						/>
@@ -223,6 +223,7 @@ export function AlloyComponentDisplay({alloy} : Readonly<AlloyDisplayProps>) {
 											minerals={componentMinerals}
 											mineralQuantities={mineralQuantities}
 											onQuantityChange={handleMineralQuantityChange}
+											onInputKeyPress={handleKeyPress}
 									/>
 							);
 						})}

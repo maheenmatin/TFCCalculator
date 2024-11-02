@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /public/
+
+Host: https://tfg-calculator.vercel.app
+Sitemap: https://tfg-calculator.vercel.app/sitemap.xml
