@@ -1,4 +1,4 @@
-import {AlloyProductionResult} from "@/app/functions/algorithm";
+import {AlloyProductionResult} from "@/functions/algorithm";
 import React from "react";
 
 

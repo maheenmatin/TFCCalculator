@@ -1,6 +1,6 @@
-import {alloys} from "@/app/data/alloys.json";
-import minerals from "@/app/data/minerals.json";
-import {Alloy, Mineral, MineralUse} from "@/app/types";
+import {alloys} from "@/data/alloys.json";
+import minerals from "@/data/minerals.json";
+import {Alloy, Mineral, MineralUse} from "@/types";
 import {NextResponse} from "next/server";
 
 

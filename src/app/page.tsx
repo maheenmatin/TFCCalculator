@@ -1,10 +1,10 @@
 "use client";
 
-import {Alloy} from "@/app/types";
+import {Alloy} from "@/types";
 import {CaretCircleLeft} from "@phosphor-icons/react";
 import {useState} from "react";
-import {AlloyComponentDisplay} from "./components/AlloyComponentDisplay";
-import {AlloySelectionGrid} from "./components/AlloySelectionGrid";
+import {AlloyComponentDisplay} from "@/components/AlloyComponentDisplay";
+import {AlloySelectionGrid} from "@/components/AlloySelectionGrid";
 
 
 export default function Home() {

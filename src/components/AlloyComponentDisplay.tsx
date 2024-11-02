@@ -1,16 +1,15 @@
-import {ErrorComponent} from "@/app/components/ErrorComponent";
-import {MineralAccordion} from "@/app/components/MineralAccordion";
-import {OutputResultComponent} from "@/app/components/OutputResultComponent";
-import {AlloyProductionResult, calculateAlloy, MineralWithQuantity} from "@/app/functions/algorithm";
-import {capitaliseFirstLetterOfEachWord, getBaseMineralFromOverride} from "@/app/functions/utils";
-import {Alloy, AlloyComponent, Mineral, MineralUse} from "@/app/types";
+import {ErrorComponent} from "@/components/ErrorComponent";
+import {MineralAccordion} from "@/components/MineralAccordion";
+import {OutputResultComponent} from "@/components/OutputResultComponent";
+import {AlloyProductionResult, calculateAlloy, MineralWithQuantity} from "@/functions/algorithm";
+import {capitaliseFirstLetterOfEachWord, getBaseMineralFromOverride} from "@/functions/utils";
+import {Alloy, AlloyComponent, Mineral, MineralUse} from "@/types";
 import React, {useEffect, useState} from "react";
 
 
 interface AlloyDisplayProps {
 	alloy? : string;
 }
-
 
 export function AlloyComponentDisplay({alloy} : Readonly<AlloyDisplayProps>) {
 	const [alloyMixture, setAlloyMixture] = useState<Alloy | null>(null);

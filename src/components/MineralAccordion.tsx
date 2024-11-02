@@ -1,4 +1,4 @@
-import {Mineral} from "@/app/types";
+import {Mineral} from "@/types";
 import React, {useState} from "react";
 
 
