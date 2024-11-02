@@ -64,38 +64,41 @@ export function AlloyComponentDisplay({alloy} : Readonly<AlloyDisplayProps>) {
 
 		setIsCalculating(true);
 
-		try {
-			const mineralWithQuantities: MineralWithQuantity[] = Array.from(mineralQuantities.entries()).map(
-					([mineralName, quantity]) => {
-						let mineral = alloyMinerals.find(m => m.name === mineralName);
+		setTimeout(() => {
+			try {
+				const mineralWithQuantities: MineralWithQuantity[] = Array.from(mineralQuantities.entries()).map(
+						([mineralName, quantity]) => {
+							let mineral = alloyMinerals.find(m => m.name === mineralName);
 
-						if (!mineral) {
-							const baseMineralName = getBaseMineralFromOverride(mineralName);
+							if (!mineral) {
+								const baseMineralName = getBaseMineralFromOverride(mineralName);
 
-							if (mineralName.toLowerCase().includes('ingot')) {
-								mineral = ingotOverride(baseMineralName);
-							} else if (mineralName.toLowerCase().includes('nugget')) {
-								mineral = nuggetOverride(baseMineralName);
+								if (mineralName.toLowerCase().includes('ingot')) {
+									mineral = ingotOverride(baseMineralName);
+								} else if (mineralName.toLowerCase().includes('nugget')) {
+									mineral = nuggetOverride(baseMineralName);
+								}
 							}
-						}
 
-						return {
-							mineral: mineral!,
-							quantity
-						};
-					}).filter(m => m.quantity > 0);
-			setResult(calculateAlloy(targetIngotCount * mbPerIngot, alloyMixture, mineralWithQuantities));
-		} catch (e) {
-			console.log(e);
-			if (e instanceof Error) {
-				setError(e);
-			} else {
-				setError(String(e));
+							return {
+								mineral: mineral!,
+								quantity
+							};
+						}).filter(m => m.quantity > 0);
+
+				setResult(calculateAlloy(targetIngotCount * mbPerIngot, alloyMixture, mineralWithQuantities));
+			} catch (e) {
+				console.log(e);
+				if (e instanceof Error) {
+					setError(e);
+				} else {
+					setError(String(e));
+				}
+			} finally {
+				setIsCalculating(false);
+				setIsResultAlteredSinceLastCalculation(false);
 			}
-		} finally {
-			setIsCalculating(false);
-			setIsResultAlteredSinceLastCalculation(false);
-		}
+		}, 0); // Delay to handle UI update
 	};
 
 	const handleKeyPress = (e: React.KeyboardEvent) => {
