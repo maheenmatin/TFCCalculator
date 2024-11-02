@@ -59,51 +59,47 @@ export function AlloyComponentDisplay({alloy} : Readonly<AlloyDisplayProps>) {
 		setIsResultAlteredSinceLastCalculation(true);
 	};
 
-	const handleCalculate = () => {
+	const handleCalculate = async () => {
 		if (!alloyMixture || !alloyMinerals || isCalculating) return;
 
 		setIsCalculating(true);
+		await new Promise(resolve => setTimeout(resolve, 0));
 
-		setTimeout(() => {
-			try {
-				const mineralWithQuantities: MineralWithQuantity[] = Array.from(mineralQuantities.entries()).map(
-						([mineralName, quantity]) => {
-							let mineral = alloyMinerals.find(m => m.name === mineralName);
-
-							if (!mineral) {
-								const baseMineralName = getBaseMineralFromOverride(mineralName);
-
-								if (mineralName.toLowerCase().includes('ingot')) {
-									mineral = ingotOverride(baseMineralName);
-								} else if (mineralName.toLowerCase().includes('nugget')) {
-									mineral = nuggetOverride(baseMineralName);
-								}
+		try {
+			const mineralWithQuantities: MineralWithQuantity[] = Array.from(mineralQuantities.entries()).map(
+					([mineralName, quantity]) => {
+						let mineral = alloyMinerals.find(m => m.name === mineralName);
+						if (!mineral) {
+							const baseMineralName = getBaseMineralFromOverride(mineralName);
+							if (mineralName.toLowerCase().includes('ingot')) {
+								mineral = ingotOverride(baseMineralName);
+							} else if (mineralName.toLowerCase().includes('nugget')) {
+								mineral = nuggetOverride(baseMineralName);
 							}
+						}
+						return {
+							mineral: mineral!,
+							quantity
+						};
+					}).filter(m => m.quantity > 0);
 
-							return {
-								mineral: mineral!,
-								quantity
-							};
-						}).filter(m => m.quantity > 0);
-
-				setResult(calculateAlloy(targetIngotCount * mbPerIngot, alloyMixture, mineralWithQuantities));
-			} catch (e) {
-				console.log(e);
-				if (e instanceof Error) {
-					setError(e);
-				} else {
-					setError(String(e));
-				}
-			} finally {
-				setIsCalculating(false);
-				setIsResultAlteredSinceLastCalculation(false);
+			setResult(calculateAlloy(targetIngotCount * mbPerIngot, alloyMixture, mineralWithQuantities));
+		} catch (e) {
+			console.log(e);
+			if (e instanceof Error) {
+				setError(e);
+			} else {
+				setError(String(e));
 			}
-		}, 0); // Delay to handle UI update
+		} finally {
+			setIsCalculating(false);
+			setIsResultAlteredSinceLastCalculation(false);
+		}
 	};
 
-	const handleKeyPress = (e: React.KeyboardEvent) => {
+	const handleKeyPress = async (e: React.KeyboardEvent) => {
 		if (e.key === 'Enter') {
-			handleCalculate();
+			await handleCalculate();
 		}
 	};
 
