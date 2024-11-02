@@ -159,7 +159,7 @@ export function AlloyComponentDisplay({alloy} : Readonly<AlloyDisplayProps>) {
 	}
 
 	return (
-			<div className="container mx-auto p-4" onKeyDown={handleKeyPress}>
+			<div className="container mx-auto p-4" onKeyDown={handleKeyPress} role="button">
 				<div className="grid grid-cols-1 gap-6">
 					<div className="bg-white text-black rounded-lg shadow p-6">
 						<h2 className="text-xl text-center font-bold mb-4">CONSTRAINTS</h2>
