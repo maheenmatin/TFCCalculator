@@ -1,0 +1,11 @@
+/* TEAM */
+Developer: Supermarcel10
+Site: https://github.com/Supermarcel10
+Contact: 47798787+Supermarcel10@users.noreply.github.com
+
+/* SITE */
+Last update: 2024/11/02
+Language: English
+Doctype: HTML5
+IDE: JetBrains WebStorm
+Stack: Next.js, React, Vercel
