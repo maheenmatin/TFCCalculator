@@ -23,12 +23,12 @@ export function AlloyComponentDisplay({alloy} : Readonly<AlloyDisplayProps>) {
 	const [isResultAlteredSinceLastCalculation, setIsResultAlteredSinceLastCalculation] = useState<boolean>(false);
 	const [error, setError] = useState<Error | string | null>(null);
 
+	// TODO: Move this to the new system in the future to support more alloys
 	const mbPerIngot : number = 144;
 	const mbPerNugget : number = 16;
 
 	useEffect(() => {
 		if (!alloy) return;
-		if (alloyMixture && alloyMinerals) return;
 
 		const fetchAlloyDetails = fetch(`/api/alloy/${encodeURIComponent(alloy)}`)
 				.then(response => response.json())
@@ -44,7 +44,7 @@ export function AlloyComponentDisplay({alloy} : Readonly<AlloyDisplayProps>) {
 		       .then(() => {
 			       setIsLoading(false);
 		       })
-	}, [alloy, alloyMixture, alloyMinerals]);
+	}, [alloy]);
 
 	const handleIngotCountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const value = e.target.value === '' ? 0 : parseInt(e.target.value, 10);
