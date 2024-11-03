@@ -35,7 +35,7 @@ export async function GET() {
 							>
 								{/* eslint-disable-next-line @next/next/no-img-element */}
 								<img
-										src="/favicon.ico"
+										src="https://tfg-calculator.vercel.app/favicon.ico"
 										alt="TFC Alloy Calculator Logo"
 										width={"256"}
 										height={"256"}
