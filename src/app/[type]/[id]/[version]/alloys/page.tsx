@@ -27,8 +27,6 @@ export default function Home() {
 							handleBackURI={`/`}
 					/>
 
-					{/*TODO: Center grid*/}
-					{/*TODO: Export self-centering grid component*/}
 					<AlloySelectionGrid onAlloySelect={handleAlloySelect}/>
 				</div>
 			</main>

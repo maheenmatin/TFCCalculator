@@ -1,7 +1,8 @@
 import {Alloy} from "@/types";
-import {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import {useParams} from "next/navigation";
 import {ErrorComponent} from "@/components/ErrorComponent";
+import {SelfCenteringGrid} from "@/components/SelfCenteringGrid";
 
 
 interface AlloyGridProps {
@@ -54,17 +55,23 @@ export function AlloySelectionGrid({onAlloySelect} : Readonly<AlloyGridProps>) {
 	}
 
 	return (
-			<div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-				{alloys.map((alloy) => (
-						<button
-								key={alloy.name}
-								className="aspect-square flex items-center justify-center p-4 rounded-lg shadow-md bg-teal-100 hover:bg-teal-200 transition-colors duration-200"
-								onClick={() => onAlloySelect(alloy)}
-								aria-label={`Select ${alloy.name} alloy`}
-						>
-							<span className="text-center text-black font-bold">{alloy.name}</span>
-						</button>
-				))}
-			</div>
+			<SelfCenteringGrid
+					elements={alloys}
+					perRow={{
+						default: 2,
+						sm: 3,
+						md: 4,
+						lg: 5
+					}}
+					renderElement={(alloy) => (
+							<button
+									className="w-full aspect-square flex items-center justify-center p-4 rounded-lg shadow-md bg-teal-100 hover:bg-teal-200 transition-colors duration-200"
+									onClick={() => onAlloySelect(alloy)}
+									aria-label={`Select ${alloy.name} alloy`}
+							>
+								<span className="text-center text-black text-lg font-bold">{alloy.name}</span>
+							</button>
+					)}
+			/>
 	);
 }
