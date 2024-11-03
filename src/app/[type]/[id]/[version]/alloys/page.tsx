@@ -19,7 +19,7 @@ export default function Home() {
 	const [error, setError] = useState<string | null>(null);
 
 	const handleAlloySelect = useCallback((alloy : Alloy) => {
-		router.push(`/${type}/${id}/${version}/${alloy.name.toLowerCase()}`);
+		router.push(`/${type}/${id}/${version}/${alloy.name}`);
 	}, [router, type, id, version]);
 
 	useEffect(() => {
@@ -38,7 +38,7 @@ export default function Home() {
 		};
 
 		fetchAlloys()
-				.catch((err) => {
+				.catch(err => {
 					setError("Failed to load alloys");
 					console.error("Error fetching alloys:", err);
 				})
