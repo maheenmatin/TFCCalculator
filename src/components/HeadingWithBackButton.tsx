@@ -5,13 +5,22 @@ import {useRouter} from "next/navigation";
 
 interface HeadingWithButtonProps {
 	title : string;
-	ariaPreviousScreenName?: string;
-	handleBackURI: string;
+	ariaPreviousScreenName? : string;
+	handleBackURI : string;
 	className? : string;
 }
 
-export function HeadingWithBackButton({title, ariaPreviousScreenName, handleBackURI, className} : Readonly<HeadingWithButtonProps>) {
+export function HeadingWithBackButton(
+		{
+			title,
+			ariaPreviousScreenName,
+			handleBackURI,
+			className
+		} : Readonly<HeadingWithButtonProps>) {
 	const router = useRouter();
+
+	const previousScreenName = ariaPreviousScreenName ? `to ${ariaPreviousScreenName}` : "";
+	const ariaLabel = `Return ${previousScreenName}`;
 
 	const handleBack = () => {
 		router.push(handleBackURI);
@@ -22,7 +31,7 @@ export function HeadingWithBackButton({title, ariaPreviousScreenName, handleBack
 				<button
 						onClick={handleBack}
 						className="mr-4"
-						aria-label={`Return ${ariaPreviousScreenName ? `to ${ariaPreviousScreenName}` : ""}`}
+						aria-label={ariaLabel}
 				>
 					<CaretCircleLeft
 							size={40}
