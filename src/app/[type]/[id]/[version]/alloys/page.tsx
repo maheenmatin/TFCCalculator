@@ -23,24 +23,18 @@ export default function Home() {
 	}, [router, type, id, version]);
 
 	useEffect(() => {
-		const fetchAlloys = async() => {
-			const response = await fetch(
-					`/api/${type}/${id}/${version}/alloy`
-			);
+		fetch(`/api/${type}/${id}/${version}/alloy`)
+				.then(response => {
+					if (!response.ok) {
+						throw new Error(`HTTP error! status: ${response.status}`);
+					}
 
-			if (!response.ok) {
-				throw new Error(`HTTP error! status: ${response.status}`);
-			}
-
-			const data = await response.json();
-
-			setAlloys(data);
-		};
-
-		fetchAlloys()
-				.catch(err => {
+					return response.json();
+				})
+				.then(data => setAlloys(data))
+				.catch(error => {
 					setError("Failed to load alloys");
-					console.error("Error fetching alloys:", err);
+					console.error("Error fetching alloys:", error);
 				})
 				.finally(() => {
 					setIsLoading(false);

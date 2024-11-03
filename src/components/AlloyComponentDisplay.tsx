@@ -5,6 +5,7 @@ import {AlloyProductionResult, calculateAlloy, MineralWithQuantity} from "@/func
 import {capitaliseFirstLetterOfEachWord, getBaseMineralFromOverride} from "@/functions/utils";
 import {Alloy, AlloyComponent, Mineral, MineralUse} from "@/types";
 import React, {useEffect, useState} from "react";
+import {useParams} from "next/navigation";
 
 
 interface AlloyDisplayProps {
@@ -12,6 +13,8 @@ interface AlloyDisplayProps {
 }
 
 export function AlloyComponentDisplay({alloy} : Readonly<AlloyDisplayProps>) {
+	const {type, id, version} = useParams();
+
 	const [alloyMixture, setAlloyMixture] = useState<Alloy | null>(null);
 	const [alloyMinerals, setAlloyMinerals] = useState<Mineral[]>([]);
 	const [targetIngotCount, setTargetIngotCount] = useState<number>(0);
@@ -32,21 +35,24 @@ export function AlloyComponentDisplay({alloy} : Readonly<AlloyDisplayProps>) {
 			return;
 		}
 
-		const fetchAlloyDetails = fetch(`/api/alloy/${encodeURIComponent(alloy)}`)
-				.then(response => response.json())
-				.then(data => setAlloyMixture(data))
-				.catch(error => console.error("Error fetching alloy details:", error));
+		fetch(`/api/${type}/${id}/${version}/alloy/${alloy}`)
+				.then(response => {
+					if (!response.ok) {
+						throw new Error(`HTTP error! status: ${response.status}`);
+					}
 
-		const fetchAlloyMinerals = fetch(`api/alloy/${encodeURIComponent(alloy)}/minerals`)
-				.then(response => response.json())
-				.then(data => setAlloyMinerals(data))
-				.catch(error => console.error("Error fetching alloy minerals:", error));
-
-		Promise.all([fetchAlloyDetails, fetchAlloyMinerals])
-		       .then(() => {
-			       setIsLoading(false);
-		       });
-	}, [alloy]);
+					return response.json();
+				})
+				.then(data => {
+					setAlloyMixture(data.alloy);
+					setAlloyMinerals(data.minerals);
+				})
+				.catch(error => {
+					setError("Error fetching alloy details");
+					console.error("Error fetching alloy details:", error)
+				})
+				.finally(() => setIsLoading(false));
+	}, [type, id, version, alloy]);
 
 	const handleIngotCountChange = (e : React.ChangeEvent<HTMLInputElement>) => {
 		const value = e.target.value === "" ? 0 : parseInt(e.target.value, 10);

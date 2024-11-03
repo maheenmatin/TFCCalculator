@@ -6,9 +6,8 @@ import {HeadingWithBackButton} from "@/components/HeadingWithBackButton";
 
 
 export default function AlloyPage() {
-	const params = useParams();
-	const version = params.version as string;
-	const alloy = params.alloy as string;
+	const {type, id, version, alloy} = useParams();
+	const alloyString = Array.isArray(alloy) ? alloy.join(',') : alloy;
 
 	return (
 			<main
@@ -18,12 +17,12 @@ export default function AlloyPage() {
 			>
 				<div className="max-w-6xl mx-auto">
 					<HeadingWithBackButton
-							title={alloy.toUpperCase()}
+							title={alloyString.toUpperCase()}
 							ariaPreviousScreenName="alloy selection"
-							handleBackURI={`/${version}/alloys`}
+							handleBackURI={`/${type}/${id}/${version}/alloys`}
 					/>
 
-					<AlloyComponentDisplay alloy={alloy}/>
+					<AlloyComponentDisplay alloy={alloyString} />
 				</div>
 			</main>
 	);
