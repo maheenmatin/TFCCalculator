@@ -3,7 +3,8 @@ import {NextResponse} from "next/server";
 import alloysJson from "@/data/alloys.json";
 import mineralsJson from "@/data/minerals.json";
 
-
+// TODO: Restrcture JSON file to be reusable for different versions.
+// TODO: Use the JSON file to pull out specific information.
 export async function GET(
 		request : Request,
 		{params} : { params : { alloyName : string } }

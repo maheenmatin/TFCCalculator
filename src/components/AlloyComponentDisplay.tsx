@@ -26,7 +26,7 @@ export function AlloyComponentDisplay({alloy} : Readonly<AlloyDisplayProps>) {
 	const [isResultAlteredSinceLastCalculation, setIsResultAlteredSinceLastCalculation] = useState<boolean>(false);
 	const [error, setError] = useState<Error | string | null>(null);
 
-	// TODO: Move this to the new system in the future to support more alloys
+	// TODO: Utilise the version specific constants instead.
 	const mbPerIngot : number = 144;
 	const mbPerNugget : number = 16;
 
