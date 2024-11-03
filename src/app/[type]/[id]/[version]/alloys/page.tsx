@@ -40,9 +40,9 @@ export default function Home() {
 					setIsLoading(false);
 				})
 				.catch(error => {
-					console.error("Error fetching alloys:", error);
-					setError("Failed to load alloys. Please try again later.");
+					setError("Failed to fetch alloys.");
 					setIsLoading(false);
+					console.error("Error fetching alloys:", error);
 				});
 	}, [params.version]);
 
@@ -59,7 +59,7 @@ export default function Home() {
 							handleBackURI={`/`}
 					/>
 
-					{isLoading && <LoadingSpinner fullScreen={true}/>}
+					{isLoading && <LoadingSpinner/>}
 					{error && <ErrorComponent error={error}/>}
 
 					{!isLoading && !error &&
