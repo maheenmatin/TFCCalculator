@@ -1,6 +1,6 @@
 import {ErrorComponent} from "@/components/ErrorComponent";
 import {MineralAccordion} from "@/components/MineralAccordion";
-import {OutputResultComponent} from "@/components/OutputResultComponent";
+import {OutputResult} from "@/components/OutputResult";
 import {AlloyProductionResult, calculateAlloy, MineralWithQuantity} from "@/functions/algorithm";
 import {capitaliseFirstLetterOfEachWord, getBaseMineralFromOverride} from "@/functions/utils";
 import {Alloy, AlloyComponent, Mineral, MineralUse} from "@/types";
@@ -182,7 +182,7 @@ export function AlloyComponentDisplay({alloy} : Readonly<AlloyDisplayProps>) {
 					</div>
 
 					<ErrorComponent error={error}/>
-					{isReadyToShowOutputs && <OutputResultComponent output={result} mbPerIngot={mbPerIngot}/>}
+					{isReadyToShowOutputs && <OutputResult output={result} mbPerIngot={mbPerIngot}/>}
 
 					{isReadyToShowInputs && <div className="bg-white text-black rounded-lg shadow p-6">
 						<h2 className="text-xl text-center font-bold mb-4">INPUT</h2>
