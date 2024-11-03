@@ -5,10 +5,7 @@ import {LoadingSpinner} from "@/components/LoadingSpinner";
 import {BaseGameVersion, GameVersions, VersionType} from "@/types/gameversions";
 
 
-interface GameVersionSelectorProps {
-}
-
-export function GameVersionSelector({} : Readonly<GameVersionSelectorProps>) {
+export function GameVersionSelector() {
 	const router = useRouter();
 	const [options, setOptions] = useState<GameVersions | null>(null);
 	const [selectedType, setSelectedType] = useState<VersionType>("modpack");
