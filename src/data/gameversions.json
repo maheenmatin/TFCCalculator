@@ -1,0 +1,45 @@
+{
+  "modpack": [
+    {
+      "id": "terrafirmagreg",
+      "displayName": "TerraFirmaGreg Modern",
+      "version": "0.7.14",
+      "gameVersion": "1.20.x",
+      "constants": {
+        "ingotMb": 144,
+        "nuggetMb": 16,
+        "blockMb": 1296
+      },
+      "supported": true
+    },
+    {
+      "id": "terrafirmagreg",
+      "displayName": "TerraFirmaGreg Vintage",
+      "version": "4.5.5",
+      "gameVersion": "1.12.x",
+      "constants": {
+        "ingotMb": 144,
+        "nuggetMb": 16,
+        "blockMb": 1296
+      },
+      "supported": false
+    }
+  ],
+  "mod": [
+    {
+      "id": "terrafirmacraft",
+      "displayName": "TerraFirmaCraft",
+      "version": "3.2.9",
+      "gameVersion": "1.20.1",
+      "constants": {
+        "ingotMb": 144,
+        "nuggetMb": 16,
+        "blockMb": 1296
+      },
+      "supported": false
+    }
+  ],
+  "lastUpdated": "2024-11-01",
+  "version": "1.0.0",
+  "schemaVersion": "1"
+}
