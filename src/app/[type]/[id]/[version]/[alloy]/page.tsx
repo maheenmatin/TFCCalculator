@@ -3,6 +3,7 @@
 import {useParams} from "next/navigation";
 import {AlloyComponentDisplay} from "@/components/AlloyComponentDisplay";
 import {HeadingWithBackButton} from "@/components/HeadingWithBackButton";
+import {replaceUnderscoreWithSpace} from "@/functions/utils";
 
 
 export default function AlloyPage() {
@@ -17,7 +18,7 @@ export default function AlloyPage() {
 			>
 				<div className="max-w-6xl mx-auto">
 					<HeadingWithBackButton
-							title={alloyString.toUpperCase()}
+							title={replaceUnderscoreWithSpace(alloyString).toUpperCase()}
 							ariaPreviousScreenName="alloy selection"
 							handleBackURI={`/${type}/${id}/${version}/alloys`}
 					/>
