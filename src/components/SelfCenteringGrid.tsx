@@ -70,7 +70,7 @@ export function SelfCenteringGrid<T>(
 
 					return (
 							<div
-									key={index}
+									key={JSON.stringify(element)}
 									style={style}
 							>
 								{renderElement(element, index)}
