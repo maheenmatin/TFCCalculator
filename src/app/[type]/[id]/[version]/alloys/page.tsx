@@ -7,6 +7,7 @@ import {SelfCenteringGrid} from "@/components/SelfCenteringGrid";
 import React, {useCallback, useEffect, useState} from "react";
 import {ErrorComponent} from "@/components/ErrorComponent";
 import {LoadingSpinner} from "@/components/LoadingSpinner";
+import {capitaliseFirstLetterOfEachWord} from "@/functions/utils";
 
 
 export default function Home() {
@@ -46,18 +47,22 @@ export default function Home() {
 				});
 	}, [type, id, version]);
 
-	const renderAlloyButton = useCallback((alloy : Alloy) => (
-			<button
-					key={alloy.name}
-					className="w-full aspect-square flex items-center justify-center p-4 rounded-lg shadow-md bg-teal-100 hover:bg-teal-200 transition-colors duration-200"
-					onClick={() => handleAlloySelect(alloy)}
-					aria-label={`Select ${alloy.name} alloy`}
-			>
+	const renderAlloyButton = useCallback((alloy : Alloy) => {
+		const displayAlloyName = capitaliseFirstLetterOfEachWord(alloy.name);
+
+		return (
+				<button
+						key={alloy.name}
+						className="w-full aspect-square flex items-center justify-center p-4 rounded-lg shadow-md bg-teal-100 hover:bg-teal-200 transition-colors duration-200"
+						onClick={() => handleAlloySelect(alloy)}
+						aria-label={`Select ${displayAlloyName} alloy`}
+				>
             <span className="text-center text-black text-lg font-bold">
-                {alloy.name}
+                {displayAlloyName}
             </span>
-			</button>
-	), [handleAlloySelect]);
+				</button>
+		);
+	}, [handleAlloySelect]);
 
 	return (
 			<main
