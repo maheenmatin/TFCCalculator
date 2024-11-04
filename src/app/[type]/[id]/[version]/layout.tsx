@@ -34,7 +34,7 @@ export async function generateMetadata({params} : ParamProps) : Promise<Metadata
 		openGraph : {
 			title,
 			description,
-			url : "https://tfg-calculator.vercel.app/",
+			url : "https://tfc-calculator.devmarcel.net/",
 			siteName : "TerraFirmaCraft Alloy Calculator",
 			images : [
 				{
