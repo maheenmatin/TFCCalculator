@@ -9,7 +9,8 @@ export async function GET() {
 					<div
 							style={{
 								display : "flex",
-								background : "#f6f6f6",
+								background : "#161616",
+								color : "#D9FFF8",
 								width : "1200px",
 								height : "630px",
 								alignItems : "center",
@@ -22,40 +23,34 @@ export async function GET() {
 									display : "flex",
 									flexDirection : "column",
 									alignItems : "center",
-									gap : "24px"
 								}}
 						>
 							<div
 									style={{
-										display : "flex",
-										imageRendering : "pixelated",
-										width : "256px",
-										height : "256px"
+										display: "flex",
+										width: "256px",
+										height: "256px",
+										marginBottom: "24px",
 									}}
 							>
 								{/* eslint-disable-next-line @next/next/no-img-element */}
 								<img
-										src="https://tfg-calculator.vercel.app/favicon.ico"
+										src="http://localhost:3000/img/icon/icon_256.png"
 										alt="TFC Alloy Calculator Logo"
-										width={"256"}
-										height={"256"}
-										style={{
-											imageRendering : "pixelated"
-										}}
 								/>
 							</div>
 							<h1
 									style={{
-										fontSize : "64px",
-										color : "#333"
+										fontSize : "68px",
+										marginBottom: "-12px",
 									}}
 							>
 								TerraFirmaCraft Alloy Calculator
 							</h1>
 							<p
 									style={{
-										fontSize : "32px",
-										color : "#666"
+										fontSize : "24px",
+										color : "#84AFA7"
 									}}
 							>
 								A simple website to calculate minerals required for alloy compositions!
