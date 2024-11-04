@@ -3,12 +3,13 @@
 ![Bug Badge](https://sonarcloud.io/api/project_badges/measure?project=TFGCalculator&metric=bugs)
 ![Tech Debt Badge](https://sonarcloud.io/api/project_badges/measure?project=TFGCalculator&metric=sqale_index)
 
-# TeraFirmaGreg Alloy Calculator
+# TerraFirmaCraft Alloy Calculator
 
 ## Project is available at:<br/>https://tfc-calculator.devmarcel.net/
 
 ## 📖 Table of Contents
 - [About](#-about)
+- [Support](#-support)
 - [Features](#-features)
 - [Usage](#%EF%B8%8F-usage)
 - [Contributing](#-contributing)
@@ -17,12 +18,18 @@
 - [License](#-license)
 
 ## 🔍 About
-The TerafirmaGreg Alloy Calculator is a powerful tool designed to help players calculate alloy compositions for the TeraFirmaGreg modpack.
+The TerraFirmaCraft Alloy Calculator is a powerful tool designed to help players calculate alloy compositions for the TerraFirmaCraft modpack.
 This calculator streamlines the process of determining optimal alloy ratios, saving time and resources.
+
+## ⚙️ Support
+At present the calculator supports:
+- TerraFirmaGreg 1.20.x - Up to date with version 0.7.14
+
+**Further support for TerraFirmaGreg 1.12.x and TerraFirmaCraft modpacks is planned for future releases!**
 
 ## ✨ Features
 - **Inventory Based**: Input what you have available, and the calculator does the rest!
-- **Accurate**: Precise calculations based on the latest TeraFirmaGreg alloys and minerals
+- **Accurate**: Precise calculations based on the latest TerraFirmaCraft alloys and minerals
 - **Time-saving**: Quickly determine the optimal alloy compositions
 - **No Waste**: Calculated alloy composition creates no leftover metal
 
@@ -32,7 +39,7 @@ This calculator streamlines the process of determining optimal alloy ratios, sav
 3. View the calculated optimal composition
 
 ## 👥 Contributing
-Contributions to the TeraFirmaGreg Alloy Calculator are more than welcome!
+Contributions to the TerraFirmaCraft Alloy Calculator are more than welcome!
 
 Here's how you can help:
 1. Fork the repository
