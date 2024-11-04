@@ -2,6 +2,9 @@
 User-agent: *
 Allow: /
 
+# Crawling
+googleBot: crawl/true
+
 # Host
 Host: https://tfg-calculator.vercel.app/
 
