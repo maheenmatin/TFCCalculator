@@ -5,7 +5,7 @@
 
 # TeraFirmaGreg Alloy Calculator
 
-## Project is available at:<br/>https://tfg-calculator.vercel.app/
+## Project is available at:<br/>https://tfc-calculator.devmarcel.net/
 
 ## 📖 Table of Contents
 - [About](#-about)
