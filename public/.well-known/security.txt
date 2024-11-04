@@ -2,4 +2,4 @@
 Contact: https://github.com/Supermarcel10/TFGCalculator/security
 Preferred-Languages: en
 
-Canonical: https://tfg-calculator.vercel.app/.well-known/security.txt
+Canonical: https://tfc-calculator.devmarcel.net/.well-known/security.txt

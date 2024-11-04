@@ -6,7 +6,7 @@ Allow: /
 googleBot: crawl/true
 
 # Host
-Host: https://tfg-calculator.vercel.app/
+Host: https://tfc-calculator.devmarcel.net/
 
 # Sitemaps
-Sitemap: https://tfg-calculator.vercel.app/sitemap.xml
+Sitemap: https://tfc-calculator.devmarcel.net/sitemap.xml
