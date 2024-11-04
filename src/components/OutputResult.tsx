@@ -10,7 +10,7 @@ interface OutputResultProps {
 	mbPerIngot : number;
 }
 
-export function OutputResultComponent({output, mbPerIngot} : Readonly<OutputResultProps>) {
+export function OutputResult({output, mbPerIngot} : Readonly<OutputResultProps>) {
 	if (!output) return;
 
 	const success = output.success;

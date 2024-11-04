@@ -1,7 +1,7 @@
 {
 	"alloys": [
 		{
-			"name": "Brass",
+			"name": "brass",
 			"components": [
 				{
 					"mineral": "copper",
@@ -16,7 +16,7 @@
 			]
 		},
 		{
-			"name": "Bronze",
+			"name": "bronze",
 			"components": [
 				{
 					"mineral": "copper",
@@ -31,7 +31,7 @@
 			]
 		},
 		{
-			"name": "Black Bronze",
+			"name": "black_bronze",
 			"components": [
 				{
 					"mineral": "copper",
@@ -51,7 +51,7 @@
 			]
 		},
 		{
-			"name": "Bismuth Bronze",
+			"name": "bismuth_bronze",
 			"components": [
 				{
 					"mineral": "copper",
@@ -71,7 +71,7 @@
 			]
 		},
 		{
-			"name": "Red Alloy",
+			"name": "red_alloy",
 			"components": [
 				{
 					"mineral": "copper",
@@ -88,7 +88,7 @@
 			]
 		},
 		{
-			"name": "Red Steel",
+			"name": "red_steel",
 			"components": [
 				{
 					"mineral": "steel",
@@ -113,7 +113,7 @@
 			]
 		},
 		{
-			"name": "Rose Gold",
+			"name": "rose_gold",
 			"components": [
 				{
 					"mineral": "copper",
@@ -128,7 +128,7 @@
 			]
 		},
 		{
-			"name": "Sterling Silver",
+			"name": "sterling_silver",
 			"components": [
 				{
 					"mineral": "copper",
@@ -143,7 +143,7 @@
 			]
 		},
 		{
-			"name": "Tin Alloy",
+			"name": "tin_alloy",
 			"components": [
 				{
 					"mineral": "tin",
@@ -158,7 +158,7 @@
 			]
 		},
 		{
-			"name": "Weak Blue Steel",
+			"name": "weak_blue_steel",
 			"components": [
 				{
 					"mineral": "steel",
@@ -183,7 +183,7 @@
 			]
 		},
 		{
-			"name": "Weak Steel",
+			"name": "weak_steel",
 			"components": [
 				{
 					"mineral": "steel",

@@ -1,9 +1,10 @@
-import alloysJson from "@/data/alloys.json";
-import mineralsJson from "@/data/minerals.json";
 import {Alloy, Mineral, MineralUse} from "@/types";
 import {NextResponse} from "next/server";
+import alloysJson from "@/data/alloys.json";
+import mineralsJson from "@/data/minerals.json";
 
-
+// TODO: Restrcture JSON file to be reusable for different versions.
+// TODO: Use the JSON file to pull out specific information.
 export async function GET(
 		request : Request,
 		{params} : { params : { alloyName : string } }
@@ -28,10 +29,10 @@ export async function GET(
 			return null;
 		}
 
-		const mineralsWithProduces: Mineral[] = rawMinerals.map((mineral) => ({
+		const mineralsWithProduces : Mineral[] = rawMinerals.map((mineral) => ({
 			...mineral,
-			produces: component.mineral,
-			uses: mineral.uses ? toMineralUses(mineral.uses) : undefined,
+			produces : component.mineral,
+			uses : mineral.uses ? toMineralUses(mineral.uses) : undefined
 		}));
 
 		return mineralsWithProduces.filter((mineral) => {
@@ -43,14 +44,22 @@ export async function GET(
 		});
 	}).filter((m) : m is NonNullable<typeof m> => m !== null);
 
-	return NextResponse.json(alloyMinerals);
+	const response = {
+		alloy : {
+			name : alloy.name,
+			components : alloy.components
+		},
+		minerals : alloyMinerals
+	};
+
+	return NextResponse.json(response);
 }
 
 /**
  * Utility function to convert string mineral uses to enums.
  * @param uses array of mineral uses as strings.
  */
-function toMineralUses(uses: string[]): MineralUse[] {
+function toMineralUses(uses : string[]) : MineralUse[] {
 	const validUses = Object.values(MineralUse) as string[];
 	return uses
 			.filter((use) => validUses.includes(use))
