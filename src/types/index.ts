@@ -9,6 +9,7 @@ export interface Component {
 export interface Alloy {
 	name : string;
 	components : Component[];
+	producible? : boolean;
 }
 
 export enum MineralUse {
