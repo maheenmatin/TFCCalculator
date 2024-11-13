@@ -1,10 +1,10 @@
-import {Mineral} from "@/types";
+import {RawMineral} from "@/types";
 import React, {useState} from "react";
 
 
 interface MineralAccordionProps {
 	title: string;
-	minerals: Mineral[];
+	minerals: RawMineral[];
 	mineralQuantities: Map<string, number>;
 	onQuantityChange: (mineralName: string, e: React.ChangeEvent<HTMLInputElement>) => void;
 	onInputKeyPress: (e: React.KeyboardEvent) => Promise<void>;

@@ -1,10 +1,10 @@
 import {calculateAlloy, MineralWithQuantity} from "@/functions/algorithm";
-import {Alloy, Mineral} from "@/types";
+import {Alloy, RawMineral} from "@/types";
 
 
-const smallTinVariant : Mineral = { name: 'small tin variant', produces: 'tin', yield: 16 };
-const mediumCopperVariant : Mineral = { name: 'medium copper variant', produces: 'copper', yield: 24 };
-const largeCopperVariant : Mineral = { name: 'large copper variant', produces: 'copper', yield: 36 };
+const smallTinVariant : RawMineral = { name: 'small tin variant', produces: 'tin', yield: 16 };
+const mediumCopperVariant : RawMineral = { name: 'medium copper variant', produces: 'copper', yield: 24 };
+const largeCopperVariant : RawMineral = { name: 'large copper variant', produces: 'copper', yield: 36 };
 
 describe('calculateAlloy algorithm', () => {
 	const bronzeAlloy: Alloy = {

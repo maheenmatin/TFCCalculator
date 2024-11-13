@@ -1,8 +1,8 @@
-import {Alloy, AlloyComponent, Mineral} from "@/types";
+import {Alloy, Component, RawMineral} from "@/types";
 
 
 export interface MineralWithQuantity {
-	mineral: Mineral;
+	mineral: RawMineral;
 	quantity: number;
 }
 
@@ -59,7 +59,7 @@ function calculateAvailableMbByType(mineralsByType : Map<string, MineralWithQuan
 
 function findValidCombination(
 		targetMb: number,
-		components: AlloyComponent[],
+		components: Component[],
 		mineralsByType: Map<string, MineralWithQuantity[]>
 ): MineralWithQuantity[] | null {
 	 /**

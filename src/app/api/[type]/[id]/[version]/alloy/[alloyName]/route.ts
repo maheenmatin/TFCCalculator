@@ -1,4 +1,4 @@
-import {Alloy, Mineral, MineralUse} from "@/types";
+import {Alloy, RawMineral, MineralUse} from "@/types";
 import {NextResponse} from "next/server";
 import alloysJson from "@/data/alloys.json";
 import mineralsJson from "@/data/minerals.json";
@@ -29,7 +29,7 @@ export async function GET(
 			return null;
 		}
 
-		const mineralsWithProduces : Mineral[] = rawMinerals.map((mineral) => ({
+		const mineralsWithProduces : RawMineral[] = rawMinerals.map((mineral) => ({
 			...mineral,
 			produces : component.mineral,
 			uses : mineral.uses ? toMineralUses(mineral.uses) : undefined

@@ -1,4 +1,4 @@
-export interface AlloyComponent {
+export interface Component {
 	mineral : string;
 	hasIngot? : boolean;
 	hasNugget? : boolean;
@@ -8,7 +8,7 @@ export interface AlloyComponent {
 
 export interface Alloy {
 	name : string;
-	components : AlloyComponent[];
+	components : Component[];
 }
 
 export enum MineralUse {
@@ -18,7 +18,7 @@ export enum MineralUse {
 	BlastFurnace = "blast_furnace"
 }
 
-export interface Mineral {
+export interface RawMineral {
 	name : string;
 	produces : string;
 	yield : number;
