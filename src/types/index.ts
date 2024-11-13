@@ -1,3 +1,9 @@
+export interface SmeltingOutput {
+	name : string;
+	components : SmeltingComponent[];
+	producible? : boolean;
+}
+
 export interface SmeltingComponent {
 	mineral : string;
 	hasIngot? : boolean;
@@ -6,10 +12,11 @@ export interface SmeltingComponent {
 	max : number;
 }
 
-export interface SmeltingOutput {
+export interface InputMineral {
 	name : string;
-	components : SmeltingComponent[];
-	producible? : boolean;
+	produces : string;
+	yield : number;
+	uses? : MineralUseCase[];
 }
 
 export enum MineralUseCase {
@@ -17,11 +24,4 @@ export enum MineralUseCase {
 	Crucible = "crucible",
 	Bloomery = "bloomery",
 	BlastFurnace = "blast_furnace"
-}
-
-export interface InputMineral {
-	name : string;
-	produces : string;
-	yield : number;
-	uses? : MineralUseCase[];
 }
