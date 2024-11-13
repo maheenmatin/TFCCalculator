@@ -1,4 +1,4 @@
-export interface Component {
+export interface SmeltingComponent {
 	mineral : string;
 	hasIngot? : boolean;
 	hasNugget? : boolean;
@@ -6,22 +6,22 @@ export interface Component {
 	max : number;
 }
 
-export interface Alloy {
+export interface SmeltingOutput {
 	name : string;
-	components : Component[];
+	components : SmeltingComponent[];
 	producible? : boolean;
 }
 
-export enum MineralUse {
+export enum MineralUseCase {
 	Vessel = "vessel",
 	Crucible = "crucible",
 	Bloomery = "bloomery",
 	BlastFurnace = "blast_furnace"
 }
 
-export interface RawMineral {
+export interface InputMineral {
 	name : string;
 	produces : string;
 	yield : number;
-	uses? : MineralUse[];
+	uses? : MineralUseCase[];
 }

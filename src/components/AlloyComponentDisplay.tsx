@@ -3,7 +3,7 @@ import {MineralAccordion} from "@/components/MineralAccordion";
 import {OutputResult} from "@/components/OutputResult";
 import {AlloyProductionResult, calculateAlloy, MineralWithQuantity} from "@/functions/algorithm";
 import {capitaliseFirstLetterOfEachWord, getBaseMineralFromOverride} from "@/functions/utils";
-import {Alloy, Component, RawMineral, MineralUse} from "@/types";
+import {SmeltingOutput, SmeltingComponent, InputMineral, MineralUseCase} from "@/types";
 import React, {useEffect, useState} from "react";
 import {useParams} from "next/navigation";
 
@@ -15,8 +15,8 @@ interface AlloyDisplayProps {
 export function AlloyComponentDisplay({alloy} : Readonly<AlloyDisplayProps>) {
 	const {type, id, version} = useParams();
 
-	const [alloyMixture, setAlloyMixture] = useState<Alloy | null>(null);
-	const [alloyMinerals, setAlloyMinerals] = useState<RawMineral[]>([]);
+	const [alloyMixture, setAlloyMixture] = useState<SmeltingOutput | null>(null);
+	const [alloyMinerals, setAlloyMinerals] = useState<InputMineral[]>([]);
 	const [targetIngotCount, setTargetIngotCount] = useState<number>(0);
 	const [mineralQuantities, setMineralQuantities] = useState<Map<string, number>>(new Map());
 
@@ -111,10 +111,10 @@ export function AlloyComponentDisplay({alloy} : Readonly<AlloyDisplayProps>) {
 	// Group minerals by what they produce
 	const groupedMinerals = React.useMemo(() => {
 		if (!alloyMinerals) {
-			return new Map<string, RawMineral[]>();
+			return new Map<string, InputMineral[]>();
 		}
 
-		const grouped = new Map<string, RawMineral[]>();
+		const grouped = new Map<string, InputMineral[]>();
 		alloyMinerals.forEach(mineral => {
 			const produces = mineral.produces.toLowerCase();
 			if (!grouped.has(produces)) {
@@ -134,35 +134,35 @@ export function AlloyComponentDisplay({alloy} : Readonly<AlloyDisplayProps>) {
 			&& !isResultAlteredSinceLastCalculation
 			&& !error;
 
-	const ingotOverride = (mineral : string) : RawMineral => {
+	const ingotOverride = (mineral : string) : InputMineral => {
 		return {
 			name : `${capitaliseFirstLetterOfEachWord(mineral)} Ingot`,
 			produces : mineral,
 			yield : mbPerIngot,
 			uses : [
-				MineralUse.Vessel,
-				MineralUse.Crucible
+				MineralUseCase.Vessel,
+				MineralUseCase.Crucible
 			]
 		};
 	};
 
-	const nuggetOverride = (mineral : string) : RawMineral => {
+	const nuggetOverride = (mineral : string) : InputMineral => {
 		return {
 			name : `${capitaliseFirstLetterOfEachWord(mineral)} Nugget`,
 			produces : mineral,
 			yield : mbPerNugget,
 			uses : [
-				MineralUse.Vessel,
-				MineralUse.Crucible
+				MineralUseCase.Vessel,
+				MineralUseCase.Crucible
 			]
 		};
 	};
 
-	function componentIngotAvailable(component : Component) : boolean {
+	function componentIngotAvailable(component : SmeltingComponent) : boolean {
 		return component.hasIngot == null || component.hasIngot;
 	}
 
-	function componentNugetAvailable(component : Component) : boolean {
+	function componentNugetAvailable(component : SmeltingComponent) : boolean {
 		return component.hasNugget == null || component.hasNugget;
 	}
 

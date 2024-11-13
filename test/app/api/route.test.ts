@@ -1,5 +1,5 @@
 import {GET} from "@/api/alloy/route";
-import {Alloy} from "@/types";
+import {SmeltingOutput} from "@/types";
 import {NextResponse} from 'next/server';
 import alloys from '@/data/alloys.json';
 
@@ -14,6 +14,6 @@ describe('GET api/alloys/', () => {
 	it('should return 200 with all alloys as JSON', async() => {
 		await GET();
 
-		expect(NextResponse.json).toHaveBeenCalledWith((alloys as { alloys: Alloy[] }).alloys);
+		expect(NextResponse.json).toHaveBeenCalledWith((alloys as { alloys: SmeltingOutput[] }).alloys);
 	});
 });

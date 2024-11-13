@@ -1,8 +1,8 @@
-import {Alloy, Component, RawMineral} from "@/types";
+import {SmeltingOutput, SmeltingComponent, InputMineral} from "@/types";
 
 
 export interface MineralWithQuantity {
-	mineral: RawMineral;
+	mineral: InputMineral;
 	quantity: number;
 }
 
@@ -59,7 +59,7 @@ function calculateAvailableMbByType(mineralsByType : Map<string, MineralWithQuan
 
 function findValidCombination(
 		targetMb: number,
-		components: Component[],
+		components: SmeltingComponent[],
 		mineralsByType: Map<string, MineralWithQuantity[]>
 ): MineralWithQuantity[] | null {
 	 /**
@@ -203,7 +203,7 @@ function findValidCombination(
 
 export function calculateAlloy(
 		targetMb: number,
-		targetAlloy: Alloy,
+		targetAlloy: SmeltingOutput,
 		availableMinerals: MineralWithQuantity[]
 ): AlloyProductionResult {
 	const targetAlloyComponents = targetAlloy.components;

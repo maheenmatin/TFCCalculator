@@ -1,4 +1,4 @@
-import {Alloy, RawMineral, MineralUse} from "@/types";
+import {SmeltingOutput, InputMineral, MineralUseCase} from "@/types";
 import {NextResponse} from "next/server";
 import alloysJson from "@/data/alloys.json";
 import mineralsJson from "@/data/minerals.json";
@@ -13,7 +13,7 @@ export async function GET(
 	const {searchParams} = new URL(request.url);
 	const uses = searchParams.getAll("uses");
 
-	const alloyList = alloysJson.alloys as Alloy[];
+	const alloyList = alloysJson.alloys as SmeltingOutput[];
 	const alloy = alloyList.find(
 			(a) => a.name.toLowerCase() === decodeURIComponent(alloyName).toLowerCase()
 	);
@@ -29,7 +29,7 @@ export async function GET(
 			return null;
 		}
 
-		const mineralsWithProduces : RawMineral[] = rawMinerals.map((mineral) => ({
+		const mineralsWithProduces : InputMineral[] = rawMinerals.map((mineral) => ({
 			...mineral,
 			produces : component.mineral,
 			uses : mineral.uses ? toMineralUses(mineral.uses) : undefined
@@ -40,7 +40,7 @@ export async function GET(
 				return true;
 			}
 
-			return uses.some((use) => mineral.uses?.includes(use as MineralUse));
+			return uses.some((use) => mineral.uses?.includes(use as MineralUseCase));
 		});
 	}).filter((m) : m is NonNullable<typeof m> => m !== null);
 
@@ -59,9 +59,9 @@ export async function GET(
  * Utility function to convert string mineral uses to enums.
  * @param uses array of mineral uses as strings.
  */
-function toMineralUses(uses : string[]) : MineralUse[] {
-	const validUses = Object.values(MineralUse) as string[];
+function toMineralUses(uses : string[]) : MineralUseCase[] {
+	const validUses = Object.values(MineralUseCase) as string[];
 	return uses
 			.filter((use) => validUses.includes(use))
-			.map((use) => use as MineralUse);
+			.map((use) => use as MineralUseCase);
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import {Alloy} from "@/types";
+import {SmeltingOutput} from "@/types";
 import {useParams, useRouter} from "next/navigation";
 import {HeadingWithBackButton} from "@/components/HeadingWithBackButton";
 import {SelfCenteringGrid} from "@/components/SelfCenteringGrid";
@@ -14,11 +14,11 @@ export default function Home() {
 	const router = useRouter();
 	const {type, id, version} = useParams();
 
-	const [alloys, setAlloys] = useState<Alloy[]>([]);
+	const [alloys, setAlloys] = useState<SmeltingOutput[]>([]);
 	const [isLoading, setIsLoading] = useState(true);
 	const [error, setError] = useState<string | null>(null);
 
-	const handleAlloySelect = useCallback((alloy : Alloy) => {
+	const handleAlloySelect = useCallback((alloy : SmeltingOutput) => {
 		router.push(`/${type}/${id}/${version}/${alloy.name}`);
 	}, [router, type, id, version]);
 
@@ -41,7 +41,7 @@ export default function Home() {
 				});
 	}, [type, id, version]);
 
-	const renderAlloyButton = useCallback((alloy : Alloy) => {
+	const renderAlloyButton = useCallback((alloy : SmeltingOutput) => {
 		const displayAlloyName = capitaliseFirstLetterOfEachWord(alloy.name);
 
 		return (
