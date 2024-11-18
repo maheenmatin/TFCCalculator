@@ -8,24 +8,24 @@ type ParamProps = {
 		type : string;
 		id : string;
 		version : string;
-		alloy? : string
+		metal? : string
 	};
 };
 
 export async function generateMetadata({params} : ParamProps) : Promise<Metadata> {
-	const alloyName = params.alloy
-	                  ? capitaliseFirstLetterOfEachWord(params.alloy)
+	const metalName = params.metal
+	                  ? capitaliseFirstLetterOfEachWord(params.metal)
 	                  : null;
 
-	const baseTitle = "TerraFirmaCraft Alloy Calculator";
-	const shortHandTitle = "TFC Alloy Calculator";
-	const title = alloyName
-	              ? `${alloyName} - ${shortHandTitle}`
+	const baseTitle = "TerraFirmaCraft Metal Calculator";
+	const shortHandTitle = "TFC Metal Calculator";
+	const title = metalName
+	              ? `${metalName} - ${shortHandTitle}`
 	              : baseTitle;
 
-	const baseDescription = "A simple website to calculate minerals required for alloy compositions!";
-	const description = alloyName
-	                    ? `Calculate the mineral requirements for ${alloyName}.`
+	const baseDescription = "A simple website to calculate minerals required for metal compositions!";
+	const description = metalName
+	                    ? `Calculate the mineral requirements for ${metalName}.`
 	                    : baseDescription;
 
 	return {
@@ -35,13 +35,13 @@ export async function generateMetadata({params} : ParamProps) : Promise<Metadata
 			title,
 			description,
 			url : "https://tfc-calculator.devmarcel.net/",
-			siteName : "TerraFirmaCraft Alloy Calculator",
+			siteName : "TerraFirmaCraft Metal Calculator",
 			images : [
 				{
 					url : "/api/og",
 					width : 1200,
 					height : 630,
-					alt : "TFC Alloy Calculator Cover"
+					alt : "TFC Metal Calculator Cover"
 				}
 			],
 			locale : "en_US",

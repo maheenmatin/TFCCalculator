@@ -1,4 +1,4 @@
-import { GET } from '@/api/alloy/[material]/route';
+import { GET } from '@/api/metal/[metal]/route';
 
 
 // Mock Request
@@ -14,17 +14,17 @@ jest.mock('next/server', () => ({
 	},
 }));
 
-// Mock production alloys JSON
-jest.mock('@/data/alloys.json', () => ({
-	alloys: [
+// Mock production metals JSON
+jest.mock('@/data/metals.json', () => ({
+	metals: [
 		{ name: 'Stainless Steel', composition: { iron: 98, carbon: 2 } },
 		{ name: 'Bronze', composition: { copper: 88, tin: 12 } },
 	],
 }));
 
-describe('GET /api/alloy/[material]', () => {
-	it('should return alloy data when alloy exists', async() => {
-		const params = { params: { alloyName: encodeURIComponent('Bronze') } };
+describe('GET /api/metal/[metal]', () => {
+	it('should return metal data when metal exists', async() => {
+		const params = { params: { metalName: encodeURIComponent('Bronze') } };
 
 		const response = await GET(mockRequest, params);
 		const data = await response.json();
@@ -33,18 +33,18 @@ describe('GET /api/alloy/[material]', () => {
 		expect(data).toEqual({ name: 'Bronze', composition: { copper: 88, tin: 12 } });
 	});
 
-	it('should return 404 when alloy does not exist', async() => {
-		const params = { params: { alloyName: encodeURIComponent('nonexistent') } };
+	it('should return 404 when metal does not exist', async() => {
+		const params = { params: { metalName: encodeURIComponent('nonexistent') } };
 
 		const response = await GET(mockRequest, params);
 		const data = await response.json();
 
 		expect(response.status).toBe(404);
-		expect(data).toEqual({ error: 'Alloy not found' });
+		expect(data).toEqual({ error: 'Metal not found' });
 	});
 
-	it('should return alloy data while being case-insensitive', async() => {
-		const params = { params: { alloyName: encodeURIComponent('BrOnZe') } };
+	it('should return metal data while being case-insensitive', async() => {
+		const params = { params: { metalName: encodeURIComponent('BrOnZe') } };
 
 		const response = await GET(mockRequest, params);
 		const data = await response.json();
@@ -53,8 +53,8 @@ describe('GET /api/alloy/[material]', () => {
 		expect(data).toEqual({ name: 'Bronze', composition: { copper: 88, tin: 12 } });
 	});
 
-	it('should decode alloy names when a misc character is present', async()=> {
-		const params = { params: { alloyName: encodeURIComponent('Stainless Steel') } };
+	it('should decode metal names when a misc character is present', async()=> {
+		const params = { params: { metalName: encodeURIComponent('Stainless Steel') } };
 
 		const response = await GET(mockRequest, params);
 		const data = await response.json();

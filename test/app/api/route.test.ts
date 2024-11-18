@@ -1,7 +1,7 @@
-import {GET} from "@/api/alloy/route";
+import {GET} from "@/api/metal/route";
 import {SmeltingOutput} from "@/types";
 import {NextResponse} from 'next/server';
-import alloys from '@/data/alloys.json';
+import metals from '@/data/metals.json';
 
 
 jest.mock('next/server', () => ({
@@ -10,10 +10,10 @@ jest.mock('next/server', () => ({
 	},
 }));
 
-describe('GET api/alloys/', () => {
-	it('should return 200 with all alloys as JSON', async() => {
+describe('GET api/metals/', () => {
+	it('should return 200 with all metals as JSON', async() => {
 		await GET();
 
-		expect(NextResponse.json).toHaveBeenCalledWith((alloys as { alloys: SmeltingOutput[] }).alloys);
+		expect(NextResponse.json).toHaveBeenCalledWith((metals as { metals: SmeltingOutput[] }).metals);
 	});
 });

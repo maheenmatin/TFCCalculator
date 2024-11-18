@@ -1,4 +1,4 @@
-import {calculateAlloy, MineralWithQuantity} from "@/functions/algorithm";
+import {calculateMetal, MineralWithQuantity} from "@/functions/algorithm";
 import {SmeltingOutput, InputMineral} from "@/types";
 
 
@@ -6,8 +6,8 @@ const smallTinVariant : InputMineral = { name: 'small tin variant', produces: 't
 const mediumCopperVariant : InputMineral = { name: 'medium copper variant', produces: 'copper', yield: 24 };
 const largeCopperVariant : InputMineral = { name: 'large copper variant', produces: 'copper', yield: 36 };
 
-describe('calculateAlloy algorithm', () => {
-	const bronzeAlloy: SmeltingOutput = {
+describe('calculateMetal algorithm', () => {
+	const bronzeMetal: SmeltingOutput = {
 		name: 'Bronze',
 		components: [
 			{
@@ -30,7 +30,7 @@ describe('calculateAlloy algorithm', () => {
 			{mineral: largeCopperVariant, quantity: 6}
 		];
 
-		const result = calculateAlloy(432, bronzeAlloy, availableMinerals);
+		const result = calculateMetal(432, bronzeMetal, availableMinerals);
 
 		expect(result.success).toBe(true);
 		expect(result.outputMb).toBe(432);
@@ -49,7 +49,7 @@ describe('calculateAlloy algorithm', () => {
 			{mineral: largeCopperVariant, quantity: 60}
 		];
 
-		const result = calculateAlloy(432, bronzeAlloy, availableMinerals);
+		const result = calculateMetal(432, bronzeMetal, availableMinerals);
 
 		expect(result.success).toBe(true);
 		expect(result.outputMb).toBe(432);
@@ -70,7 +70,7 @@ describe('calculateAlloy algorithm', () => {
 			{mineral: {name: 'medium-large copper variant', produces: 'copper', yield: 48}, quantity: 6},
 		];
 
-		const result = calculateAlloy(432, bronzeAlloy, availableMinerals);
+		const result = calculateMetal(432, bronzeMetal, availableMinerals);
 
 		expect(result.success).toBe(true);
 		expect(result.outputMb).toBe(432);
@@ -89,7 +89,7 @@ describe('calculateAlloy algorithm', () => {
 			{mineral: {name: 'large lead variant', produces: 'lead', yield: 48}, quantity: 3},
 		];
 
-		const result = calculateAlloy(432, bronzeAlloy, availableMinerals);
+		const result = calculateMetal(432, bronzeMetal, availableMinerals);
 
 		expect(result.success).toBe(true);
 		expect(result.outputMb).toBe(432);
@@ -98,7 +98,7 @@ describe('calculateAlloy algorithm', () => {
 	it('should return fail when no minerals provided', () => {
 		const availableMinerals: MineralWithQuantity[] = [];
 
-		const result = calculateAlloy(432, bronzeAlloy, availableMinerals);
+		const result = calculateMetal(432, bronzeMetal, availableMinerals);
 
 		expect(result.success).toBe(false);
 		expect(result.message).toContain('Not enough total material available');
@@ -111,7 +111,7 @@ describe('calculateAlloy algorithm', () => {
 			{mineral: largeCopperVariant, quantity: 6}
 		];
 
-		const result = calculateAlloy(432, bronzeAlloy, availableMinerals);
+		const result = calculateMetal(432, bronzeMetal, availableMinerals);
 
 		expect(result.success).toBe(false);
 		expect(result.message).toContain('Not enough total material available');
@@ -124,7 +124,7 @@ describe('calculateAlloy algorithm', () => {
 			{mineral: largeCopperVariant, quantity: 2}
 		];
 
-		const result = calculateAlloy(432, bronzeAlloy, availableMinerals);
+		const result = calculateMetal(432, bronzeMetal, availableMinerals);
 
 		expect(result.success).toBe(false);
 		expect(result.message).toContain('Not enough copper for minimum requirement');
@@ -136,7 +136,7 @@ describe('calculateAlloy algorithm', () => {
 			{mineral: largeCopperVariant, quantity: 8}
 		];
 
-		const result = calculateAlloy(432, bronzeAlloy, availableMinerals);
+		const result = calculateMetal(432, bronzeMetal, availableMinerals);
 
 		expect(result.success).toBe(false);
 		expect(result.message).toContain('Not enough tin for minimum requirement');
@@ -155,7 +155,7 @@ describe('calculateAlloy algorithm', () => {
 			}
 		];
 
-		const result = calculateAlloy(432, bronzeAlloy, availableMinerals);
+		const result = calculateMetal(432, bronzeMetal, availableMinerals);
 
 		expect(result.success).toBe(false);
 		expect(result.message).toContain('Could not find valid combination of materials');

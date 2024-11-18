@@ -36,7 +36,7 @@ export async function GET() {
 								{/* eslint-disable-next-line @next/next/no-img-element */}
 								<img
 										src="https://tfc-calculator.devmarcel.net/img/icon/icon_256.png"
-										alt="TFC Alloy Calculator Logo"
+										alt="TFC Metal Calculator Logo"
 								/>
 							</div>
 							<h1
@@ -45,7 +45,7 @@ export async function GET() {
 										marginBottom: "-12px",
 									}}
 							>
-								TerraFirmaCraft Alloy Calculator
+								TerraFirmaCraft Metal Calculator
 							</h1>
 							<p
 									style={{
@@ -53,7 +53,7 @@ export async function GET() {
 										color : "#84AFA7"
 									}}
 							>
-								A simple website to calculate minerals required for alloy compositions!
+								A simple website to calculate minerals required for metal compositions!
 							</p>
 						</div>
 					</div>

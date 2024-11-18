@@ -1,25 +1,25 @@
 import {SmeltingOutput, InputMineral, MineralUseCase} from "@/types";
 import {NextResponse} from "next/server";
-import alloysJson from "@/data/alloys.json";
+import metalsJson from "@/data/metals.json";
 import mineralsJson from "@/data/minerals.json";
 
 // TODO: Restrcture JSON file to be reusable for different versions.
 // TODO: Use the JSON file to pull out specific information.
 export async function GET(
 		request : Request,
-		{params} : { params : { material : string } }
+		{params} : { params : { metal : string } }
 ) {
-	const {material} = params;
+	const {metal} = params;
 	const {searchParams} = new URL(request.url);
 	const uses = searchParams.getAll("uses").map(use => use as MineralUseCase);
-	const decodedMaterial = decodeURIComponent(material).toLowerCase();
+	const decodedMetal = decodeURIComponent(metal).toLowerCase();
 
-	const mineralData = findMineralData(decodedMaterial);
-	if (mineralData) {
-		return handleMineralResponse(mineralData, uses);
+	const metalData = findMetalData(decodedMetal);
+	if (metalData) {
+		return handleMetalResponse(metalData, uses);
 	}
 
-	const alloyData = findAlloyData(decodedMaterial);
+	const alloyData = findAlloyData(decodedMetal);
 	if (!alloyData) {
 		return NextResponse.json(
 				{message : "Material not found"},
@@ -35,8 +35,8 @@ export async function GET(
  * @param name The lowercase name of the mineral to find.
  * @returns The mineral data if found, undefined otherwise.
  */
-function findMineralData(name : string) {
-	return alloysJson.minerals.find(m => m.name.toLowerCase() === name);
+function findMetalData(name : string) {
+	return metalsJson.metals.find(m => m.name.toLowerCase() === name);
 }
 
 /**
@@ -45,22 +45,22 @@ function findMineralData(name : string) {
  * @returns The alloy data if found, undefined otherwise.
  */
 function findAlloyData(name : string) {
-	return alloysJson.alloys.find(a => a.name.toLowerCase() === name);
+	return metalsJson.alloys.find(a => a.name.toLowerCase() === name);
 }
 
 /**
- * Processes and formats the response for a mineral request.
- * Creates a SmeltingOutput with 100% concentration of the mineral.
- * @param mineralData The raw mineral data from the JSON file.
+ * Processes and formats the response for a metal request.
+ * Creates a SmeltingOutput with 100% concentration of the metal.
+ * @param metalData The raw data from the JSON file.
  * @param uses Array of MineralUseCase to filter by.
- * @returns NextResponse containing formatted mineral data and associated minerals.
+ * @returns NextResponse containing formatted metal data and associated minerals.
  */
-function handleMineralResponse(mineralData : typeof alloysJson.minerals[0], uses : MineralUseCase[]) {
+function handleMetalResponse(metalData : typeof metalsJson.metals[0], uses : MineralUseCase[]) {
 	const mineral : SmeltingOutput = {
-		name : mineralData.name,
+		name : metalData.name,
 		components : [
 			{
-				mineral : mineralData.name,
+				mineral : metalData.name,
 				min : 100,
 				max : 100
 			}
@@ -68,12 +68,12 @@ function handleMineralResponse(mineralData : typeof alloysJson.minerals[0], uses
 		isMineral : true
 	};
 
-	const inputMinerals = getMineralsForComponent(mineralData.name, uses);
+	const minerals = getMineralsForComponent(metalData.name, uses);
 
 	return NextResponse.json(
 			{
 				material : mineral,
-				minerals : inputMinerals
+				minerals
 			}
 	);
 }
@@ -81,11 +81,11 @@ function handleMineralResponse(mineralData : typeof alloysJson.minerals[0], uses
 /**
  * Processes and formats the response for an alloy request.
  * Maps component minerals and applies use case filtering.
- * @param alloy The raw alloy data from the JSON file.
+ * @param alloy The raw data from the JSON file.
  * @param uses Array of MineralUseCase to filter by.
  * @returns NextResponse containing formatted alloy data and associated minerals.
  */
-function handleAlloyResponse(alloy : typeof alloysJson.alloys[0], uses : MineralUseCase[]) {
+function handleAlloyResponse(alloy : typeof metalsJson.alloys[0], uses : MineralUseCase[]) {
 	const alloyMinerals = alloy.components.flatMap(
 			component => getMineralsForComponent(component.mineral, uses))
 	                           .filter((m) : m is NonNullable<typeof m> => m !== null);
@@ -94,8 +94,7 @@ function handleAlloyResponse(alloy : typeof alloysJson.alloys[0], uses : Mineral
 			{
 				material : {
 					name : alloy.name,
-					components : alloy.components,
-					isMineral : false
+					components : alloy.components
 				},
 				minerals : alloyMinerals
 			}

@@ -1,5 +1,5 @@
 export enum CreationSelectionFilter {
 	All,
-	Minerals,
+	Metals,
 	Alloys
 }
