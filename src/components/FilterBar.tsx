@@ -45,7 +45,7 @@ export const FilterBar : React.FC<FilterBarProps> = (
 									key={option.value}
 									className={`flex-1 sm:flex-none px-3 sm:px-4 py-2 rounded-lg transition-colors duration-200 text-sm sm:text-base ${
 											filterType === option.value
-											? "bg-teal-500 text-white"
+											? "bg-teal-600 text-white hover:bg-teal-500"
 											: "bg-gray-300 text-black hover:bg-teal-200"
 									}`}
 									onClick={() => onFilterTypeChange(option.value)}
