@@ -40,8 +40,7 @@ export default function Home() {
 
 		if (searchTerm) {
 			const lowercaseSearch = searchTerm.toLowerCase();
-			result = result.filter(alloy =>
-					                       alloy.name.toLowerCase().includes(lowercaseSearch)
+			result = result.filter(alloy => alloy.name.toLowerCase().includes(lowercaseSearch)
 			);
 		}
 
@@ -69,13 +68,6 @@ export default function Home() {
 					setIsLoading(false);
 				});
 	}, [type, id, version]);
-
-	// const filterOptions = Object.values(CreationSelectionFilter)
-	//                             .filter(value => typeof value === "number")
-	//                             .map(value => ({
-	// 	                            value,
-	// 	                            label : CreationSelectionFilter[value]
-	//                             }));
 
 	const renderAlloyButton = useCallback((alloy : SmeltingOutput) => {
 		const displayAlloyName = capitaliseFirstLetterOfEachWord(alloy.name);
