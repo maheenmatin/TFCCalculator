@@ -11,8 +11,8 @@ export const metadata : Metadata = {
 	openGraph : {
 		title : "TerraFirmaCraft Alloy Calculator",
 		description : "A simple website to calculate minerals required for alloy compositions!",
-		url : "https:///tfg-calculator.vercel.app/",
 		siteName : "TerraFirmaCraft Alloy Calculator",
+		url : "https://tfc-calculator.devmarcel.net/",
 		images : [
 			{
 				url : "/api/og",
