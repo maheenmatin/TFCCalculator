@@ -1,4 +1,37 @@
 {
+  "minerals": [
+    {
+      "name": "bismuth"
+    },
+    {
+      "name": "copper"
+    },
+    {
+      "name": "gold"
+    },
+    {
+      "name": "iron"
+    },
+    {
+      "name": "nickel"
+    },
+    {
+      "name": "redstone",
+      "producible": false
+    },
+    {
+      "name": "silver"
+    },
+    {
+      "name": "steel"
+    },
+    {
+      "name": "tin"
+    },
+    {
+      "name": "zinc"
+    }
+  ],
 	"alloys": [
 		{
 			"name": "brass",

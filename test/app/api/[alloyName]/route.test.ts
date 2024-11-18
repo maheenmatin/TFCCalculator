@@ -1,4 +1,4 @@
-import { GET } from '@/api/alloy/[alloyName]/route';
+import { GET } from '@/api/alloy/[material]/route';
 
 
 // Mock Request
@@ -22,7 +22,7 @@ jest.mock('@/data/alloys.json', () => ({
 	],
 }));
 
-describe('GET /api/alloy/[alloyName]', () => {
+describe('GET /api/alloy/[material]', () => {
 	it('should return alloy data when alloy exists', async() => {
 		const params = { params: { alloyName: encodeURIComponent('Bronze') } };
 

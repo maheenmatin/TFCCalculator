@@ -44,7 +44,7 @@ export function AlloyComponentDisplay({alloy} : Readonly<AlloyDisplayProps>) {
 					return response.json();
 				})
 				.then(data => {
-					setAlloyMixture(data.alloy);
+					setAlloyMixture(data.material);
 					setAlloyMinerals(data.minerals);
 				})
 				.catch(error => {

@@ -1,7 +1,7 @@
 export interface SmeltingOutput {
 	name : string;
 	components : SmeltingComponent[];
-	isMineral? : boolean;
+	isMineral : boolean;
 	producible? : boolean;
 }
 
