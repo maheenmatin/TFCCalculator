@@ -8,6 +8,8 @@ import React, {useCallback, useEffect, useState} from "react";
 import {ErrorComponent} from "@/components/ErrorComponent";
 import {LoadingSpinner} from "@/components/LoadingSpinner";
 import {capitaliseFirstLetterOfEachWord} from "@/functions/utils";
+import {FilterBar} from "@/components/FilterBar";
+import {CreationSelectionFilter} from "@/types/filters";
 
 
 export default function Home() {
@@ -15,12 +17,36 @@ export default function Home() {
 	const {type, id, version} = useParams();
 
 	const [alloys, setAlloys] = useState<SmeltingOutput[]>([]);
+	const [filteredAlloys, setFilteredAlloys] = useState<SmeltingOutput[]>([]);
 	const [isLoading, setIsLoading] = useState(true);
 	const [error, setError] = useState<string | null>(null);
+	const [filterType, setFilterType] = useState<CreationSelectionFilter>(CreationSelectionFilter.All);
+	const [searchTerm, setSearchTerm] = useState("");
 
 	const handleAlloySelect = useCallback((alloy : SmeltingOutput) => {
 		router.push(`/${type}/${id}/${version}/${alloy.name}`);
 	}, [router, type, id, version]);
+
+	useEffect(() => {
+		let result = alloys;
+
+		if (filterType !== CreationSelectionFilter.All) {
+			result = result.filter(smeltingOutput =>
+					                       filterType === CreationSelectionFilter.Minerals
+					                       ? smeltingOutput.isMineral
+					                       : !smeltingOutput.isMineral
+			);
+		}
+
+		if (searchTerm) {
+			const lowercaseSearch = searchTerm.toLowerCase();
+			result = result.filter(alloy =>
+					                       alloy.name.toLowerCase().includes(lowercaseSearch)
+			);
+		}
+
+		setFilteredAlloys(result);
+	}, [alloys, filterType, searchTerm]);
 
 	useEffect(() => {
 		fetch(`/api/${type}/${id}/${version}/alloy`)
@@ -31,7 +57,10 @@ export default function Home() {
 
 					return response.json();
 				})
-				.then(data => setAlloys(data))
+				.then(data => {
+					setAlloys(data);
+					setFilteredAlloys(data);
+				})
 				.catch(error => {
 					setError("Failed to load alloys");
 					console.error("Error fetching alloys:", error);
@@ -40,6 +69,13 @@ export default function Home() {
 					setIsLoading(false);
 				});
 	}, [type, id, version]);
+
+	// const filterOptions = Object.values(CreationSelectionFilter)
+	//                             .filter(value => typeof value === "number")
+	//                             .map(value => ({
+	// 	                            value,
+	// 	                            label : CreationSelectionFilter[value]
+	//                             }));
 
 	const renderAlloyButton = useCallback((alloy : SmeltingOutput) => {
 		const displayAlloyName = capitaliseFirstLetterOfEachWord(alloy.name);
@@ -66,17 +102,31 @@ export default function Home() {
 			>
 				<div className="max-w-6xl mx-auto">
 					<HeadingWithBackButton
-							title="CHOOSE TARGET ALLOY"
+							title="CHOOSE TARGET OUTPUT"
 							ariaPreviousScreenName="home"
 							handleBackURI="/"
+					/>
+
+					<FilterBar
+							filterOptions={
+								Object.values(CreationSelectionFilter)
+								      .filter(value => typeof value === "number")
+								      .map(value => ({
+									      value,
+									      label : CreationSelectionFilter[value]
+								      }))}
+							filterType={filterType}
+							searchTerm={searchTerm}
+							onFilterTypeChange={setFilterType}
+							onSearchTermChange={setSearchTerm}
 					/>
 
 					{isLoading && <LoadingSpinner/>}
 					{error && <ErrorComponent error={error}/>}
 
-					{!isLoading && !error && alloys.length > 0 && (
+					{!isLoading && !error && filteredAlloys.length > 0 && (
 							<SelfCenteringGrid
-									elements={alloys}
+									elements={filteredAlloys}
 									perRow={{
 										default : 2,
 										sm : 3,
@@ -87,7 +137,7 @@ export default function Home() {
 							/>
 					)}
 
-					{!isLoading && !error && alloys.length === 0 && (
+					{!isLoading && !error && filteredAlloys.length === 0 && (
 							<p className="text-center text-teal-100 mt-4">
 								No alloys available for this selection.
 							</p>
