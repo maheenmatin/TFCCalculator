@@ -3,7 +3,7 @@
 ![Bug Badge](https://sonarcloud.io/api/project_badges/measure?project=TFGCalculator&metric=bugs)
 ![Tech Debt Badge](https://sonarcloud.io/api/project_badges/measure?project=TFGCalculator&metric=sqale_index)
 
-# TerraFirmaCraft Alloy Calculator
+# TerraFirmaCraft Metal Calculator
 
 ## Project is available at:<br/>https://tfc-calculator.devmarcel.net/
 
@@ -18,8 +18,8 @@
 - [License](#-license)
 
 ## 🔍 About
-The TerraFirmaCraft Alloy Calculator is a powerful tool designed to help players calculate alloy compositions for the TerraFirmaCraft modpack.
-This calculator streamlines the process of determining optimal alloy ratios, saving time and resources.
+The TerraFirmaCraft Metal Calculator is a powerful tool designed to help players calculate metal compositions for the TerraFirmaCraft modpack.
+This calculator streamlines the process of determining optimal metal ratios, saving time and resources.
 
 ## ⚙️ Support
 At present the calculator supports:
@@ -29,17 +29,17 @@ At present the calculator supports:
 
 ## ✨ Features
 - **Inventory Based**: Input what you have available, and the calculator does the rest!
-- **Accurate**: Precise calculations based on the latest TerraFirmaCraft alloys and minerals
-- **Time-saving**: Quickly determine the optimal alloy compositions
-- **No Waste**: Calculated alloy composition creates no leftover metal
+- **Accurate**: Precise calculations based on the latest TerraFirmaCraft metals and minerals
+- **Time-saving**: Quickly determine the optimal metal compositions
+- **No Waste**: Calculated metal composition creates no leftover metal
 
 ## 🛠️ Usage
-1. Input desired alloy type and quantity
+1. Input desired metal type and quantity
 2. Enter your available minerals
 3. View the calculated optimal composition
 
 ## 👥 Contributing
-Contributions to the TerraFirmaCraft Alloy Calculator are more than welcome!
+Contributions to the TerraFirmaCraft Metal Calculator are more than welcome!
 
 Here's how you can help:
 1. Fork the repository

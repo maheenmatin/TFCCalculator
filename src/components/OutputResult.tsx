@@ -1,4 +1,4 @@
-import {AlloyProductionResult} from "@/functions/algorithm";
+import {MetalProductionResult} from "@/functions/algorithm";
 import React from "react";
 
 
@@ -6,7 +6,7 @@ const successFormatting = "bg-green-700 text-white";
 const failureFormatting = "bg-yellow-400 text-black";
 
 interface OutputResultProps {
-	output : AlloyProductionResult | null;
+	output : MetalProductionResult | null;
 	mbPerIngot : number;
 }
 
@@ -22,7 +22,7 @@ export function OutputResult({output, mbPerIngot} : Readonly<OutputResultProps>)
 	)
 }
 
-function GetInnerOutput(output : AlloyProductionResult, mbPerIngot : number) {
+function GetInnerOutput(output : MetalProductionResult, mbPerIngot : number) {
 	const success = output.success;
 
 	if (!success) return (<p className="text-lg text-center">{output.message}!</p>)

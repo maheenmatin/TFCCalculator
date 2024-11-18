@@ -1,28 +1,28 @@
 import {ErrorComponent} from "@/components/ErrorComponent";
 import {MineralAccordion} from "@/components/MineralAccordion";
 import {OutputResult} from "@/components/OutputResult";
-import {AlloyProductionResult, calculateAlloy, MineralWithQuantity} from "@/functions/algorithm";
+import {MetalProductionResult, calculateMetal, MineralWithQuantity} from "@/functions/algorithm";
 import {capitaliseFirstLetterOfEachWord, getBaseMineralFromOverride} from "@/functions/utils";
-import {Alloy, AlloyComponent, Mineral, MineralUse} from "@/types";
+import {SmeltingOutput, SmeltingComponent, InputMineral, MineralUseCase} from "@/types";
 import React, {useEffect, useState} from "react";
 import {useParams} from "next/navigation";
 
 
-interface AlloyDisplayProps {
-	alloy? : string;
+interface MetalDisplayProps {
+	metal? : string;
 }
 
-export function AlloyComponentDisplay({alloy} : Readonly<AlloyDisplayProps>) {
+export function MetalComponentDisplay({metal} : Readonly<MetalDisplayProps>) {
 	const {type, id, version} = useParams();
 
-	const [alloyMixture, setAlloyMixture] = useState<Alloy | null>(null);
-	const [alloyMinerals, setAlloyMinerals] = useState<Mineral[]>([]);
+	const [metalMixture, setMetalMixture] = useState<SmeltingOutput | null>(null);
+	const [metalMinerals, setMetalMinerals] = useState<InputMineral[]>([]);
 	const [targetIngotCount, setTargetIngotCount] = useState<number>(0);
 	const [mineralQuantities, setMineralQuantities] = useState<Map<string, number>>(new Map());
 
 	const [isLoading, setIsLoading] = useState<boolean>(true);
 	const [isCalculating, setIsCalculating] = useState<boolean>(false);
-	const [result, setResult] = useState<AlloyProductionResult | null>(null);
+	const [result, setResult] = useState<MetalProductionResult | null>(null);
 	const [isResultAlteredSinceLastCalculation, setIsResultAlteredSinceLastCalculation] = useState<boolean>(false);
 	const [error, setError] = useState<Error | string | null>(null);
 
@@ -31,11 +31,11 @@ export function AlloyComponentDisplay({alloy} : Readonly<AlloyDisplayProps>) {
 	const mbPerNugget : number = 16;
 
 	useEffect(() => {
-		if (!alloy) {
+		if (!metal) {
 			return;
 		}
 
-		fetch(`/api/${type}/${id}/${version}/alloy/${alloy}`)
+		fetch(`/api/${type}/${id}/${version}/metal/${metal}`)
 				.then(response => {
 					if (!response.ok) {
 						throw new Error(`HTTP error! status: ${response.status}`);
@@ -44,15 +44,15 @@ export function AlloyComponentDisplay({alloy} : Readonly<AlloyDisplayProps>) {
 					return response.json();
 				})
 				.then(data => {
-					setAlloyMixture(data.alloy);
-					setAlloyMinerals(data.minerals);
+					setMetalMixture(data.material);
+					setMetalMinerals(data.minerals);
 				})
 				.catch(error => {
-					setError("Error fetching alloy details");
-					console.error("Error fetching alloy details:", error)
+					setError("Error fetching metal details");
+					console.error("Error fetching metal details:", error)
 				})
 				.finally(() => setIsLoading(false));
-	}, [type, id, version, alloy]);
+	}, [type, id, version, metal]);
 
 	const handleIngotCountChange = (e : React.ChangeEvent<HTMLInputElement>) => {
 		const value = e.target.value === "" ? 0 : parseInt(e.target.value, 10);
@@ -67,7 +67,7 @@ export function AlloyComponentDisplay({alloy} : Readonly<AlloyDisplayProps>) {
 	};
 
 	const handleCalculate = async() => {
-		if (!alloyMixture || !alloyMinerals || isCalculating) {
+		if (!metalMixture || !metalMinerals || isCalculating) {
 			return;
 		}
 
@@ -77,7 +77,7 @@ export function AlloyComponentDisplay({alloy} : Readonly<AlloyDisplayProps>) {
 		try {
 			const mineralWithQuantities : MineralWithQuantity[] = Array.from(mineralQuantities.entries()).map(
 					([mineralName, quantity]) => {
-						let mineral = alloyMinerals.find(m => m.name === mineralName);
+						let mineral = metalMinerals.find(m => m.name === mineralName);
 						if (!mineral) {
 							const baseMineralName = getBaseMineralFromOverride(mineralName);
 							if (mineralName.toLowerCase().includes("ingot")) {
@@ -92,7 +92,7 @@ export function AlloyComponentDisplay({alloy} : Readonly<AlloyDisplayProps>) {
 						};
 					}).filter(m => m.quantity > 0);
 
-			setResult(calculateAlloy(targetIngotCount * mbPerIngot, alloyMixture, mineralWithQuantities));
+			setResult(calculateMetal(targetIngotCount * mbPerIngot, metalMixture, mineralWithQuantities));
 		} catch (err) {
 			setError(`Failed to calculate! ${err}`);
 			console.error("Error calculating:", err);
@@ -110,12 +110,12 @@ export function AlloyComponentDisplay({alloy} : Readonly<AlloyDisplayProps>) {
 
 	// Group minerals by what they produce
 	const groupedMinerals = React.useMemo(() => {
-		if (!alloyMinerals) {
-			return new Map<string, Mineral[]>();
+		if (!metalMinerals) {
+			return new Map<string, InputMineral[]>();
 		}
 
-		const grouped = new Map<string, Mineral[]>();
-		alloyMinerals.forEach(mineral => {
+		const grouped = new Map<string, InputMineral[]>();
+		metalMinerals.forEach(mineral => {
 			const produces = mineral.produces.toLowerCase();
 			if (!grouped.has(produces)) {
 				grouped.set(produces, []);
@@ -123,7 +123,7 @@ export function AlloyComponentDisplay({alloy} : Readonly<AlloyDisplayProps>) {
 			grouped.get(produces)?.push(mineral);
 		});
 		return grouped;
-	}, [alloyMinerals]);
+	}, [metalMinerals]);
 
 	const isReadyToShowInputs : boolean =
 			targetIngotCount !== 0
@@ -134,35 +134,35 @@ export function AlloyComponentDisplay({alloy} : Readonly<AlloyDisplayProps>) {
 			&& !isResultAlteredSinceLastCalculation
 			&& !error;
 
-	const ingotOverride = (mineral : string) : Mineral => {
+	const ingotOverride = (mineral : string) : InputMineral => {
 		return {
 			name : `${capitaliseFirstLetterOfEachWord(mineral)} Ingot`,
 			produces : mineral,
 			yield : mbPerIngot,
 			uses : [
-				MineralUse.Vessel,
-				MineralUse.Crucible
+				MineralUseCase.Vessel,
+				MineralUseCase.Crucible
 			]
 		};
 	};
 
-	const nuggetOverride = (mineral : string) : Mineral => {
+	const nuggetOverride = (mineral : string) : InputMineral => {
 		return {
 			name : `${capitaliseFirstLetterOfEachWord(mineral)} Nugget`,
 			produces : mineral,
 			yield : mbPerNugget,
 			uses : [
-				MineralUse.Vessel,
-				MineralUse.Crucible
+				MineralUseCase.Vessel,
+				MineralUseCase.Crucible
 			]
 		};
 	};
 
-	function componentIngotAvailable(component : AlloyComponent) : boolean {
+	function componentIngotAvailable(component : SmeltingComponent) : boolean {
 		return component.hasIngot == null || component.hasIngot;
 	}
 
-	function componentNugetAvailable(component : AlloyComponent) : boolean {
+	function componentNugetAvailable(component : SmeltingComponent) : boolean {
 		return component.hasNugget == null || component.hasNugget;
 	}
 
@@ -197,7 +197,7 @@ export function AlloyComponentDisplay({alloy} : Readonly<AlloyDisplayProps>) {
 						<p className="text-lg text-center mb-8">Enter all available minerals in your inventory!</p>
 
 						{/* Minerals */}
-						{alloyMixture?.components.map(component => {
+						{metalMixture?.components.map(component => {
 							const mineral = component.mineral.toLowerCase();
 							let componentMinerals = groupedMinerals.get(mineral) || [];
 
@@ -206,7 +206,7 @@ export function AlloyComponentDisplay({alloy} : Readonly<AlloyDisplayProps>) {
 										<ErrorComponent
 												key={mineral}
 												error={`Failed to retrieve mineral ${mineral}`}
-												className="mb-8"
+												className="mb-6"
 										/>
 								);
 							}

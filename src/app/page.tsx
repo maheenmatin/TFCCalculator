@@ -8,11 +8,11 @@ export default function Home() {
 			<main
 					className="container mx-auto px-4 py-8"
 					role="main"
-					aria-label="Alloy Calculator Home"
+					aria-label="Metal Calculator Home"
 			>
 				<div className="max-w-6xl text-center mx-auto mb-4">
 					<h1 className="justify-center mx-auto text-4xl font-bold text-primary mb-8">
-						TerraFirmaCraft Alloy Calculator
+						TerraFirmaCraft Metal Calculator
 					</h1>
 				</div>
 
@@ -45,7 +45,7 @@ export default function Home() {
 					<div className="flex justify-center">
 						<p className="text-xl mb-8 max-w-prose">
 							A utility designed to automatically, quickly and accurately determine the required minerals to produce an
-							alloy. Unlike other calculators, this calculator is unique by abstracting as much work from the user in
+							metal. Unlike other calculators, this calculator is unique by abstracting as much work from the user in
 							terms of calculation.
 
 							Select the modpack below and click on the button!

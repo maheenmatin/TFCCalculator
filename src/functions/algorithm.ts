@@ -1,12 +1,12 @@
-import {Alloy, AlloyComponent, Mineral} from "@/types";
+import {SmeltingOutput, SmeltingComponent, InputMineral} from "@/types";
 
 
 export interface MineralWithQuantity {
-	mineral: Mineral;
+	mineral: InputMineral;
 	quantity: number;
 }
 
-export interface AlloyProductionResult {
+export interface MetalProductionResult {
 	outputMb: number;
 	usedMinerals: MineralWithQuantity[];
 	success: boolean;
@@ -59,7 +59,7 @@ function calculateAvailableMbByType(mineralsByType : Map<string, MineralWithQuan
 
 function findValidCombination(
 		targetMb: number,
-		components: AlloyComponent[],
+		components: SmeltingComponent[],
 		mineralsByType: Map<string, MineralWithQuantity[]>
 ): MineralWithQuantity[] | null {
 	 /**
@@ -201,12 +201,12 @@ function findValidCombination(
 	return currentCombination;
 }
 
-export function calculateAlloy(
+export function calculateMetal(
 		targetMb: number,
-		targetAlloy: Alloy,
+		targetMetal: SmeltingOutput,
 		availableMinerals: MineralWithQuantity[]
-): AlloyProductionResult {
-	const targetAlloyComponents = targetAlloy.components;
+): MetalProductionResult {
+	const targetMetalComponents = targetMetal.components;
 	const mineralsByType = groupMinerals(availableMinerals);
 	const totalAvailableByType = calculateAvailableMbByType(mineralsByType);
 
@@ -225,7 +225,7 @@ export function calculateAlloy(
 	}
 
 	// Check if each component has enough material for minimum percentage
-	for (const component of targetAlloyComponents) {
+	for (const component of targetMetalComponents) {
 		const mineralType = component.mineral.toLowerCase();
 		const minRequired = (component.min / 100) * targetMb;
 		const available = totalAvailableByType.get(mineralType) ?? 0;
@@ -242,7 +242,7 @@ export function calculateAlloy(
 
 	const result = findValidCombination(
 			targetMb,
-			targetAlloyComponents,
+			targetMetalComponents,
 			mineralsByType
 	);
 

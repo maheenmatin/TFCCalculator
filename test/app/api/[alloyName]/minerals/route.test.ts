@@ -1,4 +1,4 @@
-import { GET } from '@/api/alloy/[alloyName]/minerals/route';
+import { GET } from '@/api/metal/[metal]/minerals/route';
 
 
 // Mock Request
@@ -17,9 +17,9 @@ jest.mock('next/server', () => ({
 	},
 }));
 
-// Mock production alloys JSON
-jest.mock('@/data/alloys.json', () => ({
-	alloys: [
+// Mock production metals JSON
+jest.mock('@/data/metals.json', () => ({
+	metals: [
 		{
 			name: 'Steel',
 			components: [
@@ -45,10 +45,10 @@ jest.mock('@/data/minerals.json', () => ({
 	Tin: [{ name: 'Cassiterite', uses: ['vessel', 'crucible'] }],
 }));
 
-describe('GET /api/alloy/[alloyName]/minerals', () => {
-	it('should return minerals data when alloy exists', async () => {
-		const params = { params: { alloyName: encodeURIComponent('Steel') } };
-		const request = mockRequest('http://localhost/api/alloy/Steel/minerals');
+describe('GET /api/metal/[metal]/minerals', () => {
+	it('should return minerals data when metal exists', async () => {
+		const params = { params: { metalName: encodeURIComponent('Steel') } };
+		const request = mockRequest('http://localhost/api/metal/Steel/minerals');
 
 		const response = await GET(request, params);
 		const data = await response.json();
@@ -60,20 +60,20 @@ describe('GET /api/alloy/[alloyName]/minerals', () => {
 		                     ]);
 	});
 
-	it('should return 404 when alloy does not exist', async () => {
-		const params = { params: { alloyName: encodeURIComponent('nonexistent') } };
-		const request = mockRequest('http://localhost/api/alloy/nonexistent/minerals');
+	it('should return 404 when metal does not exist', async () => {
+		const params = { params: { metalName: encodeURIComponent('nonexistent') } };
+		const request = mockRequest('http://localhost/api/metal/nonexistent/minerals');
 
 		const response = await GET(request, params);
 		const data = await response.json();
 
 		expect(response.status).toBe(404);
-		expect(data).toEqual({ message: 'Alloy not found' });
+		expect(data).toEqual({ message: 'Metal not found' });
 	});
 
 	it('should return minerals data while being case-insensitive', async () => {
-		const params = { params: { alloyName: encodeURIComponent('bRoNzE') } };
-		const request = mockRequest('http://localhost/api/alloy/bRoNzE/minerals');
+		const params = { params: { metalName: encodeURIComponent('bRoNzE') } };
+		const request = mockRequest('http://localhost/api/metal/bRoNzE/minerals');
 
 		const response = await GET(request, params);
 		const data = await response.json();
@@ -86,8 +86,8 @@ describe('GET /api/alloy/[alloyName]/minerals', () => {
 	});
 
 	it('should filter minerals by uses when provided', async () => {
-		const params = { params: { alloyName: encodeURIComponent('Steel') } };
-		const request = mockRequest('http://localhost/api/alloy/Steel/minerals?uses=vessel');
+		const params = { params: { metalName: encodeURIComponent('Steel') } };
+		const request = mockRequest('http://localhost/api/metal/Steel/minerals?uses=vessel');
 
 		const response = await GET(request, params);
 		const data = await response.json();
@@ -99,8 +99,8 @@ describe('GET /api/alloy/[alloyName]/minerals', () => {
 	});
 
 	it('should handle multiple use filters', async () => {
-		const params = { params: { alloyName: encodeURIComponent('Steel') } };
-		const request = mockRequest('http://localhost/api/alloy/Steel/minerals?uses=vessel&uses=bloomery');
+		const params = { params: { metalName: encodeURIComponent('Steel') } };
+		const request = mockRequest('http://localhost/api/metal/Steel/minerals?uses=vessel&uses=bloomery');
 
 		const response = await GET(request, params);
 		const data = await response.json();

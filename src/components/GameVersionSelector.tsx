@@ -46,7 +46,7 @@ export function GameVersionSelector() {
 		}
 
 		const versionPath = `${selectedOption.gameVersion}_${selectedOption.version}`;
-		router.push(`/${selectedType}/${selectedOption.id}/${versionPath}/alloys`);
+		router.push(`/${selectedType}/${selectedOption.id}/${versionPath}/metals`);
 	};
 
 	if (isLoading) {
@@ -101,7 +101,7 @@ export function GameVersionSelector() {
 								className="px-6 py-2 rounded
 								bg-teal-600 hover:bg-teal-700 transition-colors duration-200 text-white
 								disabled:opacity-50 disabled:cursor-not-allowed"
-								aria-label="Go to alloy calculator"
+								aria-label="Go to calculator"
 						>
 							Calculate
 						</button>
