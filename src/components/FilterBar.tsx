@@ -68,6 +68,7 @@ export const FilterBar : React.FC<FilterBarProps> = (
 					<input
 							ref={searchInputRef}
 							type="text"
+							aria-label="search"
 							value={searchTerm}
 							onChange={(e) => onSearchTermChange(e.target.value)}
 							className={`w-full py-2 border rounded-lg text-black ${searchTerm ? "px-2" : "px-10"}`}
