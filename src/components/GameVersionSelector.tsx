@@ -63,49 +63,47 @@ export function GameVersionSelector() {
 
 	return (
 			<div className="container mx-auto px-4 py-8">
-				<div className="max-w-6xl mx-auto">
-					<div className="flex flex-col items-center gap-4">
-						<div className="flex flex-row items-center gap-4">
-							<select
-									value={selectedType}
-									onChange={(e) => setSelectedType(e.target.value as VersionType)}
-									className="w-32 p-2 rounded border border-teal-500 bg-transparent text-teal-100"
-									aria-label="Select type"
-							>
-								<option value="modpack">Modpack</option>
-								<option value="mod">Mod</option>
-							</select>
-
-							<select
-									value={selectedOption?.id || ""}
-									onChange={(e) => {
-										const selected = options?.[selectedType].find(
-												p => p.id === e.target.value
-										);
-										setSelectedOption(selected || null);
-									}}
-									className="w-72 p-2 rounded border border-teal-500 bg-transparent text-teal-100"
-									aria-label={`Select ${selectedType}`}
-							>
-								{options?.[selectedType].map((pkg) => (
-										<option key={pkg.id} value={pkg.id}>
-											{pkg.displayName} ({pkg.version})
-										</option>
-								))}
-							</select>
-						</div>
-
-						<button
-								onClick={handleCalculate}
-								disabled={!selectedOption}
-								className="px-6 py-2 rounded
-								bg-teal-600 hover:bg-teal-700 transition-colors duration-200 text-white
-								disabled:opacity-50 disabled:cursor-not-allowed"
-								aria-label="Go to calculator"
+				<div className="flex flex-col items-center gap-4 max-w-2xl mx-auto">
+					<div className="flex flex-col sm:flex-row justify-center w-full gap-4">
+						<select
+								value={selectedType}
+								onChange={(e) => setSelectedType(e.target.value as VersionType)}
+								className="w-full sm:w-32 p-2 rounded border border-teal-500 bg-transparent text-teal-100"
+								aria-label="Select type"
 						>
-							Calculate
-						</button>
+							<option value="modpack">Modpack</option>
+							<option value="mod">Mod</option>
+						</select>
+
+						<select
+								value={selectedOption?.id || ""}
+								onChange={(e) => {
+									const selected = options?.[selectedType].find(
+											p => p.id === e.target.value
+									);
+									setSelectedOption(selected || null);
+								}}
+								className="w-full sm:w-72 p-2 rounded border border-teal-500 bg-transparent text-teal-100"
+								aria-label={`Select ${selectedType}`}
+						>
+							{options?.[selectedType].map((pkg) => (
+									<option key={pkg.id} value={pkg.id}>
+										{pkg.displayName} ({pkg.version})
+									</option>
+							))}
+						</select>
 					</div>
+
+					<button
+							onClick={handleCalculate}
+							disabled={!selectedOption}
+							className="w-full sm:w-auto px-6 py-2 rounded
+        bg-teal-600 hover:bg-teal-700 transition-colors duration-200 text-white
+        disabled:opacity-50 disabled:cursor-not-allowed"
+							aria-label="Go to calculator"
+					>
+						Calculate
+					</button>
 				</div>
 			</div>
 	);
