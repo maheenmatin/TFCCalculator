@@ -3,23 +3,24 @@
 @tailwind utilities;
 
 :root {
-  --color-background: 21 21 21;
-  --color-text: 255 255 255;
+    --color-background: 21 21 21;
+    --color-text: 255 255 255;
+    color-scheme: dark;
 }
 
 body {
-  background-color: rgb(var(--color-background));
-  color: rgb(var(--color-text));
+    background-color: rgb(var(--color-background));
+    color: rgb(var(--color-text));
 }
 
 @layer utilities {
-  .no-spinners {
-    appearance: textfield;
-  }
+    .no-spinners {
+        appearance: textfield;
+    }
 
-  .no-spinners::-webkit-outer-spin-button,
-  .no-spinners::-webkit-inner-spin-button {
-    appearance: none;
-    margin: 0;
-  }
+    .no-spinners::-webkit-outer-spin-button,
+    .no-spinners::-webkit-inner-spin-button {
+        appearance: none;
+        margin: 0;
+    }
 }

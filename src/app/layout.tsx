@@ -28,7 +28,7 @@ export const metadata : Metadata = {
 		card : "summary_large_image",
 		title : "TerraFirmaCraft Metal Calculator",
 		description : "A simple website to calculate minerals required for metal compositions!",
-		images: ['/api/og'],
+		images : ["/api/og"]
 	}
 };
 
@@ -39,7 +39,7 @@ export default function RootLayout(
 			children : React.ReactNode
 		}>) {
 	return (
-			<html lang="en">
+			<html lang="en" className="dark">
 			<body>
 			{children}
 			<SpeedInsights/>
