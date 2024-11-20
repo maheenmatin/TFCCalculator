@@ -62,7 +62,7 @@ export function GameVersionSelector() {
 	}
 
 	return (
-			<main className="container mx-auto px-4 py-8">
+			<div className="container mx-auto px-4 py-8">
 				<div className="max-w-6xl mx-auto">
 					<div className="flex flex-col items-center gap-4">
 						<div className="flex flex-row items-center gap-4">
@@ -107,6 +107,6 @@ export function GameVersionSelector() {
 						</button>
 					</div>
 				</div>
-			</main>
+			</div>
 	);
 }
