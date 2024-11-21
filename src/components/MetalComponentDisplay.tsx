@@ -18,7 +18,7 @@ export function MetalComponentDisplay({metal} : Readonly<MetalDisplayProps>) {
 	const [metalMixture, setMetalMixture] = useState<SmeltingOutput | null>(null);
 	const [metalMinerals, setMetalMinerals] = useState<InputMineral[]>([]);
 	const [unit, setUnit] = useState<DesiredOutputTypes>(DesiredOutputTypes.Ingot);
-	const [desiredOutputInUnits, setdesiredOutputInUnits] = useState<number>(0);
+	const [desiredOutputInUnits, setDesiredOutputInUnits] = useState<number>(0);
 	const [mineralQuantities, setMineralQuantities] = useState<Map<string, number>>(new Map());
 
 	const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -57,7 +57,7 @@ export function MetalComponentDisplay({metal} : Readonly<MetalDisplayProps>) {
 
 	const handleDesiredTargetChange = (e : React.ChangeEvent<HTMLInputElement>) => {
 		const value = e.target.value === "" ? 0 : parseInt(e.target.value, 10);
-		setdesiredOutputInUnits(isNaN(value) ? 0 : value);
+		setDesiredOutputInUnits(isNaN(value) ? 0 : value);
 		setIsResultAlteredSinceLastCalculation(true);
 	};
 
