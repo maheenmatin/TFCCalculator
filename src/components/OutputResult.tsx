@@ -1,5 +1,6 @@
 import {MetalProductionResult} from "@/functions/algorithm";
 import React from "react";
+import {DesiredOutputTypes} from "@/types";
 
 
 const successFormatting = "bg-green-700 text-white";
@@ -7,29 +8,34 @@ const failureFormatting = "bg-yellow-400 text-black";
 
 interface OutputResultProps {
 	output : MetalProductionResult | null;
-	mbPerIngot : number;
+	unit : DesiredOutputTypes;
+	conversions : Record<DesiredOutputTypes, number>;
 }
 
-export function OutputResult({output, mbPerIngot} : Readonly<OutputResultProps>) {
+export function OutputResult({output, unit, conversions} : Readonly<OutputResultProps>) {
 	if (!output) return;
 
 	const success = output.success;
 	return (
 			<div className={`rounded-lg shadow p-6 ${success ? successFormatting : failureFormatting}`}>
 				<h2 className="text-xl text-center font-bold mb-4">OUTPUT</h2>
-				{GetInnerOutput(output, mbPerIngot)}
+				{GetInnerOutput(output, unit, conversions)}
 			</div>
 	)
 }
 
-function GetInnerOutput(output : MetalProductionResult, mbPerIngot : number) {
+function GetInnerOutput(output : MetalProductionResult, unit : DesiredOutputTypes, conversions : Record<DesiredOutputTypes, number>) {
 	const success = output.success;
+
+	const displayQuantity = output.outputMb / (conversions[unit] ?? 1);
+	const displayUnit = DesiredOutputTypes[unit].toLowerCase();
+	const plural = displayQuantity > 1 ? "s" : "";
 
 	if (!success) return (<p className="text-lg text-center">{output.message}!</p>)
 
 	return (
 			<div>
-				<p className="text-xl text-center">Yields exactly {output.outputMb / mbPerIngot} ingots!</p>
+				<p className="text-xl text-center">Yields exactly {displayQuantity} {displayUnit}{plural}!</p>
 				<div className="p-4">
 					<div className="flex flex-wrap justify-center gap-4">
 						{output.usedMinerals.map(usedMineral => {

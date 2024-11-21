@@ -39,7 +39,7 @@ export function MineralAccordion({ title, minerals, mineralQuantities, onQuantit
 												onChange={(e) => onQuantityChange(mineral.name, e)}
 												onKeyDown={onInputKeyPress}
 												min="0"
-												className="w-full p-2 border border-gray-300 rounded no-spinners"
+												className="w-full p-2 border bg-white border-gray-300 rounded no-spinners"
 										/>
 									</div>
 							))}
