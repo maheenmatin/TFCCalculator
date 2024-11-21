@@ -26,3 +26,9 @@ export enum MineralUseCase {
 	Bloomery = "bloomery",
 	BlastFurnace = "blast_furnace"
 }
+
+export enum DesiredOutputTypes {
+	Ingot,
+	Nugget,
+	Millibucket
+}
