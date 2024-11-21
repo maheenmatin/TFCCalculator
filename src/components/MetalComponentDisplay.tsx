@@ -184,7 +184,7 @@ export function MetalComponentDisplay({metal} : Readonly<MetalDisplayProps>) {
 									onChange={handleIngotCountChange}
 									onKeyDown={handleKeyPress}
 									min="0"
-									className="w-full p-2 border border-gray-300 rounded"
+									className="w-full p-2 border bg-white border-gray-300 rounded no-spinners"
 							/>
 						</div>
 					</div>
