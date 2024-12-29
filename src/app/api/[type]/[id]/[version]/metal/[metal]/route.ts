@@ -110,7 +110,7 @@ function handleAlloyResponse(alloy : typeof metalsJson.alloys[0], uses : Mineral
  */
 function getMineralsForComponent(mineralName : string, uses : MineralUseCase[]) : InputMineral[] {
 	const rawMinerals = mineralsJson[mineralName as keyof typeof mineralsJson];
-	if (!rawMinerals) {
+	if (!rawMinerals || !Array.isArray(rawMinerals)) {
 		return [];
 	}
 
