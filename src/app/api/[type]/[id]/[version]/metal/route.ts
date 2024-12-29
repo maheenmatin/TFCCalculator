@@ -18,16 +18,13 @@ export async function GET(
 ) {
 	const { type, id, version } = context.params;
 
-	if (!type || !id || !version) {
-		return NextResponse.json(
-				{ error: "Missing required parameters: type, id, and version are required" },
-				{ status: 400 }
-		);
-	}
-
 	try {
 		const routeParams: RouteParams = { type , id, version };
 		const dataService = await getDataService(routeParams);
+		if (dataService instanceof NextResponse) {
+			return dataService;
+		}
+
 		const { metals, alloys } = await dataService.getMetals();
 
 		const processedMetals: SmeltingOutput[] = metals

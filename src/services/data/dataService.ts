@@ -4,6 +4,7 @@ import {RouteParams} from "@/types/gameversions";
 import {InputMineral, MineralUseCase, SmeltingOutput} from "@/types";
 import {promises as fs} from "fs";
 import path from "path";
+import {NextResponse} from "next/server";
 
 
 interface RawMineralData {
@@ -105,6 +106,14 @@ export class DataService {
 	}
 }
 
-export const getDataService = cache(async(params : RouteParams) : Promise<DataService> => {
-	return DataService.initialize(params);
-});
+export const getDataService =
+		cache(async(params : RouteParams) : Promise<DataService | NextResponse<{ error : string }>> => {
+			if (!params.type || !params.id || !params.version) {
+				return NextResponse.json(
+						{error : "Missing required parameters: type, id, and version are required"},
+						{status : 400}
+				);
+			}
+
+			return DataService.initialize(params);
+		});
