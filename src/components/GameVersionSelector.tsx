@@ -67,7 +67,11 @@ export function GameVersionSelector() {
 					<div className="flex flex-col sm:flex-row justify-center w-full gap-4">
 						<select
 								value={selectedType}
-								onChange={(e) => setSelectedType(e.target.value as VersionType)}
+								onChange={(e) => {
+									const newType = e.target.value as VersionType;
+									setSelectedType(newType);
+									setSelectedOption(options?.[newType]?.[0] || null);
+								}}
 								className="w-full sm:w-32 p-2 rounded border border-teal-500 bg-transparent text-teal-100"
 								aria-label="Select type"
 						>
