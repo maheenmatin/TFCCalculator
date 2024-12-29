@@ -101,9 +101,7 @@ export function GameVersionSelector() {
 					<button
 							onClick={handleCalculate}
 							disabled={!selectedOption}
-							className="w-full sm:w-auto px-6 py-2 rounded
-        bg-teal-600 hover:bg-teal-700 transition-colors duration-200 text-white
-        disabled:opacity-50 disabled:cursor-not-allowed"
+							className="w-full sm:w-auto px-6 py-2 rounded primary"
 							aria-label="Go to calculator"
 					>
 						Calculate
