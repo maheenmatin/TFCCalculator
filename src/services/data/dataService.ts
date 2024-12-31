@@ -39,9 +39,7 @@ export class DataService {
 
 	async getMetals() : Promise<MetalsListResponse> {
 		try {
-			const filePath = path.join(this.dataPath, "metals.json");
-			console.log("Reading metals from:", filePath);
-
+			const filePath = path.join(this.dataPath, "outputs.json");
 			const fileContent = await fs.readFile(filePath, "utf-8");
 			return JSON.parse(fileContent);
 		} catch (error) {
