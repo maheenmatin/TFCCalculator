@@ -199,7 +199,7 @@ export function MetalComponentDisplay({metal} : Readonly<MetalDisplayProps>) {
 					{/* Minerals */}
 					{metalMixture?.components.map(component => {
 						const mineralName = component.mineral.toLowerCase();
-						let componentMinerals = metalMinerals.get(mineralName) || [];
+						const componentMinerals = metalMinerals.get(mineralName) || [];
 
 						if (componentMinerals.length === 0) {
 							return (
@@ -210,8 +210,6 @@ export function MetalComponentDisplay({metal} : Readonly<MetalDisplayProps>) {
 									/>
 							);
 						}
-
-						componentMinerals = [...componentMinerals];
 
 						const hasIngot = componentMinerals.some(m => m.name.toLowerCase().includes("ingot"));
 						const hasNugget = componentMinerals.some(m => m.name.toLowerCase().includes("nugget"));
