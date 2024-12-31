@@ -33,8 +33,8 @@ export default function Home() {
 		if (filterType !== CreationSelectionFilter.All) {
 			result = result.filter(smeltingOutput =>
 					                       filterType === CreationSelectionFilter.Metals
-					                       ? smeltingOutput.isMineral
-					                       : !smeltingOutput.isMineral
+					                       ? smeltingOutput.isMetal
+					                       : !smeltingOutput.isMetal
 			);
 		}
 

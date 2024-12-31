@@ -1,53 +1,42 @@
-import { NextResponse } from "next/server";
-import { SmeltingOutput } from "@/types";
+import {NextResponse} from "next/server";
 import {RouteParams, VersionType} from "@/types/gameversions";
 import {getDataService} from "@/services/data/dataService";
 
 
 interface RouteContext {
-	params: {
-		type: VersionType;
-		id: string;
-		version: string;
-	}
+	params : {
+		type : VersionType;
+		id : string;
+		version : string;
+	};
 }
 
 export async function GET(
-		_: Request,
-		context: RouteContext
+		_ : Request,
+		context : RouteContext
 ) {
-	const { type, id, version } = context.params;
+	const {type, id, version} = context.params;
 
 	try {
-		const routeParams: RouteParams = { type , id, version };
+		const routeParams : RouteParams = {type, id, version};
 		const dataService = await getDataService(routeParams);
-		if (dataService instanceof NextResponse) {
-			return dataService;
+		return NextResponse.json(await dataService.getOutputs());
+	} catch (error) {
+		if (error
+				&& typeof error === "object"
+				&& "status" in error
+				&& "message" in error
+		) {
+			return NextResponse.json(
+				{message : error.message as string},
+				{status : error.status as number}
+			);
 		}
 
-		const { metals, alloys } = await dataService.getMetals();
-
-		const processedMetals: SmeltingOutput[] = metals
-				.map(m => ({
-					name: m.name,
-					components: [],
-					isMineral: true,
-					producible: m.producible !== false
-				}))
-				.filter(mineral => mineral.producible);
-
-		const processedAlloys: SmeltingOutput[] = alloys.map(a => ({
-			name: a.name,
-			components: a.components,
-			isMineral: false
-		}));
-
-		return NextResponse.json([...processedAlloys, ...processedMetals]);
-	} catch (error) {
-		console.error("Failed to fetch metals data:", error);
+		console.error(`Failed to fetch metals data: ${error}`);
 		return NextResponse.json(
-				{ error: "Failed to fetch metals data" },
-				{ status: 500 }
+				{error : "Failed to fetch metals data"},
+				{status : 500}
 		);
 	}
 }

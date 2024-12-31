@@ -21,30 +21,23 @@ export async function GET(
 
 	try {
 		const dataService = await getDataService({type, id, version});
-		if (dataService instanceof NextResponse) {
-			return dataService;
-		}
-
-		const metalResponse = await dataService.getMetal(decodedMetal);
+		const metalResponse = await dataService.getOutput(decodedMetal);
 
 		const filteredMinerals = filterMineralsByUses(metalResponse.minerals, uses);
+		const mineralsObject = Object.fromEntries(filteredMinerals);
 
 		return NextResponse.json(
 				{
 					material : metalResponse.material,
-					minerals : filteredMinerals
+					minerals : mineralsObject
 				});
 	} catch (error) {
-		if (error && typeof error === 'object' && 'statusCode' in error) {
-			return NextResponse.json(
-					{message : "Material not found"},
-					{status : error.statusCode as number}
-			);
-		}
-
-		console.error(`Failed to fetch metal data for ${decodedMetal}:`, error);
+		console.error(`Failed to fetch metal for ${decodedMetal}: ${error}`);
 		return NextResponse.json(
-				{error : "Failed to fetch metal data"},
+				{
+					error : `Failed to fetch metal for ${decodedMetal}`,
+					raw_error : error
+				},
 				{status : 500}
 		);
 	}
@@ -53,14 +46,18 @@ export async function GET(
 /**
  * Filters minerals based on their use cases using non-exclusive OR.
  * Returns true if no uses are specified or if the mineral has any of the specified uses.
- * @param minerals The array of InputMinerals to filter
+ * @param minerals The map of InputMinerals to filter
  * @param uses Array of MineralUseCase to filter by
  * @returns Filtered array of InputMinerals
  */
-function filterMineralsByUses(minerals : InputMineral[], uses : MineralUseCase[]) : InputMineral[] {
+function filterMineralsByUses(minerals : Map<string, InputMineral[]>, uses : MineralUseCase[]) : Map<string, InputMineral[]> {
 	if (uses.length === 0) {
 		return minerals;
 	}
 
-	return minerals.filter(mineral => uses.some(use => mineral.uses?.includes(use)));
+	minerals.forEach((component, key) => {
+		minerals.set(key, component.filter(mineral => uses.some(use => mineral.uses?.includes(use))));
+	});
+
+	return minerals;
 }
