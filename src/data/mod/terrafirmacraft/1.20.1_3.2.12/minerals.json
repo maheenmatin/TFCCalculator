@@ -120,7 +120,7 @@
   ],
   "copper": [
     {
-      "name": "Small Notive Copper",
+      "name": "Small Native Copper",
       "yield": 10,
       "uses": [
         "vessel",
@@ -144,7 +144,7 @@
       ]
     },
     {
-      "name": "Poor Notive Copper",
+      "name": "Poor Native Copper",
       "yield": 15,
       "uses": [
         "vessel",
@@ -168,7 +168,7 @@
       ]
     },
     {
-      "name": "Normal Notive Copper",
+      "name": "Normal Native Copper",
       "yield": 25,
       "uses": [
         "vessel",
@@ -192,7 +192,7 @@
       ]
     },
     {
-      "name": "Rich Notive Copper",
+      "name": "Rich Native Copper",
       "yield": 35,
       "uses": [
         "vessel",
