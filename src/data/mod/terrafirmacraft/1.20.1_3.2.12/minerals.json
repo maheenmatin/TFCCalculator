@@ -1,6 +1,6 @@
 {
   "lastUpdated": "2024-12-29",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "schemaVersion": "1",
   "bismuth": [
     {
@@ -34,25 +34,9 @@
         "vessel",
         "crucible"
       ]
-    },
-    {
-      "name": "Bismuth Ingot",
-      "yield": 100,
-      "uses": [
-        "vessel",
-        "crucible"
-      ]
     }
   ],
   "bismuth_bronze": [
-    {
-      "name": "Bismuth Bronze Ingot",
-      "yield": 100,
-      "uses": [
-        "vessel",
-        "crucible"
-      ]
-    },
     {
       "name": "Bismuth Bronze Rod",
       "yield": 50,
@@ -72,14 +56,6 @@
   ],
   "black_bronze": [
     {
-      "name": "Black Bronze Ingot",
-      "yield": 100,
-      "uses": [
-        "vessel",
-        "crucible"
-      ]
-    },
-    {
       "name": "Black Bronze Rod",
       "yield": 50,
       "uses": [
@@ -97,14 +73,6 @@
     }
   ],
   "black_steel": [
-    {
-      "name": "Black Steel Ingot",
-      "yield": 100,
-      "uses": [
-        "vessel",
-        "crucible"
-      ]
-    },
     {
       "name": "Black Steel Rod",
       "yield": 50,
@@ -124,14 +92,6 @@
   ],
   "blue_steel": [
     {
-      "name": "Blue Steel Ingot",
-      "yield": 100,
-      "uses": [
-        "vessel",
-        "crucible"
-      ]
-    },
-    {
       "name": "Blue Steel Rod",
       "yield": 50,
       "uses": [
@@ -149,14 +109,6 @@
     }
   ],
   "brass": [
-    {
-      "name": "Brass Ingot",
-      "yield": 100,
-      "uses": [
-        "vessel",
-        "crucible"
-      ]
-    },
     {
       "name": "Brass Rod",
       "yield": 50,
@@ -258,14 +210,6 @@
     {
       "name": "Rich Tetrahedrite",
       "yield": 35,
-      "uses": [
-        "vessel",
-        "crucible"
-      ]
-    },
-    {
-      "name": "Copper Ingot",
-      "yield": 100,
       "uses": [
         "vessel",
         "crucible"
@@ -512,14 +456,6 @@
       ]
     },
     {
-      "name": "Nickel Ingot",
-      "yield": 100,
-      "uses": [
-        "vessel",
-        "crucible"
-      ]
-    },
-    {
       "name": "Nickel Rod",
       "yield": 50,
       "uses": [
@@ -529,14 +465,6 @@
     }
   ],
   "red_steel": [
-    {
-      "name": "Red Steel Ingot",
-      "yield": 100,
-      "uses": [
-        "vessel",
-        "crucible"
-      ]
-    },
     {
       "name": "Red Steel Rod",
       "yield": 50,
@@ -555,14 +483,6 @@
     }
   ],
   "rose_gold": [
-    {
-      "name": "Rose Gold Ingot",
-      "yield": 100,
-      "uses": [
-        "vessel",
-        "crucible"
-      ]
-    },
     {
       "name": "Rose Gold Rod",
       "yield": 50,
@@ -606,14 +526,6 @@
       ]
     },
     {
-      "name": "Silver Ingot",
-      "yield": 100,
-      "uses": [
-        "vessel",
-        "crucible"
-      ]
-    },
-    {
       "name": "Silver Rod",
       "yield": 50,
       "uses": [
@@ -623,14 +535,6 @@
     }
   ],
   "steel": [
-    {
-      "name": "Steel Ingot",
-      "yield": 100,
-      "uses": [
-        "vessel",
-        "crucible"
-      ]
-    },
     {
       "name": "Steel Rod",
       "yield": 50,
@@ -649,14 +553,6 @@
     }
   ],
   "sterling_silver": [
-    {
-      "name": "Sterling Silver Ingot",
-      "yield": 100,
-      "uses": [
-        "vessel",
-        "crucible"
-      ]
-    },
     {
       "name": "Sterling Silver Rod",
       "yield": 50,
@@ -700,14 +596,6 @@
       ]
     },
     {
-      "name": "Tin Ingot",
-      "yield": 100,
-      "uses": [
-        "vessel",
-        "crucible"
-      ]
-    },
-    {
       "name": "Tin Rod",
       "yield": 50,
       "uses": [
@@ -744,14 +632,6 @@
     {
       "name": "Rich Sphalerite",
       "yield": 35,
-      "uses": [
-        "vessel",
-        "crucible"
-      ]
-    },
-    {
-      "name": "Zinc Ingot",
-      "yield": 100,
       "uses": [
         "vessel",
         "crucible"
