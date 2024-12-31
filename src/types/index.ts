@@ -7,10 +7,18 @@ export interface SmeltingOutput {
 
 export interface SmeltingComponent {
 	mineral : string;
-	hasIngot? : boolean;
-	hasNugget? : boolean;
 	min : number;
 	max : number;
+	default : SmeltingComponentDefaultOption[];
+
+}
+
+export enum SmeltingComponentDefaultOption {
+	BLOCK = "block",
+	INGOT = "ingot",
+	NUGGET = "nugget",
+
+	ROD = "rod",
 }
 
 export interface InputMineral {

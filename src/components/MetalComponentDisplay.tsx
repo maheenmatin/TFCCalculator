@@ -3,7 +3,7 @@ import {MineralAccordion} from "@/components/MineralAccordion";
 import {OutputResult} from "@/components/OutputResult";
 import {calculateMetal, MetalProductionResult, MineralWithQuantity} from "@/functions/algorithm";
 import {capitaliseFirstLetterOfEachWord, getBaseMineralFromOverride} from "@/functions/utils";
-import {DesiredOutputTypes, InputMineral, MineralUseCase, SmeltingComponent, SmeltingOutput} from "@/types";
+import {DesiredOutputTypes, InputMineral, MineralUseCase, SmeltingComponent, SmeltingComponentDefaultOption, SmeltingOutput} from "@/types";
 import React, {useEffect, useState} from "react";
 import {useParams} from "next/navigation";
 
@@ -16,7 +16,7 @@ export function MetalComponentDisplay({metal} : Readonly<MetalDisplayProps>) {
 	const {type, id, version} = useParams();
 
 	const [metalMixture, setMetalMixture] = useState<SmeltingOutput | null>(null);
-	const [metalMinerals, setMetalMinerals] = useState<InputMineral[]>([]);
+	const [metalMinerals, setMetalMinerals] = useState<Map<string, InputMineral[]>>(new Map());
 	const [unit, setUnit] = useState<DesiredOutputTypes>(DesiredOutputTypes.Ingot);
 	const [desiredOutputInUnits, setDesiredOutputInUnits] = useState<number>(0);
 	const [mineralQuantities, setMineralQuantities] = useState<Map<string, number>>(new Map());
@@ -28,8 +28,12 @@ export function MetalComponentDisplay({metal} : Readonly<MetalDisplayProps>) {
 	const [error, setError] = useState<Error | string | null>(null);
 
 	// TODO: Utilise the version specific constants instead.
-	const mbPerIngot : number = 144;
-	const mbPerNugget : number = 16;
+	const mbPerDefault = new Map<SmeltingComponentDefaultOption, number>(
+			[
+				[SmeltingComponentDefaultOption.INGOT, 144],
+				[SmeltingComponentDefaultOption.NUGGET, 16]
+			]
+	);
 
 	useEffect(() => {
 		if (!metal) {
@@ -67,9 +71,10 @@ export function MetalComponentDisplay({metal} : Readonly<MetalDisplayProps>) {
 		setIsResultAlteredSinceLastCalculation(true);
 	};
 
+	// TODO: Possibly might need to get rid of this and do it dynamically for TFC (no nuggets)
 	const unitToMbConversion : Record<DesiredOutputTypes, number> = {
-		[DesiredOutputTypes.Ingot] : mbPerIngot,
-		[DesiredOutputTypes.Nugget] : mbPerNugget,
+		[DesiredOutputTypes.Ingot] : mbPerDefault.get(SmeltingComponentDefaultOption.INGOT) || 144,
+		[DesiredOutputTypes.Nugget] : mbPerDefault.get(SmeltingComponentDefaultOption.NUGGET) || 16,
 		[DesiredOutputTypes.Millibucket] : 1
 	} as const;
 
@@ -84,22 +89,29 @@ export function MetalComponentDisplay({metal} : Readonly<MetalDisplayProps>) {
 		await new Promise(resolve => setTimeout(resolve, 0));
 
 		try {
-			const mineralWithQuantities : MineralWithQuantity[] = Array.from(mineralQuantities.entries()).map(
-					([mineralName, quantity]) => {
-						let mineral = metalMinerals.find(m => m.name === mineralName);
-						if (!mineral) {
-							const baseMineralName = getBaseMineralFromOverride(mineralName);
-							if (mineralName.toLowerCase().includes("ingot")) {
-								mineral = ingotOverride(baseMineralName);
-							} else if (mineralName.toLowerCase().includes("nugget")) {
-								mineral = nuggetOverride(baseMineralName);
-							}
-						}
-						return {
-							mineral : mineral!,
-							quantity
-						};
-					}).filter(m => m.quantity > 0);
+			const mineralWithQuantities: Map<string, MineralWithQuantity[]> = new Map(
+					Array.from(mineralQuantities.entries()).map(
+							([mineralName, quantity]) => [
+								mineralName,
+								[{
+									mineral: (() => {
+										let mineral = metalMinerals.get(mineralName)?.[0];
+										if (!mineral) {
+											const baseMineralName = getBaseMineralFromOverride(mineralName);
+
+											for (const defaultOption in SmeltingComponentDefaultOption) {
+												if (mineralName.toLowerCase().includes(defaultOption.toLowerCase())) {
+													mineral = defaultOverride(baseMineralName, defaultOption as SmeltingComponentDefaultOption);
+												}
+											}
+										}
+										return mineral!;
+									})(),
+									quantity
+								}].filter(m => m.quantity > 0)
+							]
+					)
+			);
 
 			setResult(calculateMetal(getDesiredOutputInMb(), metalMixture, mineralWithQuantities));
 		} catch (err) {
@@ -117,23 +129,6 @@ export function MetalComponentDisplay({metal} : Readonly<MetalDisplayProps>) {
 		}
 	};
 
-	// Group minerals by what they produce
-	const groupedMinerals = React.useMemo(() => {
-		if (!metalMinerals) {
-			return new Map<string, InputMineral[]>();
-		}
-
-		const grouped = new Map<string, InputMineral[]>();
-		metalMinerals.forEach(mineral => {
-			const produces = mineral.produces.toLowerCase();
-			if (!grouped.has(produces)) {
-				grouped.set(produces, []);
-			}
-			grouped.get(produces)?.push(mineral);
-		});
-		return grouped;
-	}, [metalMinerals]);
-
 	const isReadyToShowInputs : boolean =
 			desiredOutputInUnits !== 0
 			&& !isLoading;
@@ -143,36 +138,20 @@ export function MetalComponentDisplay({metal} : Readonly<MetalDisplayProps>) {
 			&& !isResultAlteredSinceLastCalculation
 			&& !error;
 
-	const ingotOverride = (mineral : string) : InputMineral => {
+	function defaultOverride(mineral : string, defaultOption : SmeltingComponentDefaultOption) : InputMineral {
 		return {
-			name : `${capitaliseFirstLetterOfEachWord(mineral)} Ingot`,
+			name : `${capitaliseFirstLetterOfEachWord(mineral + " " + defaultOption)}`,
 			produces : mineral,
-			yield : mbPerIngot,
+			yield : mbPerDefault.get(defaultOption) || 0,
 			uses : [
 				MineralUseCase.Vessel,
 				MineralUseCase.Crucible
 			]
 		};
-	};
-
-	const nuggetOverride = (mineral : string) : InputMineral => {
-		return {
-			name : `${capitaliseFirstLetterOfEachWord(mineral)} Nugget`,
-			produces : mineral,
-			yield : mbPerNugget,
-			uses : [
-				MineralUseCase.Vessel,
-				MineralUseCase.Crucible
-			]
-		};
-	};
-
-	function componentIngotAvailable(component : SmeltingComponent) : boolean {
-		return component.hasIngot == null || component.hasIngot;
 	}
 
-	function componentNugetAvailable(component : SmeltingComponent) : boolean {
-		return component.hasNugget == null || component.hasNugget;
+	function componentDefaultAvailable(component : SmeltingComponent, defaultOption : SmeltingComponentDefaultOption) {
+		return component.default.includes(defaultOption);
 	}
 
 	return (
@@ -219,14 +198,14 @@ export function MetalComponentDisplay({metal} : Readonly<MetalDisplayProps>) {
 
 					{/* Minerals */}
 					{metalMixture?.components.map(component => {
-						const mineral = component.mineral.toLowerCase();
-						let componentMinerals = groupedMinerals.get(mineral) || [];
+						const mineralName = component.mineral.toLowerCase();
+						let componentMinerals = metalMinerals.get(mineralName) || [];
 
 						if (componentMinerals.length === 0) {
 							return (
 									<ErrorComponent
-											key={mineral}
-											error={`Failed to retrieve mineral ${mineral}`}
+											key={mineralName}
+											error={`Failed to retrieve mineral ${mineralName}`}
 											className="mb-6"
 									/>
 							);
@@ -237,18 +216,18 @@ export function MetalComponentDisplay({metal} : Readonly<MetalDisplayProps>) {
 						const hasIngot = componentMinerals.some(m => m.name.toLowerCase().includes("ingot"));
 						const hasNugget = componentMinerals.some(m => m.name.toLowerCase().includes("nugget"));
 
-						if (!hasIngot && componentIngotAvailable(component)) {
-							componentMinerals.push(ingotOverride(component.mineral));
+						if (!hasIngot && componentDefaultAvailable(component, SmeltingComponentDefaultOption.INGOT)) {
+							componentMinerals.push(defaultOverride(component.mineral, SmeltingComponentDefaultOption.INGOT));
 						}
 
-						if (!hasNugget && componentNugetAvailable(component)) {
-							componentMinerals.push(nuggetOverride(component.mineral));
+						if (!hasNugget && componentDefaultAvailable(component, SmeltingComponentDefaultOption.NUGGET)) {
+							componentMinerals.push(defaultOverride(component.mineral, SmeltingComponentDefaultOption.NUGGET));
 						}
 
 						return (
 								<MineralAccordion
-										key={mineral}
-										title={capitaliseFirstLetterOfEachWord(mineral)}
+										key={mineralName}
+										title={capitaliseFirstLetterOfEachWord(mineralName)}
 										minerals={componentMinerals}
 										mineralQuantities={mineralQuantities}
 										onQuantityChange={handleMineralQuantityChange}

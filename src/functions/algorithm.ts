@@ -13,32 +13,6 @@ export interface MetalProductionResult {
 	message?: string;
 }
 
-// interface MineralCombination {
-// 	minerals: MineralWithQuantity[];
-// 	outputMb: number;
-// }
-
-/**
- * Groups minerals by their production type.
- * For example groups all copper producing minerals.
- * @param availableMinerals All available minerals.
- */
-function groupMinerals(availableMinerals: MineralWithQuantity[]) : Map<string, MineralWithQuantity[]> {
-	const mineralsByType = new Map<string, MineralWithQuantity[]>();
-
-	for (const mineralWithQty of availableMinerals) {
-		const producedMineral = mineralWithQty.mineral.produces.toLowerCase();
-
-		if (!mineralsByType.has(producedMineral)) {
-			mineralsByType.set(producedMineral, []);
-		}
-
-		mineralsByType.get(producedMineral)?.push(mineralWithQty);
-	}
-
-	return mineralsByType;
-}
-
 /**
  * Calculate the total available mB for each mineral production type.
  * @param mineralsByType Grouped minerals by their production type.
@@ -204,11 +178,10 @@ function findValidCombination(
 export function calculateMetal(
 		targetMb: number,
 		targetMetal: SmeltingOutput,
-		availableMinerals: MineralWithQuantity[]
+		availableMinerals: Map<string, MineralWithQuantity[]>
 ): MetalProductionResult {
 	const targetMetalComponents = targetMetal.components;
-	const mineralsByType = groupMinerals(availableMinerals);
-	const totalAvailableByType = calculateAvailableMbByType(mineralsByType);
+	const totalAvailableByType = calculateAvailableMbByType(availableMinerals);
 
 	// Check if we have enough total material
 	const totalAvailable = Array.from(totalAvailableByType.values()).reduce(
@@ -243,7 +216,7 @@ export function calculateMetal(
 	const result = findValidCombination(
 			targetMb,
 			targetMetalComponents,
-			mineralsByType
+			availableMinerals
 	);
 
 	if (!result) {
