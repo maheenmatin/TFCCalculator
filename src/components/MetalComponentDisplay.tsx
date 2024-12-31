@@ -211,15 +211,13 @@ export function MetalComponentDisplay({metal} : Readonly<MetalDisplayProps>) {
 							);
 						}
 
-						const hasIngot = componentMinerals.some(m => m.name.toLowerCase().includes("ingot"));
-						const hasNugget = componentMinerals.some(m => m.name.toLowerCase().includes("nugget"));
+						for (const defaultOption in SmeltingComponentDefaultOption) {
+							const alreadyExists = componentMinerals.some(m => m.name.toLowerCase().includes(defaultOption.toLowerCase()));
+							const shouldDefault = componentDefaultAvailable(component, defaultOption as SmeltingComponentDefaultOption);
 
-						if (!hasIngot && componentDefaultAvailable(component, SmeltingComponentDefaultOption.INGOT)) {
-							componentMinerals.push(defaultOverride(component.mineral, SmeltingComponentDefaultOption.INGOT));
-						}
-
-						if (!hasNugget && componentDefaultAvailable(component, SmeltingComponentDefaultOption.NUGGET)) {
-							componentMinerals.push(defaultOverride(component.mineral, SmeltingComponentDefaultOption.NUGGET));
+							if (!alreadyExists && shouldDefault) {
+								componentMinerals.push(defaultOverride(component.mineral, defaultOption as SmeltingComponentDefaultOption));
+							}
 						}
 
 						return (
