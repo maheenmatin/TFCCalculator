@@ -1,16 +1,36 @@
 export interface SmeltingOutput {
 	name : string;
 	components : SmeltingComponent[];
-	isMetal : boolean;
 	producible? : boolean;
+	type : SmeltingOutputType;
+}
+
+enum SmeltingOutputType {
+	METAL,
+	ALLOY
+}
+
+export interface MetalOutput extends SmeltingOutput {
+	type : SmeltingOutputType.METAL
+}
+
+export interface AlloyOutput extends SmeltingOutput {
+	type : SmeltingOutputType.ALLOY
+}
+
+/**
+ * Guard function to determine if SmeltingOutput is an Alloy
+ * @param output
+ */
+export function isAlloyOutput(output: SmeltingOutput): output is AlloyOutput {
+	return output.type === SmeltingOutputType.ALLOY;
 }
 
 export interface SmeltingComponent {
 	mineral : string;
 	min : number;
 	max : number;
-	default : SmeltingComponentDefaultOption[];
-
+	default? : SmeltingComponentDefaultOption[];
 }
 
 export enum SmeltingComponentDefaultOption {

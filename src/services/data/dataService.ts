@@ -1,6 +1,6 @@
 import {cache} from "react";
 import {RouteParams} from "@/types/gameversions";
-import {InputMineral, SmeltingOutput} from "@/types";
+import {AlloyOutput, InputMineral, isAlloyOutput, MetalOutput, SmeltingOutput} from "@/types";
 import {promises as fs} from "fs";
 import path from "path";
 
@@ -10,8 +10,8 @@ interface RawMineralsJson {
 }
 
 interface MetalsListResponse {
-	metals: SmeltingOutput[];
-	alloys: SmeltingOutput[];
+	metals : MetalOutput[];
+	alloys : AlloyOutput[];
 }
 
 export interface OutputResponse {
@@ -37,22 +37,26 @@ export class DataService {
 
 			return [
 				...rawData.metals.map(metal => ({
-					name: metal.name,
-					components: [],
-					isMetal: true,
-					producible: metal.producible ?? true
-				})),
+					name : metal.name,
+					components : [
+						{
+							mineral : metal.name,
+							min : 100,
+							max : 100
+						}
+					],
+					producible : metal.producible ?? true
+				} as MetalOutput)),
 				...rawData.alloys.map(alloy => ({
-					name: alloy.name,
-					components: alloy.components ?? [],
-					isMetal: false,
-					producible: alloy.producible ?? true
-				}))
+					name : alloy.name,
+					components : alloy.components ?? [],
+					producible : alloy.producible ?? true
+				} as AlloyOutput))
 			];
 		} catch (error) {
 			throw {
-				status: 500,
-				message: `Failed to load outputs from ${this.dataPath}`,
+				status : 500,
+				message : `Failed to load outputs from ${this.dataPath}`,
 				error
 			};
 		}
@@ -74,47 +78,47 @@ export class DataService {
 			}
 		} catch (error) {
 			throw {
-				status: 500,
-				message: `Failed to load output ${outputName} for ${this.dataPath}`,
+				status : 500,
+				message : `Failed to load output ${outputName} for ${this.dataPath}`,
 				error
 			};
 		}
 
 		throw {
-			status: 404,
-			message: `Output ${outputName} not found!`
+			status : 404,
+			message : `Output ${outputName} not found!`
 		};
 	}
 
 	private async getMineralsForOutput(output : SmeltingOutput) : Promise<Map<string, InputMineral[]>> {
 		const minerals = await this.loadMinerals();
 
-		return output.isMetal
-		       ? this.getMineralsForMetal(output, minerals)
-		       : this.getMineralsForAlloy(output, minerals);
+		return isAlloyOutput(output)
+		       ? this.getMineralsForAlloy(output, minerals)
+		       : this.getMineralsForMetal(output as MetalOutput, minerals);
 	}
 
-	private async getMineralsForMetal(metal : SmeltingOutput, minerals : RawMineralsJson) : Promise<Map<string, InputMineral[]>> {
+	private async getMineralsForMetal(metal : MetalOutput, minerals : RawMineralsJson) : Promise<Map<string, InputMineral[]>> {
 		const metalMinerals = minerals[metal.name.toLowerCase()];
 		if (!metalMinerals) {
 			throw {
-				status: 404,
-				message: `No minerals found for ${metal.name}!`
+				status : 404,
+				message : `No minerals found for ${metal.name}!`
 			};
 		}
 
 		return new Map<string, InputMineral[]>([[metal.name, metalMinerals]]);
 	}
 
-	private async getMineralsForAlloy(alloy : SmeltingOutput, minerals : RawMineralsJson) : Promise<Map<string, InputMineral[]>> {
+	private async getMineralsForAlloy(alloy : AlloyOutput, minerals : RawMineralsJson) : Promise<Map<string, InputMineral[]>> {
 		const combinedMinerals = new Map<string, InputMineral[]>;
 
 		alloy.components.forEach(component => {
 			const componentMinerals = minerals[component.mineral.toLowerCase()];
 			if (!componentMinerals) {
 				throw {
-					status: 404,
-					message: `No minerals found for ${alloy.name} with name ${component.mineral}!`
+					status : 404,
+					message : `No minerals found for ${alloy.name} with name ${component.mineral}!`
 				};
 			}
 
@@ -131,8 +135,8 @@ export class DataService {
 			return JSON.parse(fileContent);
 		} catch (error) {
 			throw {
-				status: 500,
-				message: `Failed to load minerals from ${this.dataPath}`,
+				status : 500,
+				message : `Failed to load minerals from ${this.dataPath}`,
 				error
 			};
 		}
@@ -142,8 +146,8 @@ export class DataService {
 export const getDataService = cache(async(params : RouteParams) : Promise<DataService> => {
 	if (!params.type || !params.id || !params.version) {
 		throw {
-			status: 400,
-			message: "Missing required parameters: type, id, and version are required"
+			status : 400,
+			message : "Missing required parameters: type, id, and version are required"
 		};
 	}
 
