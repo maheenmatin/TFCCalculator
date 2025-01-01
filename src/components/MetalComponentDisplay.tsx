@@ -15,7 +15,7 @@ interface MetalDisplayProps {
 export function MetalComponentDisplay({metal} : Readonly<MetalDisplayProps>) {
 	const {type, id, version} = useParams();
 
-	const [outputMixture, setoutputMixture] = useState<SmeltingOutput | null>(null);
+	const [outputMixture, setOutputMixture] = useState<SmeltingOutput | null>(null);
 	const [outputMinerals, setOutputMinerals] = useState<Map<string, InputMineral[]>>(new Map());
 	const [unit, setUnit] = useState<DesiredOutputTypes>(DesiredOutputTypes.Ingot);
 	const [desiredOutputInUnits, setDesiredOutputInUnits] = useState<number>(0);
@@ -49,7 +49,7 @@ export function MetalComponentDisplay({metal} : Readonly<MetalDisplayProps>) {
 					return response.json();
 				})
 				.then(data => {
-					setoutputMixture(data.material);
+					setOutputMixture(data.material);
 					setOutputMinerals(new Map(Object.entries(data.minerals)));
 				})
 				.catch(error => {
@@ -73,8 +73,8 @@ export function MetalComponentDisplay({metal} : Readonly<MetalDisplayProps>) {
 
 	// TODO: Possibly might need to get rid of this and do it dynamically for TFC (no nuggets)
 	const unitToMbConversion : Record<DesiredOutputTypes, number> = {
-		[DesiredOutputTypes.Ingot] : mbPerDefault.get(SmeltingComponentDefaultOption.INGOT) || 144,
-		[DesiredOutputTypes.Nugget] : mbPerDefault.get(SmeltingComponentDefaultOption.NUGGET) || 16,
+		[DesiredOutputTypes.Ingot] : mbPerDefault.get(SmeltingComponentDefaultOption.INGOT) ?? 144,
+		[DesiredOutputTypes.Nugget] : mbPerDefault.get(SmeltingComponentDefaultOption.NUGGET) ?? 16,
 		[DesiredOutputTypes.Millibucket] : 1
 	} as const;
 
@@ -142,7 +142,7 @@ export function MetalComponentDisplay({metal} : Readonly<MetalDisplayProps>) {
 		return {
 			name : `${capitaliseFirstLetterOfEachWord(mineral + " " + defaultOption)}`,
 			produces : mineral,
-			yield : mbPerDefault.get(defaultOption) || 0,
+			yield : mbPerDefault.get(defaultOption) ?? 0,
 			uses : [
 				MineralUseCase.Vessel,
 				MineralUseCase.Crucible
