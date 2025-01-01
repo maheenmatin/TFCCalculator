@@ -5,25 +5,18 @@ export interface SmeltingOutput {
 	type : SmeltingOutputType;
 }
 
-enum SmeltingOutputType {
+export enum SmeltingOutputType {
 	METAL,
 	ALLOY
 }
 
-export interface MetalOutput extends SmeltingOutput {
-	type : SmeltingOutputType.METAL
-}
-
-export interface AlloyOutput extends SmeltingOutput {
-	type : SmeltingOutputType.ALLOY
-}
-
 /**
- * Guard function to determine if SmeltingOutput is an Alloy
- * @param output
+ * Guard function to determine if SmeltingOutput is of a given type
+ * @param output Unknown output type
+ * @param outputType Check against given output type
  */
-export function isAlloyOutput(output: SmeltingOutput): output is AlloyOutput {
-	return output.type === SmeltingOutputType.ALLOY;
+export function isOutputType(output : SmeltingOutput, outputType : SmeltingOutputType) {
+	return output.type === outputType;
 }
 
 export interface SmeltingComponent {

@@ -1,6 +1,6 @@
 import {cache} from "react";
 import {RouteParams} from "@/types/gameversions";
-import {AlloyOutput, InputMineral, isAlloyOutput, MetalOutput, SmeltingOutput} from "@/types";
+import {InputMineral, isOutputType, SmeltingOutput, SmeltingOutputType} from "@/types";
 import {promises as fs} from "fs";
 import path from "path";
 
@@ -10,8 +10,8 @@ interface RawMineralsJson {
 }
 
 interface MetalsListResponse {
-	metals : MetalOutput[];
-	alloys : AlloyOutput[];
+	metals : SmeltingOutput[];
+	alloys : SmeltingOutput[];
 }
 
 export interface OutputResponse {
@@ -45,13 +45,15 @@ export class DataService {
 							max : 100
 						}
 					],
-					producible : metal.producible ?? true
-				} as MetalOutput)),
+					producible : metal.producible ?? true,
+					type: SmeltingOutputType.METAL
+				})),
 				...rawData.alloys.map(alloy => ({
 					name : alloy.name,
 					components : alloy.components ?? [],
-					producible : alloy.producible ?? true
-				} as AlloyOutput))
+					producible : alloy.producible ?? true,
+					type: SmeltingOutputType.ALLOY
+				}))
 			];
 		} catch (error) {
 			throw {
@@ -93,12 +95,12 @@ export class DataService {
 	private async getMineralsForOutput(output : SmeltingOutput) : Promise<Map<string, InputMineral[]>> {
 		const minerals = await this.loadMinerals();
 
-		return isAlloyOutput(output)
+		return isOutputType(output, SmeltingOutputType.ALLOY)
 		       ? this.getMineralsForAlloy(output, minerals)
-		       : this.getMineralsForMetal(output as MetalOutput, minerals);
+		       : this.getMineralsForMetal(output, minerals);
 	}
 
-	private async getMineralsForMetal(metal : MetalOutput, minerals : RawMineralsJson) : Promise<Map<string, InputMineral[]>> {
+	private async getMineralsForMetal(metal : SmeltingOutput, minerals : RawMineralsJson) : Promise<Map<string, InputMineral[]>> {
 		const metalMinerals = minerals[metal.name.toLowerCase()];
 		if (!metalMinerals) {
 			throw {
@@ -110,7 +112,7 @@ export class DataService {
 		return new Map<string, InputMineral[]>([[metal.name, metalMinerals]]);
 	}
 
-	private async getMineralsForAlloy(alloy : AlloyOutput, minerals : RawMineralsJson) : Promise<Map<string, InputMineral[]>> {
+	private async getMineralsForAlloy(alloy : SmeltingOutput, minerals : RawMineralsJson) : Promise<Map<string, InputMineral[]>> {
 		const combinedMinerals = new Map<string, InputMineral[]>;
 
 		alloy.components.forEach(component => {
