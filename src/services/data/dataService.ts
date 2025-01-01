@@ -19,6 +19,17 @@ export interface OutputResponse {
 	minerals : Map<string, InputMineral[]>;
 }
 
+export class DataServiceError extends Error {
+	constructor(
+			public readonly status: number,
+			message: string,
+			public readonly originalError?: unknown
+	) {
+		super(message);
+		this.name = 'DataServiceError';
+	}
+}
+
 export class DataService {
 	private constructor(
 			private readonly dataPath : string
@@ -56,11 +67,11 @@ export class DataService {
 				}))
 			];
 		} catch (error) {
-			throw {
-				status : 500,
-				message : `Failed to load outputs from ${this.dataPath}`,
+			throw new DataServiceError(
+				500,
+				`Failed to load outputs from ${this.dataPath}`,
 				error
-			};
+			);
 		}
 	}
 
@@ -79,17 +90,17 @@ export class DataService {
 				};
 			}
 		} catch (error) {
-			throw {
-				status : 500,
-				message : `Failed to load output ${outputName} for ${this.dataPath}`,
-				error
-			};
+			throw new DataServiceError(
+					500,
+					`Failed to load output ${outputName} for ${this.dataPath}`,
+					error
+			);
 		}
 
-		throw {
-			status : 404,
-			message : `Output ${outputName} not found!`
-		};
+		throw new DataServiceError(
+				404,
+				`Output ${outputName} not found!`
+		);
 	}
 
 	private async getMineralsForOutput(output : SmeltingOutput) : Promise<Map<string, InputMineral[]>> {
@@ -118,10 +129,10 @@ export class DataService {
 		alloy.components.forEach(component => {
 			const componentMinerals = minerals[component.mineral.toLowerCase()];
 			if (!componentMinerals) {
-				throw {
-					status : 404,
-					message : `No minerals found for ${alloy.name} with name ${component.mineral}!`
-				};
+				throw new DataServiceError(
+						404,
+						`No minerals found for ${alloy.name} with name ${component.mineral}!`
+				);
 			}
 
 			combinedMinerals.set(component.mineral.toLowerCase(), componentMinerals);
@@ -136,21 +147,21 @@ export class DataService {
 			const fileContent = await fs.readFile(filePath, "utf-8");
 			return JSON.parse(fileContent);
 		} catch (error) {
-			throw {
-				status : 500,
-				message : `Failed to load minerals from ${this.dataPath}`,
-				error
-			};
+			throw new DataServiceError(
+					500,
+					`Failed to load minerals from ${this.dataPath}`,
+					error
+			);
 		}
 	}
 }
 
 export const getDataService = cache(async(params : RouteParams) : Promise<DataService> => {
 	if (!params.type || !params.id || !params.version) {
-		throw {
-			status : 400,
-			message : "Missing required parameters: type, id, and version are required"
-		};
+		throw new DataServiceError(
+				400,
+				"Missing required parameters: type, id, and version are required"
+		);
 	}
 
 	return DataService.initialize(params);

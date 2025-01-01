@@ -1,6 +1,6 @@
 import {NextResponse} from "next/server";
 import {RouteParams, VersionType} from "@/types/gameversions";
-import {getDataService} from "@/services/data/dataService";
+import {DataServiceError, getDataService} from "@/services/data/dataService";
 
 
 interface RouteContext {
@@ -22,14 +22,11 @@ export async function GET(
 		const dataService = await getDataService(routeParams);
 		return NextResponse.json(await dataService.getOutputs());
 	} catch (error) {
-		if (error
-				&& typeof error === "object"
-				&& "status" in error
-				&& "message" in error
-		) {
+		if (error && error instanceof DataServiceError) {
+			console.error(`${error.message}: ${error.originalError}`);
 			return NextResponse.json(
-				{message : error.message as string},
-				{status : error.status as number}
+				{message : error.message},
+				{status : error.status}
 			);
 		}
 

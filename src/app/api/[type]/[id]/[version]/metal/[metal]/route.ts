@@ -1,7 +1,7 @@
 import {InputMineral, MineralUseCase} from "@/types";
 import {NextResponse} from "next/server";
 import {RouteParams} from "@/types/gameversions";
-import {getDataService} from "@/services/data/dataService";
+import {DataServiceError, getDataService} from "@/services/data/dataService";
 
 
 interface RouteContext {
@@ -32,12 +32,17 @@ export async function GET(
 					minerals : mineralsObject
 				});
 	} catch (error) {
-		console.error(`Failed to fetch metal for ${decodedMetal}: ${error}`);
+		if (error && error instanceof DataServiceError) {
+			console.error(`${error.message}: ${error.originalError}`);
+			return NextResponse.json(
+					{message : error.message},
+					{status : error.status}
+			);
+		}
+
+		console.error(`Unknown failure to fetch ${decodedMetal}: ${error}`);
 		return NextResponse.json(
-				{
-					error : `Failed to fetch metal for ${decodedMetal}`,
-					raw_error : error
-				},
+				{error : `Unknown failure to fetch ${decodedMetal}: ${error}`,},
 				{status : 500}
 		);
 	}
@@ -48,16 +53,11 @@ export async function GET(
  * Returns true if no uses are specified or if the mineral has any of the specified uses.
  * @param minerals The map of InputMinerals to filter
  * @param uses Array of MineralUseCase to filter by
- * @returns Filtered array of InputMinerals
+ * @returns Filtered map of InputMinerals
  */
 function filterMineralsByUses(minerals : Map<string, InputMineral[]>, uses : MineralUseCase[]) : Map<string, InputMineral[]> {
-	if (uses.length === 0) {
-		return minerals;
-	}
-
-	minerals.forEach((component, key) => {
-		minerals.set(key, component.filter(mineral => uses.some(use => mineral.uses?.includes(use))));
-	});
-
-	return minerals;
+	return new Map([...minerals].map(([key, component]) => [
+		key,
+		component.filter(mineral => mineral.uses?.some(use => uses.includes(use)))
+	]));
 }
