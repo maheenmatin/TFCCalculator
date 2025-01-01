@@ -114,10 +114,10 @@ export class DataService {
 	private async getMineralsForMetal(metal : SmeltingOutput, minerals : RawMineralsJson) : Promise<Map<string, InputMineral[]>> {
 		const metalMinerals = minerals[metal.name.toLowerCase()];
 		if (!metalMinerals) {
-			throw {
-				status : 404,
-				message : `No minerals found for ${metal.name}!`
-			};
+			throw new DataServiceError(
+					404,
+					`No minerals found for ${metal.name}!`
+			);
 		}
 
 		return new Map<string, InputMineral[]>([[metal.name, metalMinerals]]);
