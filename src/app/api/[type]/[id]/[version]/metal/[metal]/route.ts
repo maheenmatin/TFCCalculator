@@ -56,8 +56,13 @@ export async function GET(
  * @returns Filtered map of InputMinerals
  */
 function filterMineralsByUses(minerals : Map<string, InputMineral[]>, uses : MineralUseCase[]) : Map<string, InputMineral[]> {
-	return new Map([...minerals].map(([key, component]) => [
-		key,
-		component.filter(mineral => mineral.uses?.some(use => uses.includes(use)))
-	]));
+	if (uses.length === 0) {
+		return minerals;
+	}
+
+	minerals.forEach((component, key) => {
+		minerals.set(key, component.filter(mineral => uses.some(use => mineral.uses?.includes(use))));
+	});
+
+	return minerals;
 }
