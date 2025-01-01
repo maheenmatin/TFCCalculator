@@ -15,16 +15,16 @@ interface MetalDisplayProps {
 export function MetalComponentDisplay({metal} : Readonly<MetalDisplayProps>) {
 	const {type, id, version} = useParams();
 
-	const [metalMixture, setMetalMixture] = useState<SmeltingOutput | null>(null);
-	const [metalMinerals, setMetalMinerals] = useState<Map<string, InputMineral[]>>(new Map());
+	const [outputMixture, setoutputMixture] = useState<SmeltingOutput | null>(null);
+	const [outputMinerals, setOutputMinerals] = useState<Map<string, InputMineral[]>>(new Map());
 	const [unit, setUnit] = useState<DesiredOutputTypes>(DesiredOutputTypes.Ingot);
 	const [desiredOutputInUnits, setDesiredOutputInUnits] = useState<number>(0);
 	const [mineralQuantities, setMineralQuantities] = useState<Map<string, number>>(new Map());
 
 	const [isLoading, setIsLoading] = useState<boolean>(true);
 	const [isCalculating, setIsCalculating] = useState<boolean>(false);
-	const [result, setResult] = useState<MetalProductionResult | null>(null);
 	const [isResultAlteredSinceLastCalculation, setIsResultAlteredSinceLastCalculation] = useState<boolean>(false);
+	const [result, setResult] = useState<MetalProductionResult | null>(null);
 	const [error, setError] = useState<Error | string | null>(null);
 
 	// TODO: Utilise the version specific constants instead.
@@ -49,8 +49,8 @@ export function MetalComponentDisplay({metal} : Readonly<MetalDisplayProps>) {
 					return response.json();
 				})
 				.then(data => {
-					setMetalMixture(data.material);
-					setMetalMinerals(data.minerals);
+					setoutputMixture(data.material);
+					setOutputMinerals(new Map(Object.entries(data.minerals)));
 				})
 				.catch(error => {
 					setError("Error fetching metal details");
@@ -81,7 +81,7 @@ export function MetalComponentDisplay({metal} : Readonly<MetalDisplayProps>) {
 	const getDesiredOutputInMb = () : number => desiredOutputInUnits * (unitToMbConversion[unit] ?? 1);
 
 	const handleCalculate = async() => {
-		if (!metalMixture || !metalMinerals || isCalculating) {
+		if (!outputMixture || !outputMinerals || isCalculating) {
 			return;
 		}
 
@@ -95,7 +95,7 @@ export function MetalComponentDisplay({metal} : Readonly<MetalDisplayProps>) {
 								mineralName,
 								[{
 									mineral: (() => {
-										let mineral = metalMinerals.get(mineralName)?.[0];
+										let mineral = outputMinerals.get(mineralName)?.[0];
 										if (!mineral) {
 											const baseMineralName = getBaseMineralFromOverride(mineralName);
 
@@ -113,7 +113,7 @@ export function MetalComponentDisplay({metal} : Readonly<MetalDisplayProps>) {
 					)
 			);
 
-			setResult(calculateMetal(getDesiredOutputInMb(), metalMixture, mineralWithQuantities));
+			setResult(calculateMetal(getDesiredOutputInMb(), outputMixture, mineralWithQuantities));
 		} catch (err) {
 			setError(`Failed to calculate! ${err}`);
 			console.error("Error calculating:", err);
@@ -151,7 +151,7 @@ export function MetalComponentDisplay({metal} : Readonly<MetalDisplayProps>) {
 	}
 
 	function componentDefaultAvailable(component : SmeltingComponent, defaultOption : SmeltingComponentDefaultOption) {
-		return component.default.includes(defaultOption);
+		return component.default?.includes(defaultOption);
 	}
 
 	return (
@@ -197,9 +197,9 @@ export function MetalComponentDisplay({metal} : Readonly<MetalDisplayProps>) {
 					<p className="text-lg text-center mb-8">Enter all available minerals in your inventory!</p>
 
 					{/* Minerals */}
-					{metalMixture?.components.map(component => {
+					{outputMixture?.components.map(component => {
 						const mineralName = component.mineral.toLowerCase();
-						const componentMinerals = metalMinerals.get(mineralName) || [];
+						const componentMinerals = outputMinerals.get(mineralName) ?? [];
 
 						if (componentMinerals.length === 0) {
 							return (
