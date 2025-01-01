@@ -5,6 +5,12 @@ export interface SmeltingOutput {
 	type : SmeltingOutputType;
 }
 
+export interface MetalSmeltingOutput extends SmeltingOutput {
+	default? : SmeltingComponentDefaultOption[];
+}
+
+export interface AlloySmeltingOutput extends SmeltingOutput {}
+
 export enum SmeltingOutputType {
 	METAL,
 	ALLOY

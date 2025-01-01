@@ -4,35 +4,71 @@
   "schemaVersion": "1",
   "metals": [
     {
-      "name": "bismuth"
+      "name": "bismuth",
+      "default": [
+        "ingot",
+        "nugget"
+      ]
     },
     {
-      "name": "copper"
+      "name": "copper",
+      "default": [
+        "ingot",
+        "nugget"
+      ]
     },
     {
-      "name": "gold"
+      "name": "gold",
+      "default": [
+        "ingot",
+        "nugget"
+      ]
     },
     {
-      "name": "iron"
+      "name": "iron",
+      "default": [
+        "ingot",
+        "nugget"
+      ]
     },
     {
-      "name": "nickel"
+      "name": "nickel",
+      "default": [
+        "ingot",
+        "nugget"
+      ]
     },
     {
       "name": "redstone",
       "producible": false
     },
     {
-      "name": "silver"
+      "name": "silver",
+      "default": [
+        "ingot",
+        "nugget"
+      ]
     },
     {
-      "name": "steel"
+      "name": "steel",
+      "default": [
+        "ingot",
+        "nugget"
+      ]
     },
     {
-      "name": "tin"
+      "name": "tin",
+      "default": [
+        "ingot",
+        "nugget"
+      ]
     },
     {
-      "name": "zinc"
+      "name": "zinc",
+      "default": [
+        "ingot",
+        "nugget"
+      ]
     }
   ],
   "alloys": [
@@ -116,8 +152,6 @@
         },
         {
           "mineral": "redstone",
-          "hasIngot": false,
-          "hasNugget": false,
           "min": 15.0,
           "max": 25.0
         }
