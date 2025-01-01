@@ -1,11 +1,12 @@
 import {ErrorComponent} from "@/components/ErrorComponent";
 import {MineralAccordion} from "@/components/MineralAccordion";
 import {OutputResult} from "@/components/OutputResult";
-import {calculateMetal, MetalProductionResult, MineralWithQuantity} from "@/functions/algorithm";
+import {calculateMetal, MetalProductionResult} from "@/functions/algorithm";
 import {capitaliseFirstLetterOfEachWord, getBaseMineralFromOverride} from "@/functions/utils";
-import {DesiredOutputTypes, InputMineral, MineralUseCase, SmeltingComponent, SmeltingComponentDefaultOption, SmeltingOutput} from "@/types";
+import {DesiredOutputTypes, InputMineral, MineralUseCase, QuantifiedInputMineral, SmeltingComponent, SmeltingComponentDefaultOption, SmeltingOutput} from "@/types";
 import React, {useEffect, useState} from "react";
 import {useParams} from "next/navigation";
+import {ApiResponse} from "@/app/api/[type]/[id]/[version]/metal/[metal]/route";
 
 
 interface MetalDisplayProps {
@@ -15,11 +16,10 @@ interface MetalDisplayProps {
 export function MetalComponentDisplay({metal} : Readonly<MetalDisplayProps>) {
 	const {type, id, version} = useParams();
 
-	const [outputMixture, setOutputMixture] = useState<SmeltingOutput | null>(null);
-	const [outputMinerals, setOutputMinerals] = useState<Map<string, InputMineral[]>>(new Map());
+	const [mixture, setMixture] = useState<SmeltingOutput | null>(null);
+	const [minerals, setMinerals] = useState<Map<string, QuantifiedInputMineral[]>>(new Map());
 	const [unit, setUnit] = useState<DesiredOutputTypes>(DesiredOutputTypes.Ingot);
 	const [desiredOutputInUnits, setDesiredOutputInUnits] = useState<number>(0);
-	const [mineralQuantities, setMineralQuantities] = useState<Map<string, number>>(new Map());
 
 	const [isLoading, setIsLoading] = useState<boolean>(true);
 	const [isCalculating, setIsCalculating] = useState<boolean>(false);
@@ -41,16 +41,18 @@ export function MetalComponentDisplay({metal} : Readonly<MetalDisplayProps>) {
 		}
 
 		fetch(`/api/${type}/${id}/${version}/metal/${metal}`)
-				.then(response => {
-					if (!response.ok) {
-						throw new Error(`HTTP error! status: ${response.status}`);
-					}
-
-					return response.json();
-				})
+				.then(response => response.ok
+				                  ? response.json() as Promise<ApiResponse>
+				                  : Promise.reject(`HTTP error! status: ${response.status}`))
 				.then(data => {
-					setOutputMixture(data.material);
-					setOutputMinerals(new Map(Object.entries(data.minerals)));
+					setMixture(data.material);
+					setMinerals(new Map(
+							Object.entries(data.minerals).map(([name, minerals]) => [
+								                                  name,
+								                                  minerals.map(m => ({...m, quantity : 0}))
+							                                  ]
+							)
+					));
 				})
 				.catch(error => {
 					setError("Error fetching metal details");
@@ -66,9 +68,34 @@ export function MetalComponentDisplay({metal} : Readonly<MetalDisplayProps>) {
 	};
 
 	const handleMineralQuantityChange = (mineralName : string, e : React.ChangeEvent<HTMLInputElement>) => {
-		const value = e.target.value === "" ? 0 : parseInt(e.target.value, 10);
-		setMineralQuantities(prev => new Map(prev).set(mineralName, isNaN(value) ? 0 : value));
+		const newQty = e.target.value === "" ? 0 : parseInt(e.target.value, 10);
+		setMinerals(prevMinerals => updateMineralQuantity(prevMinerals, mineralName, newQty));
 		setIsResultAlteredSinceLastCalculation(true);
+	};
+
+	const updateMineralQuantity = (
+			prevMinerals : Map<string, QuantifiedInputMineral[]>,
+			mineralName : string,
+			newQuantity : number
+	) : Map<string, QuantifiedInputMineral[]> => {
+		const newMap = new Map(prevMinerals);
+
+		for (const [componentName, mineralArray] of newMap.entries()) {
+			const updatedMinerals = [...mineralArray];
+
+			for (let i = 0; i < updatedMinerals.length; i++) {
+				if (updatedMinerals[i].name === mineralName) {
+					updatedMinerals[i] = {
+						...updatedMinerals[i],
+						quantity : newQuantity
+					};
+				}
+			}
+
+			newMap.set(componentName, updatedMinerals);
+		}
+
+		return newMap;
 	};
 
 	// TODO: Possibly might need to get rid of this and do it dynamically for TFC (no nuggets)
@@ -81,7 +108,7 @@ export function MetalComponentDisplay({metal} : Readonly<MetalDisplayProps>) {
 	const getDesiredOutputInMb = () : number => desiredOutputInUnits * (unitToMbConversion[unit] ?? 1);
 
 	const handleCalculate = async() => {
-		if (!outputMixture || !outputMinerals || isCalculating) {
+		if (!mixture || !minerals || isCalculating) {
 			return;
 		}
 
@@ -89,31 +116,18 @@ export function MetalComponentDisplay({metal} : Readonly<MetalDisplayProps>) {
 		await new Promise(resolve => setTimeout(resolve, 0));
 
 		try {
-			const mineralWithQuantities: Map<string, MineralWithQuantity[]> = new Map(
-					Array.from(mineralQuantities.entries()).map(
-							([mineralName, quantity]) => [
-								mineralName,
-								[{
-									mineral: (() => {
-										let mineral = outputMinerals.get(mineralName)?.[0];
-										if (!mineral) {
-											const baseMineralName = getBaseMineralFromOverride(mineralName);
+			const mineralWithQuantities : Map<string, QuantifiedInputMineral[]> = new Map();
 
-											for (const defaultOption in SmeltingComponentDefaultOption) {
-												if (mineralName.toLowerCase().includes(defaultOption.toLowerCase())) {
-													mineral = defaultOverride(baseMineralName, defaultOption as SmeltingComponentDefaultOption);
-												}
-											}
-										}
-										return mineral!;
-									})(),
-									quantity
-								}].filter(m => m.quantity > 0)
-							]
-					)
-			);
+			// Keep non-zero quantities
+			for (const [category, mineralArray] of minerals) {
+				const nonZeroMinerals = mineralArray.filter(m => m.quantity > 0);
 
-			setResult(calculateMetal(getDesiredOutputInMb(), outputMixture, mineralWithQuantities));
+				if (nonZeroMinerals.length > 0) {
+					mineralWithQuantities.set(category, nonZeroMinerals);
+				}
+			}
+
+			setResult(calculateMetal(getDesiredOutputInMb(), mixture, mineralWithQuantities));
 		} catch (err) {
 			setError(`Failed to calculate! ${err}`);
 			console.error("Error calculating:", err);
@@ -138,21 +152,23 @@ export function MetalComponentDisplay({metal} : Readonly<MetalDisplayProps>) {
 			&& !isResultAlteredSinceLastCalculation
 			&& !error;
 
-	function defaultOverride(mineral : string, defaultOption : SmeltingComponentDefaultOption) : InputMineral {
-		return {
-			name : `${capitaliseFirstLetterOfEachWord(mineral + " " + defaultOption)}`,
-			produces : mineral,
-			yield : mbPerDefault.get(defaultOption) ?? 0,
-			uses : [
-				MineralUseCase.Vessel,
-				MineralUseCase.Crucible
-			]
-		};
-	}
+	// TODO: Fix defaults based on new structure
+	// function defaultOverride(mineral : string, defaultOption : SmeltingComponentDefaultOption) : QuantifiedInputMineral {
+	// 	return {
+	// 		name : `${capitaliseFirstLetterOfEachWord(mineral + " " + defaultOption)}`,
+	// 		produces : mineral,
+	// 		yield : mbPerDefault.get(defaultOption) ?? 0,
+	// 		uses : [
+	// 			MineralUseCase.Vessel,
+	// 			MineralUseCase.Crucible
+	// 		],
+	// 		quantity : 0
+	// 	};
+	// }
 
-	function componentDefaultAvailable(component : SmeltingComponent, defaultOption : SmeltingComponentDefaultOption) {
-		return component.default?.includes(defaultOption);
-	}
+	// function componentDefaultAvailable(component : SmeltingComponent, defaultOption : SmeltingComponentDefaultOption) {
+	// 	return component.default?.includes(defaultOption);
+	// }
 
 	return (
 			<div className="container mx-auto p-4 grid grid-cols-1 gap-6">
@@ -197,9 +213,9 @@ export function MetalComponentDisplay({metal} : Readonly<MetalDisplayProps>) {
 					<p className="text-lg text-center mb-8">Enter all available minerals in your inventory!</p>
 
 					{/* Minerals */}
-					{outputMixture?.components.map(component => {
+					{mixture?.components.map(component => {
 						const mineralName = component.mineral.toLowerCase();
-						const componentMinerals = outputMinerals.get(mineralName) ?? [];
+						const componentMinerals = minerals.get(mineralName) ?? [];
 
 						if (componentMinerals.length === 0) {
 							return (
@@ -211,21 +227,20 @@ export function MetalComponentDisplay({metal} : Readonly<MetalDisplayProps>) {
 							);
 						}
 
-						for (const defaultOption in SmeltingComponentDefaultOption) {
-							const alreadyExists = componentMinerals.some(m => m.name.toLowerCase().includes(defaultOption.toLowerCase()));
-							const shouldDefault = componentDefaultAvailable(component, defaultOption as SmeltingComponentDefaultOption);
-
-							if (!alreadyExists && shouldDefault) {
-								componentMinerals.push(defaultOverride(component.mineral, defaultOption as SmeltingComponentDefaultOption));
-							}
-						}
+						// for (const defaultOption in SmeltingComponentDefaultOption) {
+						// 	const alreadyExists = componentMinerals.some(m => m.name.toLowerCase().includes(defaultOption.toLowerCase()));
+						// 	const shouldDefault = componentDefaultAvailable(component, defaultOption as SmeltingComponentDefaultOption);
+						//
+						// 	if (!alreadyExists && shouldDefault) {
+						// 		componentMinerals.push(defaultOverride(component.mineral, defaultOption as SmeltingComponentDefaultOption));
+						// 	}
+						// }
 
 						return (
 								<MineralAccordion
 										key={mineralName}
 										title={capitaliseFirstLetterOfEachWord(mineralName)}
 										minerals={componentMinerals}
-										mineralQuantities={mineralQuantities}
 										onQuantityChange={handleMineralQuantityChange}
 										onInputKeyPress={handleKeyPress}
 								/>

@@ -29,7 +29,6 @@ export interface SmeltingComponent {
 	mineral : string;
 	min : number;
 	max : number;
-	default? : SmeltingComponentDefaultOption[];
 }
 
 export enum SmeltingComponentDefaultOption {
@@ -45,6 +44,10 @@ export interface InputMineral {
 	produces : string;
 	yield : number;
 	uses? : MineralUseCase[];
+}
+
+export interface QuantifiedInputMineral extends InputMineral {
+	quantity : number;
 }
 
 export enum MineralUseCase {

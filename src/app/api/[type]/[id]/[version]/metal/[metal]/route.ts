@@ -1,8 +1,13 @@
-import {InputMineral, MineralUseCase} from "@/types";
+import {InputMineral, MineralUseCase, SmeltingOutput} from "@/types";
 import {NextResponse} from "next/server";
 import {RouteParams} from "@/types/gameversions";
 import {DataServiceError, getDataService} from "@/services/data/dataService";
 
+
+export interface ApiResponse {
+	material: SmeltingOutput;
+	minerals: Record<string, InputMineral[]>;
+}
 
 interface RouteContext {
 	params : RouteParams & {

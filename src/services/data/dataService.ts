@@ -1,6 +1,6 @@
 import {cache} from "react";
 import {RouteParams} from "@/types/gameversions";
-import {InputMineral, isOutputType, SmeltingOutput, SmeltingOutputType} from "@/types";
+import {AlloySmeltingOutput, InputMineral, isOutputType, MetalSmeltingOutput, SmeltingOutput, SmeltingOutputType} from "@/types";
 import {promises as fs} from "fs";
 import path from "path";
 
@@ -10,8 +10,8 @@ interface RawMineralsJson {
 }
 
 interface MetalsListResponse {
-	metals : SmeltingOutput[];
-	alloys : SmeltingOutput[];
+	metals : MetalSmeltingOutput[];
+	alloys : AlloySmeltingOutput[];
 }
 
 export interface OutputResponse {
@@ -57,7 +57,8 @@ export class DataService {
 						}
 					],
 					producible : metal.producible ?? true,
-					type: SmeltingOutputType.METAL
+					type: SmeltingOutputType.METAL,
+					default: metal.default
 				})),
 				...rawData.alloys.map(alloy => ({
 					name : alloy.name,
@@ -78,6 +79,7 @@ export class DataService {
 	async getOutput(outputName : string) : Promise<OutputResponse> {
 		try {
 			const outputs = await this.getOutputs();
+			outputs.forEach(output => console.log(output.components));
 
 			const smeltingOutput = outputs.find(
 					(output : SmeltingOutput) => output.name.toLowerCase() === outputName.toLowerCase()
