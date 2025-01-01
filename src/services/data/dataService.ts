@@ -21,7 +21,7 @@ export interface OutputResponse {
 
 export class DataService {
 	private constructor(
-			private dataPath : string
+			private readonly dataPath : string
 	) {}
 
 	static async initialize(params : RouteParams) : Promise<DataService> {
