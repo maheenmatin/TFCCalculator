@@ -1,9 +1,7 @@
- {
- 	
- "lastUpdated": "2025-05-18",
+{
+  "lastUpdated": "2025-05-18",
   "version": "1.0.0",
   "schemaVersion": "1",
-
 	"bismuth": [
 		{
 			"name": "Raw Bismuth",
