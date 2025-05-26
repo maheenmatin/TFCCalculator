@@ -114,7 +114,7 @@ export function GameVersionSelector() {
 					</select>
 
 					<select
-						value={selectedDisplayName || ""}
+						value={selectedDisplayName ?? ""}
 						onChange={handleBaseGameVersionChange}
 						className="w-full p-2 rounded border border-teal-500 bg-transparent text-teal-100"
 						aria-label="Select modpack/mod"
@@ -127,7 +127,7 @@ export function GameVersionSelector() {
 					</select>
 
 					<select
-						value={selectedVersion || ""}
+						value={selectedVersion ?? ""}
 						onChange={handleVersionChange}
 						className="w-full p-2 rounded border border-teal-500 bg-transparent text-teal-100"
 						aria-label="Select version"
@@ -142,7 +142,7 @@ export function GameVersionSelector() {
 
 				<button
 					onClick={handleCalculate}
-					disabled={!selectedDisplayName || !selectedVersion}
+					disabled={!selectedType || !selectedDisplayName || !selectedVersion}
 					className="w-full sm:w-auto px-6 py-2 rounded primary"
 					aria-label="Go to calculator"
 				>
