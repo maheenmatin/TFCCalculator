@@ -3,7 +3,7 @@
     {
       "id": "terrafirmagreg",
       "displayName": "TerraFirmaGreg Modern",
-      "version": "0.9.7",
+      "version": "0.9.x",
       "gameVersion": "1.20.x",
       "constants": {
         "ingotMb": 144,
@@ -15,7 +15,7 @@
     {
       "id": "terrafirmagreg",
       "displayName": "TerraFirmaGreg Modern",
-      "version": "0.7.14",
+      "version": "0.7.x",
       "gameVersion": "1.20.x",
       "constants": {
         "ingotMb": 144,
