@@ -1,4 +1,4 @@
-import { BaseGameVersion, GameVersions, ModVersion, VersionType } from "@/types/gameversions";
+import { BaseGameVersion, GameVersions, VersionType } from "@/types/gameversions";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { LoadingSpinner } from "./LoadingSpinner";
