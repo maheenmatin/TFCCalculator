@@ -1,5 +1,5 @@
 import React from "react";
-import {CaretCircleLeft} from "@phosphor-icons/react";
+import {CaretCircleLeftIcon} from "@phosphor-icons/react";
 import {useRouter} from "next/navigation";
 
 
@@ -33,7 +33,7 @@ export function HeadingWithBackButton(
 						className="mr-4"
 						aria-label={ariaLabel}
 				>
-					<CaretCircleLeft
+					<CaretCircleLeftIcon
 							size={40}
 							weight="bold"
 							className="text-primary text-teal-100 hover:text-teal-300 transition-colors duration-200"

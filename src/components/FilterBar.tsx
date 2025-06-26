@@ -1,5 +1,5 @@
 import React, {useEffect, useRef} from "react";
-import {MagnifyingGlass} from "@phosphor-icons/react";
+import {MagnifyingGlassIcon} from "@phosphor-icons/react";
 
 
 type FilterOption = { value : number; label : string }
@@ -56,7 +56,7 @@ export const FilterBar : React.FC<FilterBarProps> = (
 				</div>
 				<div className="relative w-full sm:w-64">
 					{!searchTerm && <div>
-						<MagnifyingGlass
+						<MagnifyingGlassIcon
 							className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500"
 							size={20}
 						/>
