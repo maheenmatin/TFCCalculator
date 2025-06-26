@@ -9,7 +9,7 @@ export async function GET(
 		request : Request,
 		{params} : { params : { metal : string } }
 ) {
-	const {metal} = params;
+	const {metal} = await params;
 	const {searchParams} = new URL(request.url);
 	const uses = searchParams.getAll("uses").map(use => use as MineralUseCase);
 	const decodedMetal = decodeURIComponent(metal).toLowerCase();
