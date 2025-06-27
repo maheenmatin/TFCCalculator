@@ -8,7 +8,7 @@ type ParamProps = {
 		type : string;
 		id : string;
 		version : string;
-		metal : string | null;
+		metal? : string;
 	}>;
 };
 
@@ -60,7 +60,7 @@ export default function VersionLayout(
 			children
 		} : {
 			children : React.ReactNode;
-			params : ParamProps;
+			params : ParamProps["params"];
 		}) {
 	return children;
 }
