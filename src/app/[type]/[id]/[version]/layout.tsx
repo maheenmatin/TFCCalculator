@@ -61,7 +61,7 @@ export default function VersionLayout(
 			children
 		} : {
 			children : React.ReactNode;
-			params : ParamProps;
+			params : Promise<ParamProps>;
 		}) {
 	return children;
 }
