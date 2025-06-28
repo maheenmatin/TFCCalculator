@@ -1,8 +1,15 @@
-import * as tseslint from "next/dist/build/templates/pages"
+import {FlatCompat} from "@eslint/eslintrc"
 
 
-export default tseslint.config({
-  rules: {
-    "@typescript-eslint/no-empty-object-type": "off"
-  }
-});
+const compat = new FlatCompat({
+    baseDirectory : import.meta.dirname
+})
+
+const eslintConfig = [...compat.config({
+    extends : ["next"],
+    rules : {
+        "@typescript-eslint/no-empty-object-type" : "off",
+    }
+})]
+
+export default eslintConfig

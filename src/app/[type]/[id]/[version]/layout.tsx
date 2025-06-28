@@ -4,16 +4,16 @@ import {capitaliseFirstLetterOfEachWord} from "@/functions/utils";
 
 
 type ParamProps = {
-	params : Promise<{
-		type : string;
-		id : string;
-		version : string;
-		metal? : string;
+	params: Promise<{
+		type: string;
+		id: string;
+		version: string;
+		metal?: string;
 	}>;
 };
 
 export async function generateMetadata({params} : ParamProps) : Promise<Metadata> {
-	const { metal } = await params;
+	const {metal} = await params;
 	const metalName = metal ? capitaliseFirstLetterOfEachWord(metal) : null;
 
 	const baseTitle = "TerraFirmaCraft Metal Calculator";
@@ -60,7 +60,7 @@ export default function VersionLayout(
 			children
 		} : {
 			children : React.ReactNode;
-			params : ParamProps["params"];
+			params : ParamProps['params'];
 		}) {
 	return children;
 }
