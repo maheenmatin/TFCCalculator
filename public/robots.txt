@@ -1,9 +1,10 @@
+# googleBot
+User-agent: googleBot
+Allow: /
+
 # *
 User-agent: *
 Allow: /
-
-# Crawling
-googleBot: crawl/true
 
 # Host
 Host: https://tfc-calculator.devmarcel.net/
