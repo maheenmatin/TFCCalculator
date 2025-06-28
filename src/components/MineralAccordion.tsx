@@ -13,7 +13,7 @@ export function MineralAccordion({ title, minerals, onQuantityChange, onInputKey
 	const [isOpen, setIsOpen] = useState(false);
 
 	return (
-			<div className="border rounded-lg mb-4">
+			<div className="bg-gray-100 rounded-lg mb-4">
 				<button
 						className="w-full p-4 text-left flex justify-between items-center text-black bg-teal-100 hover:bg-teal-200 rounded-lg"
 						onClick={() => setIsOpen(!isOpen)}

@@ -10,16 +10,16 @@ export interface ApiResponse {
 }
 
 interface RouteContext {
-	params : RouteParams & {
+	params : Promise<RouteParams & {
 		metal : string;
-	};
+	}>;
 }
 
 export async function GET(
 		request : Request,
-		{params} : RouteContext
+		{params} : RouteContext,
 ) {
-	const {metal, type, id, version} = params;
+	const {metal, type, id, version} = await params;
 	const {searchParams} = new URL(request.url);
 	const uses = searchParams.getAll("uses").map(use => use as MineralUseCase);
 	const decodedMetal = decodeURIComponent(metal).toLowerCase();

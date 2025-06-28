@@ -8,6 +8,8 @@ import {replaceUnderscoreWithSpace} from "@/functions/utils";
 
 export default function MetalPage() {
 	const {type, id, version, metal} = useParams();
+	if (metal == null) return;
+
 	const metalString = Array.isArray(metal) ? metal.join(',') : metal;
 
 	return (
