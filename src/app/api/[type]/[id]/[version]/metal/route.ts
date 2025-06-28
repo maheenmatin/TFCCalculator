@@ -4,18 +4,18 @@ import {DataServiceError, getDataService} from "@/services/data/dataService";
 
 
 interface RouteContext {
-	params : {
+	params : Promise<{
 		type : VersionType;
 		id : string;
 		version : string;
-	};
+	}>;
 }
 
 export async function GET(
 		_ : Request,
 		context : RouteContext
 ) {
-	const {type, id, version} = context.params;
+	const {type, id, version} = await context.params;
 
 	try {
 		const routeParams : RouteParams = {type, id, version};
