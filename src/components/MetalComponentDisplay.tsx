@@ -3,10 +3,11 @@ import { MineralAccordion } from "@/components/MineralAccordion";
 import { OutputResult } from "@/components/OutputResult";
 import { calculateMetal, MetalProductionResult } from "@/functions/algorithm";
 import { capitaliseFirstLetterOfEachWord } from "@/functions/utils";
-import { DesiredOutputTypes, QuantifiedInputMineral, SmeltingComponentDefaultOption, SmeltingOutput } from "@/types";
+import {DesiredOutputTypes, MineralUseCase, QuantifiedInputMineral, SmeltingOutput} from "@/types";
 import React, { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
-import { ApiResponse } from "@/app/api/[type]/[id]/[version]/metal/[metal]/route";
+import { ApiResponse as MetalsApiResponse } from "@/app/api/[type]/[id]/[version]/metal/[metal]/route";
+import { ApiResponse as ConstantsApiResponse } from "@/app/api/[type]/[id]/[version]/constants/route";
 
 
 interface MetalDisplayProps {
@@ -18,6 +19,7 @@ export function MetalComponentDisplay({ metal }: Readonly<MetalDisplayProps>) {
 
 	const [mixture, setMixture] = useState<SmeltingOutput | null>(null);
 	const [minerals, setMinerals] = useState<Map<string, QuantifiedInputMineral[]>>(new Map());
+	const [mbConstants, setMbConstants] = useState<Record<string, number> | null>(null);
 	const [unit, setUnit] = useState<DesiredOutputTypes>(DesiredOutputTypes.Ingot);
 	const [desiredOutputInUnits, setDesiredOutputInUnits] = useState<number>(0);
 
@@ -27,22 +29,14 @@ export function MetalComponentDisplay({ metal }: Readonly<MetalDisplayProps>) {
 	const [result, setResult] = useState<MetalProductionResult | null>(null);
 	const [error, setError] = useState<Error | string | null>(null);
 
-	// TODO: Utilise the version specific constants instead.
-	const mbPerDefault = new Map<SmeltingComponentDefaultOption, number>(
-		[
-			[SmeltingComponentDefaultOption.INGOT, 144],
-			[SmeltingComponentDefaultOption.NUGGET, 16]
-		]
-	);
-
 	useEffect(() => {
 		if (!metal) {
 			return;
 		}
 
-		fetch(`/api/${type}/${id}/${version}/metal/${metal}`)
+		let metalsTask = fetch(`/api/${type}/${id}/${version}/metal/${metal}`)
 			.then(response => response.ok
-				? response.json() as Promise<ApiResponse>
+				? response.json() as Promise<MetalsApiResponse>
 				: Promise.reject(`HTTP error! status: ${response.status}`))
 			.then(data => {
 				setMixture(data.material);
@@ -57,8 +51,19 @@ export function MetalComponentDisplay({ metal }: Readonly<MetalDisplayProps>) {
 			.catch(error => {
 				setError("Error fetching metal details");
 				console.error("Error fetching metal details:", error);
-			})
-			.finally(() => setIsLoading(false));
+			});
+
+		let constantsTask = fetch(`/api/${type}/${id}/${version}/constants`)
+				.then(response => response.ok
+				? response.json() as Promise<ConstantsApiResponse>
+				: Promise.reject(`HTTP error! status: ${response.status}`))
+				.then(data => setMbConstants(data))
+				.catch(error => {
+					setError("Error fetching constants");
+					console.error("Error fetching constants:", error);
+				});
+
+		Promise.all([metalsTask, constantsTask]).then(_ => setIsLoading(false));
 	}, [type, id, version, metal]);
 
 	const handleDesiredTargetChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -98,14 +103,14 @@ export function MetalComponentDisplay({ metal }: Readonly<MetalDisplayProps>) {
 		return newMap;
 	};
 
-	// TODO: Possibly might need to get rid of this and do it dynamically for TFC (no nuggets)
-	const unitToMbConversion: Record<DesiredOutputTypes, number> = {
-		[DesiredOutputTypes.Ingot]: mbPerDefault.get(SmeltingComponentDefaultOption.INGOT) ?? 144,
-		[DesiredOutputTypes.Nugget]: mbPerDefault.get(SmeltingComponentDefaultOption.NUGGET) ?? 16,
-		[DesiredOutputTypes.Millibucket]: 1
-	} as const;
+	const getDesiredOutputInMb = (): number => {
+		if (mbConstants == null) {
+			setError("mbConstants cannot be null")
+			return 0;
+		}
 
-	const getDesiredOutputInMb = (): number => desiredOutputInUnits * (unitToMbConversion[unit] ?? 1);
+		return desiredOutputInUnits * (mbConstants[unit] ?? 1);
+	}
 
 	const handleCalculate = async () => {
 		if (!mixture || !minerals || isCalculating) {
@@ -126,6 +131,8 @@ export function MetalComponentDisplay({ metal }: Readonly<MetalDisplayProps>) {
 					mineralWithQuantities.set(category, nonZeroMinerals);
 				}
 			}
+
+			if (mbConstants == null) return;
 
 			setResult(calculateMetal(getDesiredOutputInMb(), mixture, mineralWithQuantities));
 		} catch (err) {
@@ -152,21 +159,23 @@ export function MetalComponentDisplay({ metal }: Readonly<MetalDisplayProps>) {
 		&& !isResultAlteredSinceLastCalculation
 		&& !error;
 
-	// TODO: Fix defaults based on new structure
-	// function defaultOverride(mineral : string, defaultOption : SmeltingComponentDefaultOption) : QuantifiedInputMineral {
-	// 	return {
-	// 		name : `${capitaliseFirstLetterOfEachWord(mineral + " " + defaultOption)}`,
-	// 		produces : mineral,
-	// 		yield : mbPerDefault.get(defaultOption) ?? 0,
-	// 		uses : [
-	// 			MineralUseCase.Vessel,
-	// 			MineralUseCase.Crucible
-	// 		],
-	// 		quantity : 0
-	// 	};
-	// }
+	function defaultOverride(mineral : string, defaultOption : string) : QuantifiedInputMineral | null {
+		if (mbConstants == null || mbConstants[defaultOption] == null) return null;
 
-	// function componentDefaultAvailable(component : SmeltingComponent, defaultOption : SmeltingComponentDefaultOption) {
+		return {
+			name : `${capitaliseFirstLetterOfEachWord(mineral + " " + defaultOption)}`,
+			produces : mineral,
+			yield : mbConstants[defaultOption],
+			uses : [
+				MineralUseCase.Vessel,
+				MineralUseCase.Crucible
+			],
+			quantity : 0
+		};
+	}
+
+	// function componentDefaultAvailable(component : SmeltingComponent, defaultOption : string) {
+	// 	component.mineral
 	// 	return component.default?.includes(defaultOption);
 	// }
 
@@ -206,7 +215,10 @@ export function MetalComponentDisplay({ metal }: Readonly<MetalDisplayProps>) {
 			</div>
 
 			<ErrorComponent error={error} />
-			{isReadyToShowOutputs && <OutputResult output={result} unit={unit} conversions={unitToMbConversion} />}
+			{isReadyToShowOutputs
+					&& mbConstants != null
+					&& <OutputResult output={result} unit={unit} conversions={mbConstants} />
+			}
 
 			{isReadyToShowInputs && <div className="bg-white text-black rounded-lg shadow p-6">
 				<h2 className="text-xl text-center font-bold mb-4">INPUT</h2>
@@ -227,14 +239,17 @@ export function MetalComponentDisplay({ metal }: Readonly<MetalDisplayProps>) {
 						);
 					}
 
-					// for (const defaultOption in SmeltingComponentDefaultOption) {
-					// 	const alreadyExists = componentMinerals.some(m => m.name.toLowerCase().includes(defaultOption.toLowerCase()));
-					// 	const shouldDefault = componentDefaultAvailable(component, defaultOption as SmeltingComponentDefaultOption);
-					//
-					// 	if (!alreadyExists && shouldDefault) {
-					// 		componentMinerals.push(defaultOverride(component.mineral, defaultOption as SmeltingComponentDefaultOption));
-					// 	}
-					// }
+					for (const defaultConstant in mbConstants) {
+						const alreadyExists = componentMinerals.some(m => m.name.toLowerCase().includes(defaultConstant.toLowerCase()));
+						// const shouldDefault = componentDefaultAvailable(component, defaultConstant);
+						// TODO: Implement
+						const shouldDefault = true;
+
+						if (!alreadyExists && shouldDefault) {
+							const override = defaultOverride(component.mineral, defaultConstant);
+							if (override) componentMinerals.push(override);
+						}
+					}
 
 					return (
 						<MineralAccordion

@@ -44,14 +44,6 @@
       ]
     },
     {
-      "name": "Bismuth Dust",
-      "yield": 144,
-      "uses": [
-        "vessel",
-        "crucible"
-      ]
-    },
-    {
       "name": "Impure Pile of Bismuth Dust",
       "yield": 80,
       "uses": [
@@ -82,14 +74,6 @@
         "vessel",
         "crucible"
       ]
-    },
-    {
-      "name": "Bismuth Bronze Dust",
-      "yield": 144,
-      "uses": [
-        "vessel",
-        "crucible"
-      ]
     }
   ],
   "black_bronze": [
@@ -104,14 +88,6 @@
     {
       "name": "Small Pile of Black Bronze Dust",
       "yield": 36,
-      "uses": [
-        "vessel",
-        "crucible"
-      ]
-    },
-    {
-      "name": "Black Bronze Dust",
-      "yield": 144,
       "uses": [
         "vessel",
         "crucible"
@@ -182,14 +158,6 @@
     {
       "name": "Small Pile of Brass Dust",
       "yield": 36,
-      "uses": [
-        "vessel",
-        "crucible"
-      ]
-    },
-    {
-      "name": "Brass Dust",
-      "yield": 144,
       "uses": [
         "vessel",
         "crucible"
@@ -294,14 +262,6 @@
     {
       "name": "Small Pile of Copper Dust",
       "yield": 36,
-      "uses": [
-        "vessel",
-        "crucible"
-      ]
-    },
-    {
-      "name": "Copper Dust",
-      "yield": 144,
       "uses": [
         "vessel",
         "crucible"
@@ -488,14 +448,6 @@
       ]
     },
     {
-      "name": "Gold Dust",
-      "yield": 144,
-      "uses": [
-        "vessel",
-        "crucible"
-      ]
-    },
-    {
       "name": "Impure Pile of Gold Dust",
       "yield": 80,
       "uses": [
@@ -554,16 +506,6 @@
     {
       "name": "Small Pile of Iron Dust",
       "yield": 36,
-      "uses": [
-        "vessel",
-        "crucible",
-        "bloomery",
-        "blast_furnace"
-      ]
-    },
-    {
-      "name": "Iron Dust",
-      "yield": 144,
       "uses": [
         "vessel",
         "crucible",
@@ -982,14 +924,6 @@
       ]
     },
     {
-      "name": "Nickel Dust",
-      "yield": 144,
-      "uses": [
-        "vessel",
-        "crucible"
-      ]
-    },
-    {
       "name": "Impure Pile of Nickel Dust",
       "yield": 80,
       "uses": [
@@ -1082,14 +1016,6 @@
         "vessel",
         "crucible"
       ]
-    },
-    {
-      "name": "Red Steel Dust",
-      "yield": 144,
-      "uses": [
-        "vessel",
-        "crucible"
-      ]
     }
   ],
   "redstone": [
@@ -1134,14 +1060,6 @@
       ]
     },
     {
-      "name": "Redstone Dust",
-      "yield": 144,
-      "uses": [
-        "vessel",
-        "crucible"
-      ]
-    },
-    {
       "name": "Impure Pile of Redstone Dust",
       "yield": 80,
       "uses": [
@@ -1168,14 +1086,6 @@
     {
       "name": "Small Pile of Rose Gold Dust",
       "yield": 36,
-      "uses": [
-        "vessel",
-        "crucible"
-      ]
-    },
-    {
-      "name": "Rose Gold Dust",
-      "yield": 144,
       "uses": [
         "vessel",
         "crucible"
@@ -1224,14 +1134,6 @@
       ]
     },
     {
-      "name": "Silver Dust",
-      "yield": 144,
-      "uses": [
-        "vessel",
-        "crucible"
-      ]
-    },
-    {
       "name": "Impure Pile of Silver Dust",
       "yield": 80,
       "uses": [
@@ -1262,14 +1164,6 @@
         "vessel",
         "crucible"
       ]
-    },
-    {
-      "name": "Steel Dust",
-      "yield": 144,
-      "uses": [
-        "vessel",
-        "crucible"
-      ]
     }
   ],
   "sterling_silver": [
@@ -1284,14 +1178,6 @@
     {
       "name": "Small Pile of Sterling Silver Dust",
       "yield": 36,
-      "uses": [
-        "vessel",
-        "crucible"
-      ]
-    },
-    {
-      "name": "Sterling Silver Dust",
-      "yield": 144,
       "uses": [
         "vessel",
         "crucible"
@@ -1334,14 +1220,6 @@
     {
       "name": "Small Pile of Tin Dust",
       "yield": 36,
-      "uses": [
-        "vessel",
-        "crucible"
-      ]
-    },
-    {
-      "name": "Tin Dust",
-      "yield": 144,
       "uses": [
         "vessel",
         "crucible"
@@ -1529,14 +1407,6 @@
     {
       "name": "Small Pile of Zinc Dust",
       "yield": 36,
-      "uses": [
-        "vessel",
-        "crucible"
-      ]
-    },
-    {
-      "name": "Zinc Dust",
-      "yield": 144,
       "uses": [
         "vessel",
         "crucible"

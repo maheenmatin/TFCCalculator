@@ -7,67 +7,79 @@
       "name": "bismuth",
       "default": [
         "ingot",
-        "nugget"
+        "nugget",
+        "dust"
       ]
     },
     {
       "name": "copper",
       "default": [
         "ingot",
-        "nugget"
+        "nugget",
+        "dust"
       ]
     },
     {
       "name": "gold",
       "default": [
         "ingot",
-        "nugget"
+        "nugget",
+        "dust"
       ]
     },
     {
       "name": "iron",
       "default": [
         "ingot",
-        "nugget"
+        "nugget",
+        "dust"
       ]
     },
     {
       "name": "nickel",
       "default": [
         "ingot",
-        "nugget"
+        "nugget",
+        "dust"
       ]
     },
     {
       "name": "redstone",
-      "producible": false
+      "producible": false,
+      "default": [
+        "dust"
+      ]
     },
     {
       "name": "silver",
       "default": [
         "ingot",
-        "nugget"
+        "nugget",
+        "dust"
       ]
     },
     {
       "name": "steel",
       "default": [
         "ingot",
-        "nugget"
+        "nugget",
+        "dust"
       ]
     },
     {
       "name": "tin",
       "default": [
         "ingot",
-        "nugget"
+        "nugget",
+        "dust"
       ]
     },
     {
       "name": "zinc",
       "default": [
         "ingot",
-        "nugget"
+        "nugget",
+        "dust"
       ]
     }
   ],
@@ -85,6 +97,9 @@
           "min": 8.0,
           "max": 12.0
         }
+      ],
+      "default": [
+        "dust"
       ]
     },
     {
@@ -120,6 +135,9 @@
           "min": 10.0,
           "max": 25.0
         }
+      ],
+      "default": [
+        "dust"
       ]
     },
     {
@@ -140,6 +158,9 @@
           "min": 10.0,
           "max": 20.0
         }
+      ],
+      "default": [
+        "dust"
       ]
     },
     {
@@ -180,6 +201,9 @@
           "min": 10.0,
           "max": 15.0
         }
+      ],
+      "default": [
+        "dust"
       ]
     },
     {
@@ -195,6 +219,9 @@
           "min": 70.0,
           "max": 85.0
         }
+      ],
+      "default": [
+        "dust"
       ]
     },
     {
@@ -210,6 +237,9 @@
           "min": 60.0,
           "max": 80.0
         }
+      ],
+      "default": [
+        "dust"
       ]
     },
     {

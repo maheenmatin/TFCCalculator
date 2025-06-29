@@ -1,6 +1,6 @@
 import {cache} from "react";
 import {RouteParams} from "@/types/gameversions";
-import {AlloySmeltingOutput, InputMineral, isOutputType, MetalSmeltingOutput, SmeltingOutput, SmeltingOutputType} from "@/types";
+import {InputMineral, isOutputType, SmeltingOutput, SmeltingOutputType} from "@/types";
 import {promises as fs} from "fs";
 import path from "path";
 
@@ -10,8 +10,8 @@ interface RawMineralsJson {
 }
 
 interface MetalsListResponse {
-	metals : MetalSmeltingOutput[];
-	alloys : AlloySmeltingOutput[];
+	metals : SmeltingOutput[];
+	alloys : SmeltingOutput[];
 }
 
 export interface OutputResponse {
@@ -64,7 +64,8 @@ export class DataService {
 					name : alloy.name,
 					components : alloy.components ?? [],
 					producible : alloy.producible ?? true,
-					type: SmeltingOutputType.ALLOY
+					type: SmeltingOutputType.ALLOY,
+					default: alloy.default
 				}))
 			];
 		} catch (error) {

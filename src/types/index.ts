@@ -3,13 +3,8 @@ export interface SmeltingOutput {
 	components : SmeltingComponent[];
 	producible? : boolean;
 	type : SmeltingOutputType;
+	default? : string[];
 }
-
-export interface MetalSmeltingOutput extends SmeltingOutput {
-	default? : SmeltingComponentDefaultOption[];
-}
-
-export interface AlloySmeltingOutput extends SmeltingOutput {}
 
 export enum SmeltingOutputType {
 	METAL,
@@ -31,14 +26,6 @@ export interface SmeltingComponent {
 	max : number;
 }
 
-export enum SmeltingComponentDefaultOption {
-	BLOCK = "block",
-	INGOT = "ingot",
-	NUGGET = "nugget",
-
-	ROD = "rod",
-}
-
 export interface InputMineral {
 	name : string;
 	produces : string;
@@ -58,7 +45,7 @@ export enum MineralUseCase {
 }
 
 export enum DesiredOutputTypes {
-	Ingot,
-	Nugget,
-	Millibucket
+	Ingot = "ingot",
+	Nugget = "nugget",
+	Millibucket = "millibucket"
 }
