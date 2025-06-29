@@ -80,7 +80,6 @@ export class DataService {
 	async getOutput(outputName : string) : Promise<OutputResponse> {
 		try {
 			const outputs = await this.getOutputs();
-			outputs.forEach(output => console.log(output.components));
 
 			const smeltingOutput = outputs.find(
 					(output : SmeltingOutput) => output.name.toLowerCase() === outputName.toLowerCase()
