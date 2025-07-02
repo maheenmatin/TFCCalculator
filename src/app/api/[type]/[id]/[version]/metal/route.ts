@@ -1,6 +1,7 @@
 import {NextResponse} from "next/server";
 import {RouteParams, VersionType} from "@/types/gameversions";
-import {DataServiceError, getDataService} from "@/services/data/dataService";
+import {DataMapperService, DataServiceError} from "@/services/data/dataMapperService";
+import {DataReaderService} from "@/services/data/dataReaderService";
 
 
 interface RouteContext {
@@ -18,9 +19,8 @@ export async function GET(
 	const {type, id, version} = await context.params;
 
 	try {
-		const routeParams : RouteParams = {type, id, version};
-		const dataService = await getDataService(routeParams);
-		return NextResponse.json(await dataService.getOutputs());
+		const dataMapperService = new DataMapperService(new DataReaderService());
+		return NextResponse.json(await dataMapperService.getAvailableOutputs({type, id, version}));
 	} catch (error) {
 		if (error && error instanceof DataServiceError) {
 			console.error(`${error.message}: ${error.originalError}`);

@@ -11,15 +11,6 @@ export enum SmeltingOutputType {
 	ALLOY
 }
 
-/**
- * Guard function to determine if SmeltingOutput is of a given type
- * @param output Unknown output type
- * @param outputType Check against given output type
- */
-export function isOutputType(output : SmeltingOutput, outputType : SmeltingOutputType) {
-	return output.type === outputType;
-}
-
 export interface SmeltingComponent {
 	mineral : string;
 	min : number;

@@ -1,12 +1,13 @@
-import {InputMineral, MineralUseCase, SmeltingOutput} from "@/types";
+import {InputMineral, MineralUseCase, SmeltingComponent} from "@/types";
 import {NextResponse} from "next/server";
 import {RouteParams} from "@/types/gameversions";
-import {DataServiceError, getDataService} from "@/services/data/dataService";
+import {DataMapperService, DataServiceError} from "@/services/data/dataMapperService";
+import {DataReaderService} from "@/services/data/dataReaderService";
 
 
 export interface ApiResponse {
-	material: SmeltingOutput;
-	minerals: Record<string, InputMineral[]>;
+	components : SmeltingComponent[];
+	minerals : Map<string, InputMineral[]>;
 }
 
 interface RouteContext {
@@ -25,16 +26,14 @@ export async function GET(
 	const decodedMetal = decodeURIComponent(metal).toLowerCase();
 
 	try {
-		const dataService = await getDataService({type, id, version});
-		const metalResponse = await dataService.getOutput(decodedMetal);
-
-		const filteredMinerals = filterMineralsByUses(metalResponse.minerals, uses);
-		const mineralsObject = Object.fromEntries(filteredMinerals);
+		const dataMapperService = new DataMapperService(new DataReaderService());
+		const response = await dataMapperService.getOutputData({type, id, version}, decodedMetal);
+		const filteredMinerals = filterMineralsByUses(response.minerals, uses);
 
 		return NextResponse.json(
 				{
-					material : metalResponse.material,
-					minerals : mineralsObject
+					components : response.components,
+					minerals : Object.fromEntries(filteredMinerals)
 				});
 	} catch (error) {
 		if (error && error instanceof DataServiceError) {
