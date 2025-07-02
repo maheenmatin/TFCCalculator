@@ -11,10 +11,7 @@ interface OutputJSON {
 }
 
 interface MineralsJSON {
-	// lastUpdated: string;
-	// version: string;
-	// schemaVersion: string;
-	[outputName: string]: InputMineral[]; // Record<string, InputMineral[]>;
+	[outputName: string]: InputMineral[];
 }
 
 export interface IDataReaderService {
