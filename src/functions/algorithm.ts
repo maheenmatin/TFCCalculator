@@ -203,10 +203,9 @@ function findValidCombination(
 
 export function calculateMetal(
 		targetMb: number,
-		targetMetal: SmeltingOutput,
+		targetComponents: SmeltingComponent[],
 		availableMinerals: Map<string, QuantifiedInputMineral[]>
 ): MetalProductionResult {
-	const targetMetalComponents = targetMetal.components;
 	const totalAvailableByType = calculateAvailableMbByType(availableMinerals);
 
 	// Check if we have enough total material
@@ -224,7 +223,7 @@ export function calculateMetal(
 	}
 
 	// Check if each component has enough material for minimum percentage
-	for (const component of targetMetalComponents) {
+	for (const component of targetComponents) {
 		const mineralType = component.mineral.toLowerCase();
 		const minRequired = (component.min / 100) * targetMb;
 		const available = totalAvailableByType.get(mineralType) ?? 0;
@@ -241,7 +240,7 @@ export function calculateMetal(
 
 	const result = findValidCombination(
 			targetMb,
-			targetMetalComponents,
+			targetComponents,
 			convertToMineralWithQuantity(availableMinerals)
 	);
 

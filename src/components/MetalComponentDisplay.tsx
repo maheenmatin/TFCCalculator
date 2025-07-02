@@ -3,7 +3,7 @@ import { MineralAccordion } from "@/components/MineralAccordion";
 import { OutputResult } from "@/components/OutputResult";
 import { calculateMetal, MetalProductionResult } from "@/functions/algorithm";
 import { capitaliseFirstLetterOfEachWord } from "@/functions/utils";
-import {DesiredOutputTypes, MineralUseCase, QuantifiedInputMineral, SmeltingOutput} from "@/types";
+import {DesiredOutputTypes, InputMineral, MineralUseCase, QuantifiedInputMineral, SmeltingComponent, SmeltingOutput} from "@/types";
 import React, { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { ApiResponse as MetalsApiResponse } from "@/app/api/[type]/[id]/[version]/metal/[metal]/route";
@@ -17,7 +17,7 @@ interface MetalDisplayProps {
 export function MetalComponentDisplay({ metal }: Readonly<MetalDisplayProps>) {
 	const { type, id, version } = useParams();
 
-	const [mixture, setMixture] = useState<SmeltingOutput | null>(null);
+	const [components, setComponents] = useState<SmeltingComponent[] | null>(null);
 	const [minerals, setMinerals] = useState<Map<string, QuantifiedInputMineral[]>>(new Map());
 	const [mbConstants, setMbConstants] = useState<Record<string, number> | null>(null);
 	const [unit, setUnit] = useState<DesiredOutputTypes>(DesiredOutputTypes.Ingot);
@@ -39,13 +39,12 @@ export function MetalComponentDisplay({ metal }: Readonly<MetalDisplayProps>) {
 				? response.json() as Promise<MetalsApiResponse>
 				: Promise.reject(`HTTP error! status: ${response.status}`))
 			.then(data => {
-				setMixture(data.material);
+				setComponents(data.components);
 				setMinerals(new Map(
-					Object.entries(data.minerals).map(([name, minerals]) => [
+					Object.entries(data.minerals).map(([name, minerals] : [string, InputMineral[]]) => [
 						name,
 						minerals.map(m => ({ ...m, quantity: 0 }))
-					]
-					)
+					])
 				));
 			})
 			.catch(error => {
@@ -113,7 +112,7 @@ export function MetalComponentDisplay({ metal }: Readonly<MetalDisplayProps>) {
 	}
 
 	const handleCalculate = async () => {
-		if (!mixture || !minerals || isCalculating) {
+		if (!components || !minerals || isCalculating) {
 			return;
 		}
 
@@ -134,7 +133,7 @@ export function MetalComponentDisplay({ metal }: Readonly<MetalDisplayProps>) {
 
 			if (mbConstants == null) return;
 
-			setResult(calculateMetal(getDesiredOutputInMb(), mixture, mineralWithQuantities));
+			setResult(calculateMetal(getDesiredOutputInMb(), components, mineralWithQuantities));
 		} catch (err) {
 			setError(`Failed to calculate! ${err}`);
 			console.error("Error calculating:", err);
@@ -225,7 +224,7 @@ export function MetalComponentDisplay({ metal }: Readonly<MetalDisplayProps>) {
 				<p className="text-lg text-center mb-8">Enter all available minerals in your inventory!</p>
 
 				{/* Minerals */}
-				{mixture?.components.map(component => {
+				{components?.map(component => {
 					const mineralName = component.mineral.toLowerCase();
 					const componentMinerals = minerals.get(mineralName) ?? [];
 
