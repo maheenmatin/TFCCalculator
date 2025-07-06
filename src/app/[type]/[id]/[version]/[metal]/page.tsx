@@ -12,6 +12,9 @@ export default function MetalPage() {
 
 	const metalString = Array.isArray(metal) ? metal.join(',') : metal;
 
+	const versionsSplit = (version as string).split("_", 2);
+	const subheadingString = `${id as string} ${versionsSplit[1]}`;
+
 	return (
 			<main
 					className="container mx-auto px-4 py-8"
@@ -21,6 +24,7 @@ export default function MetalPage() {
 				<div className="max-w-6xl mx-auto">
 					<HeadingWithBackButton
 							title={replaceUnderscoreWithSpace(metalString).toUpperCase()}
+							subheading={subheadingString}
 							ariaPreviousScreenName="metal selection"
 							handleBackURI={`/${type}/${id}/${version}/metals`}
 					/>
