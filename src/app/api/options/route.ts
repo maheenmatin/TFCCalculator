@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import gameVersionJson from "@/data/gameversions.json";
-import { GameVersions, ModpackVersion, ModVersion } from "@/types/gameversions";
+import {BaseGameVersion, GameVersions} from "@/types/gameversions";
 
 export async function GET() {
 	const data = gameVersionJson as GameVersions;
@@ -14,7 +14,7 @@ export async function GET() {
 			acc[key] = acc[key] || [];
 			acc[key].push(item);
 			return acc;
-		}, {} as Record<string, ModpackVersion[]>);
+		}, {} as Record<string, BaseGameVersion[]>);
 
 	const mod = data.mod
 		// Filter out unsupported versions
@@ -25,7 +25,7 @@ export async function GET() {
 			acc[key] = acc[key] || [];
 			acc[key].push(item);
 			return acc;
-		}, {} as Record<string, ModVersion[]>);
+		}, {} as Record<string, BaseGameVersion[]>);
 
 	const filtered = {
 		modpack,

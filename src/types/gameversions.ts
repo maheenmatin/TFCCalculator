@@ -9,14 +9,9 @@ export interface BaseGameVersion {
 	supported : boolean;
 }
 
-// TODO: Deprecate in favour of enum!
-export interface ModpackVersion extends BaseGameVersion {}
-// TODO: Deprecate in favour of enum!
-export interface ModVersion extends BaseGameVersion {}
-
 export interface GameVersions {
-	modpack : ModpackVersion[];
-	mod : ModVersion[];
+	modpack : BaseGameVersion[];
+	mod : BaseGameVersion[];
 	lastUpdated : string;
 	version : string;
 	schemaVersion : string;
