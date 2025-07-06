@@ -21,7 +21,7 @@ export async function GET(
 	const {type, id, version} = await context.params;
 	const data = gameVersionJson as GameVersions;
 
-	let resource = data[type]
+	const resource = data[type]
 			.find(item => filterVersionAndId(item, id, version));
 
 	if (resource == undefined) {
@@ -36,11 +36,11 @@ function filterVersionAndId(
 		id: string,
 		versions: string
 ) {
-	let isSameId = baseGameVersion.id == id;
+	const isSameId = baseGameVersion.id == id;
 
-	let versionsSplit = versions.split("_", 2);
-	let isSameGameVersion = baseGameVersion.gameVersion == versionsSplit[0];
-	let isSameResourceVersion = baseGameVersion.version == versionsSplit[1];
+	const versionsSplit = versions.split("_", 2);
+	const isSameGameVersion = baseGameVersion.gameVersion == versionsSplit[0];
+	const isSameResourceVersion = baseGameVersion.version == versionsSplit[1];
 
 	return isSameId && isSameGameVersion && isSameResourceVersion;
 }
