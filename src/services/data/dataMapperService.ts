@@ -163,7 +163,12 @@ export class DataMapperService implements IDataMapperService {
 			if (!foundMinerals) {
 				missingMinerals.push(mineralName);
 			} else {
-				combinedMinerals.set(mineralName, foundMinerals);
+				// Supply produces mineral for FE compliance
+				const mineralsWithProduces = foundMinerals.map(mineral => ({
+					...mineral,
+					produces : mineralName
+				}));
+				combinedMinerals.set(mineralName, mineralsWithProduces);
 			}
 		}
 
