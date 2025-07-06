@@ -150,27 +150,6 @@ export function MetalComponentDisplay({ metal }: Readonly<MetalDisplayProps>) {
 		&& !isResultAlteredSinceLastCalculation
 		&& !error;
 
-	// TODO: Move these to the BE
-	// function defaultOverride(mineral : string, defaultOption : string) : QuantifiedInputMineral | null {
-	// 	if (mbConstants == null || mbConstants[defaultOption] == null) return null;
-	//
-	// 	return {
-	// 		name : `${capitaliseFirstLetterOfEachWord(mineral + " " + defaultOption)}`,
-	// 		produces : mineral,
-	// 		yield : mbConstants[defaultOption],
-	// 		uses : [
-	// 			MineralUseCase.Vessel,
-	// 			MineralUseCase.Crucible
-	// 		],
-	// 		quantity : 0
-	// 	};
-	// }
-
-	// function componentDefaultAvailable(component : SmeltingComponent, defaultOption : string) {
-	// 	component.mineral
-	// 	return component.default?.includes(defaultOption);
-	// }
-
 	return (
 		<div className="container mx-auto p-4 grid grid-cols-1 gap-6">
 			<div className="bg-white text-black rounded-lg shadow p-6">
@@ -230,18 +209,6 @@ export function MetalComponentDisplay({ metal }: Readonly<MetalDisplayProps>) {
 							/>
 						);
 					}
-
-					// for (const defaultConstant in mbConstants) {
-					// 	const alreadyExists = componentMinerals.some(m => m.name.toLowerCase().includes(defaultConstant.toLowerCase()));
-					// 	// const shouldDefault = componentDefaultAvailable(component, defaultConstant);
-					// 	// TODO: Implement
-					// 	const shouldDefault = true;
-					//
-					// 	if (!alreadyExists && shouldDefault) {
-					// 		const override = defaultOverride(component.mineral, defaultConstant);
-					// 		if (override) componentMinerals.push(override);
-					// 	}
-					// }
 
 					return (
 						<MineralAccordion
