@@ -35,9 +35,10 @@ export function MetalComponentDisplay({ metal }: Readonly<MetalDisplayProps>) {
 		}
 
 		let metalsTask = fetch(`/api/${type}/${id}/${version}/metal/${metal}`)
-			.then(response => response.ok
-				? response.json() as Promise<MetalsApiResponse>
-				: Promise.reject(`HTTP error! status: ${response.status}`))
+	    .then(response => {
+	        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+	        return response.json() as Promise<MetalsApiResponse>;
+	    })
 			.then(data => {
 				setComponents(data.components);
 				setMinerals(new Map(
@@ -53,9 +54,10 @@ export function MetalComponentDisplay({ metal }: Readonly<MetalDisplayProps>) {
 			});
 
 		let constantsTask = fetch(`/api/${type}/${id}/${version}/constants`)
-				.then(response => response.ok
-				? response.json() as Promise<ConstantsApiResponse>
-				: Promise.reject(`HTTP error! status: ${response.status}`))
+		    .then(response => {
+		        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+		        return response.json() as Promise<ConstantsApiResponse>;
+		    })
 				.then(data => setMbConstants(data))
 				.catch(error => {
 					setError("Error fetching constants");
