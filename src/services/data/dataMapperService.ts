@@ -217,7 +217,7 @@ export class DataMapperService implements IDataMapperService {
 		const metal = outputs
 				.metals
 				?.find(m => m.name.toLowerCase() === mineralName.toLowerCase());
-		if (metal && metal.default) {
+		if (metal?.default) {
 			return metal.default;
 		}
 
@@ -225,7 +225,7 @@ export class DataMapperService implements IDataMapperService {
 		const alloy = outputs
 				.alloys
 				?.find(a => a.name.toLowerCase() === mineralName.toLowerCase());
-		if (alloy && alloy.default) {
+		if (alloy?.default) {
 			return alloy.default;
 		}
 
