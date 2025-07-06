@@ -21,8 +21,8 @@ export async function GET(
 	const {type, id, version} = await context.params;
 	const data = gameVersionJson as GameVersions;
 
-	let resource = (data[type] as BaseGameVersion[])
-			.find(item => filterVersionAndId(item, id, version))
+	let resource = data[type]
+			.find(item => filterVersionAndId(item, id, version));
 
 	if (resource == undefined) {
 		return notFound();
