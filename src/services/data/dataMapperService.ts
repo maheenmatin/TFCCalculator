@@ -134,7 +134,7 @@ export class DataMapperService implements IDataMapperService {
 				.filter(r => r.gameVersion == versionsSplit[0])
 				.find(r => r.version == versionsSplit[1]);
 
-		if (!resource || !resource.constants) {
+		if (!resource?.constants) {
 			return null;
 		}
 
@@ -160,7 +160,6 @@ export class DataMapperService implements IDataMapperService {
 		// Collect missing minerals
 		for (const mineralName of mineralNames) {
 			const foundMinerals = minerals[mineralName];
-			console.log(foundMinerals);
 			if (!foundMinerals) {
 				missingMinerals.push(mineralName);
 			} else {
