@@ -30,10 +30,10 @@ export function HeadingWithBackButton(
 
 	return (
 			<div className="mb-8">
-				<div className={`${className} flex items-center`}>
+				<div className={`${className} grid grid-cols-[1fr_auto_1fr] items-center`}>
 					<button
 							onClick={handleBack}
-							className="mr-4"
+							className="justify-self-start"
 							aria-label={ariaLabel}
 					>
 						<CaretCircleLeftIcon
@@ -44,11 +44,12 @@ export function HeadingWithBackButton(
 						/>
 					</button>
 
-					<h1 className="text-3xl font-bold text-primary flex-grow text-center">
+					<h1 className="text-3xl font-bold text-primary text-center">
 						{title}
 					</h1>
 
-					<div className="w-10" aria-hidden="true"/>
+					{/*Right spacer*/}
+					<div aria-hidden="true"/>
 				</div>
 
 				{subheading && <h2 className="text-sm text-gray-400 text-center">
