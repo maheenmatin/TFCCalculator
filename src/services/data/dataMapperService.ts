@@ -126,7 +126,7 @@ export class DataMapperService implements IDataMapperService {
 	) : Promise<Record<string, number> | null> {
 		const rawGameVersionData = await this.dataReaderService.getGameVersionsJSON();
 
-		let versionsSplit = params.version.split("_", 2);
+		const versionsSplit = params.version.split("_", 2);
 
 		const resource = rawGameVersionData[params.type]
 				.filter(r => r.supported)
