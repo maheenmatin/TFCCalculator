@@ -23,7 +23,7 @@ export async function GET(
 		return NextResponse.json(await dataMapperService.getAvailableOutputs({type, id, version}));
 	} catch (error) {
 		if (error && error instanceof DataServiceError) {
-			console.error(`${error.message}: ${error.originalError}`);
+			console.warn(`${error.message}: ${error.originalError}`);
 			return NextResponse.json(
 				{message : error.message},
 				{status : error.status}
