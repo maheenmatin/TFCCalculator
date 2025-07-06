@@ -181,24 +181,20 @@ export class DataMapperService implements IDataMapperService {
 			throw new DataServiceError(404, errorMessage);
 		}
 
-		// If no defaults to append, return early
-		if (!output.default) {
-			return combinedMinerals;
-		}
-
 		// Add default minerals based on constants
 		for (const mineralName of mineralNames) {
-			const defaultMinerals : InputMineral[] = [];
+			const mineralDefaults = await this.getMineralDefaults(params, mineralName);
+			const defaultMinerals: InputMineral[] = [];
 
-			for (const defaultName of output.default) {
+			for (const defaultName of mineralDefaults) {
 				const defaultYield = constants[defaultName];
 				if (defaultYield !== undefined) {
-					const name = replaceUnderscoreWithSpace(output.name);
+					const name = replaceUnderscoreWithSpace(mineralName);
 
 					defaultMinerals.push({
-						name : capitaliseFirstLetterOfEachWord(`${name} ${defaultName}`),
-						produces : output.name,
-						yield : defaultYield
+						name: capitaliseFirstLetterOfEachWord(`${name} ${defaultName}`),
+						produces: mineralName,
+						yield: defaultYield
 					});
 				}
 			}
@@ -209,5 +205,30 @@ export class DataMapperService implements IDataMapperService {
 		}
 
 		return combinedMinerals;
+	}
+
+	private async getMineralDefaults(
+			params: RouteParams,
+			mineralName: string
+	): Promise<string[]> {
+		const outputs = await this.dataReaderService.getOutputsJSON(params);
+
+		// Check in metals
+		const metal = outputs
+				.metals
+				?.find(m => m.name.toLowerCase() === mineralName.toLowerCase());
+		if (metal && metal.default) {
+			return metal.default;
+		}
+
+		// Check in alloys
+		const alloy = outputs
+				.alloys
+				?.find(a => a.name.toLowerCase() === mineralName.toLowerCase());
+		if (alloy && alloy.default) {
+			return alloy.default;
+		}
+
+		return [];
 	}
 }
