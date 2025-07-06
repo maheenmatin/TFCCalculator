@@ -1,4 +1,4 @@
-import {SmeltingOutput, SmeltingComponent, InputMineral, QuantifiedInputMineral} from "@/types";
+import {SmeltingComponent, InputMineral, QuantifiedInputMineral} from "@/types";
 
 
 export interface MineralWithQuantity {
