@@ -1,13 +1,13 @@
-import { ErrorComponent } from "@/components/ErrorComponent";
-import { MineralAccordion } from "@/components/MineralAccordion";
-import { OutputResult } from "@/components/OutputResult";
-import { calculateMetal, MetalProductionResult } from "@/functions/algorithm";
-import { capitaliseFirstLetterOfEachWord } from "@/functions/utils";
-import {DesiredOutputTypes, InputMineral, MineralUseCase, QuantifiedInputMineral, SmeltingComponent, SmeltingOutput} from "@/types";
-import React, { useEffect, useState } from "react";
-import { useParams } from "next/navigation";
-import { ApiResponse as MetalsApiResponse } from "@/app/api/[type]/[id]/[version]/metal/[metal]/route";
-import { ApiResponse as ConstantsApiResponse } from "@/app/api/[type]/[id]/[version]/constants/route";
+import {ErrorComponent} from "@/components/ErrorComponent";
+import {MineralAccordion} from "@/components/MineralAccordion";
+import {OutputResult} from "@/components/OutputResult";
+import {calculateMetal, MetalProductionResult} from "@/functions/algorithm";
+import {capitaliseFirstLetterOfEachWord} from "@/functions/utils";
+import {DesiredOutputTypes, InputMineral, QuantifiedInputMineral, SmeltingComponent} from "@/types";
+import React, {useEffect, useState} from "react";
+import {useParams} from "next/navigation";
+import {ApiResponse as MetalsApiResponse} from "@/app/api/[type]/[id]/[version]/metal/[metal]/route";
+import {ApiResponse as ConstantsApiResponse} from "@/app/api/[type]/[id]/[version]/constants/route";
 
 
 interface MetalDisplayProps {

@@ -1,5 +1,5 @@
 import {NextResponse} from "next/server";
-import {RouteParams, VersionType} from "@/types/gameversions";
+import {VersionType} from "@/types/gameversions";
 import {DataMapperService, DataServiceError} from "@/services/data/dataMapperService";
 import {DataReaderService} from "@/services/data/dataReaderService";
 
