@@ -18,11 +18,3 @@ export function replaceUnderscoreWithSpace(input : string) : string {
 			.split(/[ _]+/)
 			.join(" ");
 }
-
-export function getBaseMineralFromOverride(mineralName : string) : string {
-	return mineralName
-			.toLowerCase()
-			.replace(" ingot", "")
-			.replace(" nugget", "")
-			.replace(" ", "_");
-}

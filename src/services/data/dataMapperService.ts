@@ -1,6 +1,7 @@
 import {RouteParams} from "@/types/gameversions";
 import {InputMineral, SmeltingComponent, SmeltingOutput, SmeltingOutputType} from "@/types";
 import {IDataReaderService} from "@/services/data/dataReaderService";
+import {capitaliseFirstLetterOfEachWord, replaceUnderscoreWithSpace} from "@/functions/utils";
 
 
 interface AvailableOutput {
@@ -58,13 +59,22 @@ export class DataMapperService implements IDataMapperService {
 	}
 
 	async getOutputData(params: RouteParams, outputName: string): Promise<OutputDataResponse> {
-		const rawData = await this.dataReaderService.getOutputsJSON(params);
+		const rawOutputData = await this.dataReaderService.getOutputsJSON(params);
+
 		const lowerOutputName = outputName.toLowerCase();
+		const constants = await this.retrieveConstants(params);
+
+		if (!constants) {
+			throw new DataServiceError(
+				404,
+				`Failed to find constants for version!`
+			);
+		}
 
 		// Try to find in metals
-		const metal = rawData.metals
-		                     .filter(m => m.producible !== false)
-		                     .find(m => m.name.toLowerCase() === lowerOutputName);
+		const metal = rawOutputData.metals
+			.filter(m => m.producible !== false)
+			.find(m => m.name.toLowerCase() === lowerOutputName);
 		if (metal) {
 			const smeltingOutput: SmeltingOutput = {
 				name: metal.name,
@@ -82,15 +92,15 @@ export class DataMapperService implements IDataMapperService {
 
 			return {
 				components: smeltingOutput.components,
-				minerals: await this.getMineralsForOutput(params, smeltingOutput)
+				minerals: await this.getMineralsForOutput(params, smeltingOutput, constants)
 			};
 		}
 
 		// Try to find in alloys
-		const alloy = rawData.alloys
-		                     .filter(a => a.producible !== false)
-		                     .find(a => a.name.toLowerCase() === lowerOutputName);
-		if (alloy && alloy.producible !== false) {
+		const alloy = rawOutputData.alloys
+			.filter(a => a.producible !== false)
+			.find(a => a.name.toLowerCase() === lowerOutputName);
+		if (alloy) {
 			const smeltingOutput: SmeltingOutput = {
 				name: alloy.name,
 				components: alloy.components ?? [],
@@ -101,7 +111,7 @@ export class DataMapperService implements IDataMapperService {
 
 			return {
 				components: smeltingOutput.components,
-				minerals: await this.getMineralsForOutput(params, smeltingOutput)
+				minerals: await this.getMineralsForOutput(params, smeltingOutput, constants)
 			};
 		}
 
@@ -111,11 +121,35 @@ export class DataMapperService implements IDataMapperService {
 		);
 	}
 
-	private async getMineralsForOutput(params: RouteParams, output: SmeltingOutput): Promise<Map<string, InputMineral[]>> {
+	private async retrieveConstants(
+			params : RouteParams,
+	) : Promise<Record<string, number> | null> {
+		const rawGameVersionData = await this.dataReaderService.getGameVersionsJSON();
+
+		let versionsSplit = params.version.split("_", 2);
+
+		const resource = rawGameVersionData[params.type]
+				.filter(r => r.supported)
+				.filter(r => r.id == params.id)
+				.filter(r => r.gameVersion == versionsSplit[0])
+				.find(r => r.version == versionsSplit[1]);
+
+		if (!resource || !resource.constants) {
+			return null;
+		}
+
+		return resource.constants;
+	}
+
+	private async getMineralsForOutput(
+			params : RouteParams,
+			output : SmeltingOutput,
+			constants : Record<string, number>
+	) : Promise<Map<string, InputMineral[]>> {
 		const minerals = await this.dataReaderService.getMineralsJSON(params);
 		const isAlloy = output.type == SmeltingOutputType.ALLOY;
 		const combinedMinerals = new Map<string, InputMineral[]>();
-		const missingMinerals: string[] = [];
+		const missingMinerals : string[] = [];
 
 		// For metals, use the output name directly
 		// For alloys, iterate through components
@@ -126,6 +160,7 @@ export class DataMapperService implements IDataMapperService {
 		// Collect missing minerals
 		for (const mineralName of mineralNames) {
 			const foundMinerals = minerals[mineralName];
+			console.log(foundMinerals);
 			if (!foundMinerals) {
 				missingMinerals.push(mineralName);
 			} else {
@@ -140,6 +175,33 @@ export class DataMapperService implements IDataMapperService {
 				: `No minerals found for metal ${output.name}`;
 
 			throw new DataServiceError(404, errorMessage);
+		}
+
+		// If no defaults to append, return early
+		if (!output.default) {
+			return combinedMinerals;
+		}
+
+		// Add default minerals based on constants
+		for (const mineralName of mineralNames) {
+			const defaultMinerals : InputMineral[] = [];
+
+			for (const defaultName of output.default) {
+				const defaultYield = constants[defaultName];
+				if (defaultYield !== undefined) {
+					const name = replaceUnderscoreWithSpace(output.name);
+
+					defaultMinerals.push({
+						name : capitaliseFirstLetterOfEachWord(`${name} ${defaultName}`),
+						produces : output.name,
+						yield : defaultYield
+					});
+				}
+			}
+
+			// Add default minerals to existing minerals
+			const existingMinerals = combinedMinerals.get(mineralName) || [];
+			combinedMinerals.set(mineralName, [...existingMinerals, ...defaultMinerals]);
 		}
 
 		return combinedMinerals;

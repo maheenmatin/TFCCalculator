@@ -102,15 +102,6 @@ export function MetalComponentDisplay({ metal }: Readonly<MetalDisplayProps>) {
 		return newMap;
 	};
 
-	const getDesiredOutputInMb = (): number => {
-		if (mbConstants == null) {
-			setError("mbConstants cannot be null")
-			return 0;
-		}
-
-		return desiredOutputInUnits * (mbConstants[unit] ?? 1);
-	}
-
 	const handleCalculate = async () => {
 		if (!components || !minerals || isCalculating) {
 			return;
@@ -132,8 +123,9 @@ export function MetalComponentDisplay({ metal }: Readonly<MetalDisplayProps>) {
 			}
 
 			if (mbConstants == null) return;
+			const desiredOutputInMb = desiredOutputInUnits * (mbConstants[unit] ?? 1)
 
-			setResult(calculateMetal(getDesiredOutputInMb(), components, mineralWithQuantities));
+			setResult(calculateMetal(desiredOutputInMb, components, mineralWithQuantities));
 		} catch (err) {
 			setError(`Failed to calculate! ${err}`);
 			console.error("Error calculating:", err);
@@ -158,20 +150,21 @@ export function MetalComponentDisplay({ metal }: Readonly<MetalDisplayProps>) {
 		&& !isResultAlteredSinceLastCalculation
 		&& !error;
 
-	function defaultOverride(mineral : string, defaultOption : string) : QuantifiedInputMineral | null {
-		if (mbConstants == null || mbConstants[defaultOption] == null) return null;
-
-		return {
-			name : `${capitaliseFirstLetterOfEachWord(mineral + " " + defaultOption)}`,
-			produces : mineral,
-			yield : mbConstants[defaultOption],
-			uses : [
-				MineralUseCase.Vessel,
-				MineralUseCase.Crucible
-			],
-			quantity : 0
-		};
-	}
+	// TODO: Move these to the BE
+	// function defaultOverride(mineral : string, defaultOption : string) : QuantifiedInputMineral | null {
+	// 	if (mbConstants == null || mbConstants[defaultOption] == null) return null;
+	//
+	// 	return {
+	// 		name : `${capitaliseFirstLetterOfEachWord(mineral + " " + defaultOption)}`,
+	// 		produces : mineral,
+	// 		yield : mbConstants[defaultOption],
+	// 		uses : [
+	// 			MineralUseCase.Vessel,
+	// 			MineralUseCase.Crucible
+	// 		],
+	// 		quantity : 0
+	// 	};
+	// }
 
 	// function componentDefaultAvailable(component : SmeltingComponent, defaultOption : string) {
 	// 	component.mineral
@@ -238,17 +231,17 @@ export function MetalComponentDisplay({ metal }: Readonly<MetalDisplayProps>) {
 						);
 					}
 
-					for (const defaultConstant in mbConstants) {
-						const alreadyExists = componentMinerals.some(m => m.name.toLowerCase().includes(defaultConstant.toLowerCase()));
-						// const shouldDefault = componentDefaultAvailable(component, defaultConstant);
-						// TODO: Implement
-						const shouldDefault = true;
-
-						if (!alreadyExists && shouldDefault) {
-							const override = defaultOverride(component.mineral, defaultConstant);
-							if (override) componentMinerals.push(override);
-						}
-					}
+					// for (const defaultConstant in mbConstants) {
+					// 	const alreadyExists = componentMinerals.some(m => m.name.toLowerCase().includes(defaultConstant.toLowerCase()));
+					// 	// const shouldDefault = componentDefaultAvailable(component, defaultConstant);
+					// 	// TODO: Implement
+					// 	const shouldDefault = true;
+					//
+					// 	if (!alreadyExists && shouldDefault) {
+					// 		const override = defaultOverride(component.mineral, defaultConstant);
+					// 		if (override) componentMinerals.push(override);
+					// 	}
+					// }
 
 					return (
 						<MineralAccordion
