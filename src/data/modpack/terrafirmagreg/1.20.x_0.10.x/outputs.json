@@ -99,7 +99,8 @@
         }
       ],
       "default": [
-        "dust"
+        "dust",
+        "nugget"
       ]
     },
     {
@@ -115,6 +116,10 @@
           "min": 8.0,
           "max": 12.0
         }
+      ],
+      "default": [
+        "dust",
+        "nugget"
       ]
     },
     {
@@ -137,7 +142,8 @@
         }
       ],
       "default": [
-        "dust"
+        "dust",
+        "nugget"
       ]
     },
     {
@@ -160,7 +166,8 @@
         }
       ],
       "default": [
-        "dust"
+        "dust",
+        "nugget"
       ]
     },
     {
@@ -176,6 +183,10 @@
           "min": 75.0,
           "max": 85.0
         }
+      ],
+      "default": [
+        "dust",
+        "nugget"
       ]
     },
     {
@@ -203,7 +214,8 @@
         }
       ],
       "default": [
-        "dust"
+        "dust",
+        "nugget"
       ]
     },
     {
@@ -221,7 +233,8 @@
         }
       ],
       "default": [
-        "dust"
+        "dust",
+        "nugget"
       ]
     },
     {
@@ -239,7 +252,8 @@
         }
       ],
       "default": [
-        "dust"
+        "dust",
+        "nugget"
       ]
     },
     {
@@ -255,6 +269,10 @@
           "min": 45.0,
           "max": 55.0
         }
+      ],
+      "default": [
+        "dust",
+        "nugget"
       ]
     },
     {
@@ -280,6 +298,10 @@
           "min": 10.0,
           "max": 15.0
         }
+      ],
+      "default": [
+        "dust",
+        "nugget"
       ]
     },
     {
@@ -300,6 +322,10 @@
           "min": 15.0,
           "max": 25.0
         }
+      ],
+      "default": [
+        "dust",
+        "nugget"
       ]
     }
   ]
