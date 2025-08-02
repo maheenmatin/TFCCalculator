@@ -1,8 +1,8 @@
-import {SmeltingComponent, InputMineral, QuantifiedInputMineral} from "@/types";
+import {SmeltingComponent, Mineral, QuantifiedMineral} from "@/types";
 
 
 export interface MineralWithQuantity {
-	mineral: InputMineral;
+	mineral: Mineral;
 	quantity: number;
 }
 
@@ -17,7 +17,7 @@ export interface MetalProductionResult {
  * Calculate the total available mB for each mineral production type.
  * @param mineralsByType Grouped minerals by their production type.
  */
-function calculateAvailableMbByType(mineralsByType : Map<string, QuantifiedInputMineral[]>) : Map<string, number> {
+function calculateAvailableMbByType(mineralsByType : Map<string, QuantifiedMineral[]>) : Map<string, number> {
 	const totalAvailableByType = new Map<string, number>();
 
 	for (const [type, minerals] of mineralsByType) {
@@ -37,7 +37,7 @@ function calculateAvailableMbByType(mineralsByType : Map<string, QuantifiedInput
 /**
  * TEMPORARY PLACEHOLDER CONVERSION FUNCTION
  */
-function convertToMineralWithQuantity(mineralsByType: Map<string, QuantifiedInputMineral[]>): Map<string, MineralWithQuantity[]> {
+function convertToMineralWithQuantity(mineralsByType: Map<string, QuantifiedMineral[]>): Map<string, MineralWithQuantity[]> {
 	const convertedMap = new Map<string, MineralWithQuantity[]>();
 
 	for (const [type, minerals] of mineralsByType) {
@@ -204,7 +204,7 @@ function findValidCombination(
 export function calculateMetal(
 		targetMb: number,
 		targetComponents: SmeltingComponent[],
-		availableMinerals: Map<string, QuantifiedInputMineral[]>
+		availableMinerals: Map<string, QuantifiedMineral[]>
 ): MetalProductionResult {
 	const totalAvailableByType = calculateAvailableMbByType(availableMinerals);
 

@@ -1,7 +1,7 @@
 import {GameVersions, RouteParams} from "@/types/gameversions";
 import path from "path";
 import {promises as fs} from "fs";
-import {InputMineral, SmeltingOutput} from "@/types";
+import {Mineral, SmeltingOutput} from "@/types";
 import {DataServiceError} from "@/services/data/dataMapperService";
 
 
@@ -12,7 +12,7 @@ interface OutputJSON {
 }
 
 interface MineralsJSON {
-	[outputName: string]: InputMineral[];
+	[outputName: string]: Mineral[];
 }
 
 export interface IDataReaderService {

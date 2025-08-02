@@ -1,4 +1,4 @@
-import {InputMineral, MineralUseCase, SmeltingComponent} from "@/types";
+import {Mineral, MineralUseCase, SmeltingComponent} from "@/types";
 import {NextResponse} from "next/server";
 import {RouteParams} from "@/types/gameversions";
 import {DataMapperService, DataServiceError} from "@/services/data/dataMapperService";
@@ -7,7 +7,7 @@ import {DataReaderService} from "@/services/data/dataReaderService";
 
 export interface ApiResponse {
 	components : SmeltingComponent[];
-	minerals : Map<string, InputMineral[]>;
+	minerals : Map<string, Mineral[]>;
 }
 
 interface RouteContext {
@@ -59,7 +59,7 @@ export async function GET(
  * @param uses Array of MineralUseCase to filter by
  * @returns Filtered map of InputMinerals
  */
-function filterMineralsByUses(minerals : Map<string, InputMineral[]>, uses : MineralUseCase[]) : Map<string, InputMineral[]> {
+function filterMineralsByUses(minerals : Map<string, Mineral[]>, uses : MineralUseCase[]) : Map<string, Mineral[]> {
 	if (uses.length === 0) {
 		return minerals;
 	}
