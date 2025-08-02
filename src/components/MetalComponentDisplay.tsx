@@ -2,9 +2,9 @@ import {ErrorComponent} from "@/components/ErrorComponent";
 import {MineralAccordion} from "@/components/MineralAccordion";
 import {OutputResult} from "@/components/OutputResult";
 import {calculateMetal, MetalProductionResult} from "@/functions/algorithm";
-import {capitaliseFirstLetterOfEachWord} from "@/functions/utils";
+import {capitaliseFirstLetterOfEachWord}                                        from "@/functions/utils";
 import {DesiredOutputTypes, InputMineral, QuantifiedInputMineral, SmeltingComponent} from "@/types";
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useState}                                             from "react";
 import {useParams} from "next/navigation";
 import {ApiResponse as MetalsApiResponse} from "@/app/api/[type]/[id]/[version]/metal/[metal]/route";
 import {ApiResponse as ConstantsApiResponse} from "@/app/api/[type]/[id]/[version]/constants/route";
@@ -112,21 +112,23 @@ export function MetalComponentDisplay({ metal }: Readonly<MetalDisplayProps>) {
 		setIsCalculating(true);
 		await new Promise(resolve => setTimeout(resolve, 0));
 
-		try {
-			const mineralWithQuantities: Map<string, QuantifiedInputMineral[]> = new Map();
+		// TODO: Decouple this somehow into a more generic reusable method of some form?
+		const mineralWithQuantities: Map<string, QuantifiedInputMineral[]> = new Map();
 
-			// Keep non-zero quantities
-			for (const [category, mineralArray] of minerals) {
-				const nonZeroMinerals = mineralArray.filter(m => m.quantity > 0);
+		// Keep non-zero quantities
+		for (const [category, mineralArray] of minerals) {
+			const nonZeroMinerals = mineralArray.filter(m => m.quantity > 0);
 
-				if (nonZeroMinerals.length > 0) {
-					mineralWithQuantities.set(category, nonZeroMinerals);
-				}
+			if (nonZeroMinerals.length > 0) {
+				mineralWithQuantities.set(category, nonZeroMinerals);
 			}
+		}
+		// END TODO
 
-			if (mbConstants == null) return;
-			const desiredOutputInMb = desiredOutputInUnits * (mbConstants[unit] ?? 1)
+		if (mbConstants == null) return;
+		const desiredOutputInMb = desiredOutputInUnits * (mbConstants[unit] ?? 1)
 
+		try {
 			setResult(calculateMetal(desiredOutputInMb, components, mineralWithQuantities));
 		} catch (err) {
 			setError(`Failed to calculate! ${err}`);
