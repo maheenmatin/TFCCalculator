@@ -1,4 +1,4 @@
-import {QuantifiedInputMineral, SmeltingComponent} from "@/types";
+import {QuantifiedMineral, SmeltingComponent} from "@/types";
 
 
 /**
@@ -55,7 +55,7 @@ export interface CalculationOutput {
 	/**
 	 * The collection of used minerals to produce the outputs, with their quantities.
 	 */
-	usedMinerals : QuantifiedInputMineral[];
+	usedMinerals : QuantifiedMineral[];
 }
 
 /**
@@ -106,7 +106,7 @@ export interface IOutputCalculator {
 	calculateSmeltingOutput(
 			targetMb : number,
 			components : SmeltingComponent[],
-			availableMinerals : Map<string, QuantifiedInputMineral[]>,
+			availableMinerals : Map<string, QuantifiedMineral[]>,
 			flags? : Flags,
 			flagValues? : FlagValues
 	) : CalculationOutput;

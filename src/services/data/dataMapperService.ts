@@ -1,6 +1,6 @@
-import {RouteParams} from "@/types/gameversions";
-import {InputMineral, SmeltingComponent, SmeltingOutput, SmeltingOutputType} from "@/types";
-import {IDataReaderService} from "@/services/data/dataReaderService";
+import {RouteParams}                                                    from "@/types/gameversions";
+import {Mineral, SmeltingComponent, SmeltingOutput, SmeltingOutputType} from "@/types";
+import {IDataReaderService}                                             from "@/services/data/dataReaderService";
 import {capitaliseFirstLetterOfEachWord, replaceUnderscoreWithSpace} from "@/functions/utils";
 
 
@@ -13,7 +13,7 @@ export type AvailableOutputsResponse = AvailableOutput[];
 
 export interface OutputDataResponse {
 	components : SmeltingComponent[];
-	minerals : Map<string, InputMineral[]>;
+	minerals : Map<string, Mineral[]>;
 }
 
 export interface IDataMapperService {
@@ -145,10 +145,10 @@ export class DataMapperService implements IDataMapperService {
 			params : RouteParams,
 			output : SmeltingOutput,
 			constants : Record<string, number>
-	) : Promise<Map<string, InputMineral[]>> {
+	) : Promise<Map<string, Mineral[]>> {
 		const minerals = await this.dataReaderService.getMineralsJSON(params);
 		const isAlloy = output.type == SmeltingOutputType.ALLOY;
-		const combinedMinerals = new Map<string, InputMineral[]>();
+		const combinedMinerals = new Map<string, Mineral[]>();
 		const missingMinerals : string[] = [];
 
 		// For metals, use the output name directly
@@ -184,7 +184,7 @@ export class DataMapperService implements IDataMapperService {
 		// Add default minerals based on constants
 		for (const mineralName of mineralNames) {
 			const mineralDefaults = await this.getMineralDefaults(params, mineralName);
-			const defaultMinerals: InputMineral[] = [];
+			const defaultMinerals: Mineral[] = [];
 
 			for (const defaultName of mineralDefaults) {
 				const defaultYield = constants[defaultName];

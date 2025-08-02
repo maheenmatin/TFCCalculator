@@ -1,10 +1,10 @@
 import {calculateMetal, MineralWithQuantity} from "@/functions/algorithm";
-import {SmeltingOutput, InputMineral} from "@/types";
+import {SmeltingOutput, Mineral} from "@/types";
 
 
-const smallTinVariant : InputMineral = { name: 'small tin variant', produces: 'tin', yield: 16 };
-const mediumCopperVariant : InputMineral = { name: 'medium copper variant', produces: 'copper', yield: 24 };
-const largeCopperVariant : InputMineral = { name: 'large copper variant', produces: 'copper', yield: 36 };
+const smallTinVariant : Mineral = { name: 'small tin variant', produces: 'tin', yield: 16 };
+const mediumCopperVariant : Mineral = { name: 'medium copper variant', produces: 'copper', yield: 24 };
+const largeCopperVariant : Mineral = { name: 'large copper variant', produces: 'copper', yield: 36 };
 
 describe('calculateMetal algorithm', () => {
 	const bronzeMetal: SmeltingOutput = {

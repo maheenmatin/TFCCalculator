@@ -3,7 +3,7 @@ import {MineralAccordion} from "@/components/MineralAccordion";
 import {OutputResult} from "@/components/OutputResult";
 import {calculateMetal, MetalProductionResult} from "@/functions/algorithm";
 import {capitaliseFirstLetterOfEachWord}                                        from "@/functions/utils";
-import {DesiredOutputTypes, InputMineral, QuantifiedInputMineral, SmeltingComponent} from "@/types";
+import {DesiredOutputTypes, Mineral, QuantifiedMineral, SmeltingComponent} from "@/types";
 import React, {useEffect, useState}                                             from "react";
 import {useParams} from "next/navigation";
 import {ApiResponse as MetalsApiResponse} from "@/app/api/[type]/[id]/[version]/metal/[metal]/route";
@@ -18,7 +18,7 @@ export function MetalComponentDisplay({ metal }: Readonly<MetalDisplayProps>) {
 	const { type, id, version } = useParams();
 
 	const [components, setComponents] = useState<SmeltingComponent[] | null>(null);
-	const [minerals, setMinerals] = useState<Map<string, QuantifiedInputMineral[]>>(new Map());
+	const [minerals, setMinerals] = useState<Map<string, QuantifiedMineral[]>>(new Map());
 	const [mbConstants, setMbConstants] = useState<Record<string, number> | null>(null);
 	const [unit, setUnit] = useState<DesiredOutputTypes>(DesiredOutputTypes.Ingot);
 	const [desiredOutputInUnits, setDesiredOutputInUnits] = useState<number>(0);
@@ -42,7 +42,7 @@ export function MetalComponentDisplay({ metal }: Readonly<MetalDisplayProps>) {
 			.then(data => {
 				setComponents(data.components);
 				setMinerals(new Map(
-					Object.entries(data.minerals).map(([name, minerals] : [string, InputMineral[]]) => [
+					Object.entries(data.minerals).map(([name, minerals] : [string, Mineral[]]) => [
 						name,
 						minerals.map(m => ({ ...m, quantity: 0 }))
 					])
@@ -80,10 +80,10 @@ export function MetalComponentDisplay({ metal }: Readonly<MetalDisplayProps>) {
 	};
 
 	const updateMineralQuantity = (
-		prevMinerals: Map<string, QuantifiedInputMineral[]>,
+		prevMinerals: Map<string, QuantifiedMineral[]>,
 		mineralName: string,
 		newQuantity: number
-	): Map<string, QuantifiedInputMineral[]> => {
+	): Map<string, QuantifiedMineral[]> => {
 		const newMap = new Map(prevMinerals);
 
 		for (const [componentName, mineralArray] of newMap.entries()) {
@@ -113,7 +113,7 @@ export function MetalComponentDisplay({ metal }: Readonly<MetalDisplayProps>) {
 		await new Promise(resolve => setTimeout(resolve, 0));
 
 		// TODO: Decouple this somehow into a more generic reusable method of some form?
-		const mineralWithQuantities: Map<string, QuantifiedInputMineral[]> = new Map();
+		const mineralWithQuantities: Map<string, QuantifiedMineral[]> = new Map();
 
 		// Keep non-zero quantities
 		for (const [category, mineralArray] of minerals) {
