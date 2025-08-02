@@ -15,7 +15,7 @@ export enum Flags {
 	 *
 	 * Requires the {@link intervalMb} value to be present in {@link FlagValues}.
 	 */
-	CLOSEST_ALTERNATIVE = 1 << 0,
+	CLOSEST_ALTERNATIVE = 1,
 }
 
 /**
@@ -66,11 +66,11 @@ export enum OutputCode {
 	/**
 	 * It is feasible to create the desired output.
 	 */
-	SUCCESS = 200,
+	SUCCESS,
 	/**
 	 * Request has missing values or contains invalid input from the caller.
 	 */
-	BAD_REQUEST = 500,
+	BAD_REQUEST,
 	/**
 	 * Insufficient amount of minerals in total to achieve desired amount.
 	 */
