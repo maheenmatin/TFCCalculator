@@ -1,10 +1,10 @@
-import {QuantifiedInputMineral} from "@/types";
+import {QuantifiedMineral} from "@/types";
 import React, {useState} from "react";
 
 
 interface MineralAccordionProps {
 	title: string;
-	minerals: QuantifiedInputMineral[];
+	minerals: QuantifiedMineral[];
 	onQuantityChange: (mineralName: string, e: React.ChangeEvent<HTMLInputElement>) => void;
 	onInputKeyPress: (e: React.KeyboardEvent) => Promise<void>;
 }

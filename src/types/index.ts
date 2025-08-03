@@ -17,14 +17,14 @@ export interface SmeltingComponent {
 	max : number;
 }
 
-export interface InputMineral {
+export interface Mineral {
 	name : string;
 	produces : string;
 	yield : number;
 	uses? : MineralUseCase[];
 }
 
-export interface QuantifiedInputMineral extends InputMineral {
+export interface QuantifiedMineral extends Mineral {
 	quantity : number;
 }
 
