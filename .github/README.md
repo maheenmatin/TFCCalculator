@@ -71,8 +71,5 @@ This project is set up for automatic deployment on Vercel.
 > [!CAUTION]
 > Every push to the `main` branch will trigger a new production deployment.
 
-> [!NOTE]
-> Pull requests and `dev` (acts as a staging branch), will trigger a preview deployment.
-
 ## 📄 License
 This project is licensed under the [GNU GPL v3](/LICENSE) license.
