@@ -1,6 +1,6 @@
 {
   "lastUpdated": "2025-08-02",
-  "version": "1.0.1",
+  "version": "1.0.0",
   "schemaVersion": "1",
   "metals": [
     {
@@ -100,8 +100,8 @@
       ],
       "default": [
         "ingot",
-        "nugget",
-        "dust"
+        "dust",
+        "nugget"
       ]
     },
     {
@@ -120,8 +120,8 @@
       ],
       "default": [
         "ingot",
-        "nugget",
-        "dust"
+        "dust",
+        "nugget"
       ]
     },
     {
@@ -145,8 +145,8 @@
       ],
       "default": [
         "ingot",
-        "nugget",
-        "dust"
+        "dust",
+        "nugget"
       ]
     },
     {
@@ -170,8 +170,8 @@
       ],
       "default": [
         "ingot",
-        "nugget",
-        "dust"
+        "dust",
+        "nugget"
       ]
     },
     {
@@ -190,8 +190,8 @@
       ],
       "default": [
         "ingot",
-        "nugget",
-        "dust"
+        "dust",
+        "nugget"
       ]
     },
     {
@@ -220,8 +220,8 @@
       ],
       "default": [
         "ingot",
-        "nugget",
-        "dust"
+        "dust",
+        "nugget"
       ]
     },
     {
@@ -240,8 +240,8 @@
       ],
       "default": [
         "ingot",
-        "nugget",
-        "dust"
+        "dust",
+        "nugget"
       ]
     },
     {
@@ -260,8 +260,8 @@
       ],
       "default": [
         "ingot",
-        "nugget",
-        "dust"
+        "dust",
+        "nugget"
       ]
     },
     {
@@ -280,8 +280,8 @@
       ],
       "default": [
         "ingot",
-        "nugget",
-        "dust"
+        "dust",
+        "nugget"
       ]
     },
     {
@@ -310,8 +310,8 @@
       ],
       "default": [
         "ingot",
-        "nugget",
-        "dust"
+        "dust",
+        "nugget"
       ]
     },
     {
@@ -335,8 +335,8 @@
       ],
       "default": [
         "ingot",
-        "nugget",
-        "dust"
+        "dust",
+        "nugget"
       ]
     }
   ]
