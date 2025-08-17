@@ -1,5 +1,1 @@
-- Proposed changes to "Contributing" / "Local Setup":
-	- ensure that Next.js is installed
-	- if not, run "npm install next react react-dom"
-
 - 
