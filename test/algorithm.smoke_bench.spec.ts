@@ -6,8 +6,8 @@ const bronze = bronzeComponents();
 // HEAVY=1 NODE_OPTIONS=--max-old-space-size=4096 jest -w 1 test/algorithm.smoke_bench.spec.ts
 const HEAVY = process.env.HEAVY === '1';
 
-// TODO: Algorithm requires backtracking. Incorrectly returns no valid combination
 describe('calculateMetal — smoke & micro-bench', () => {
+  // TODO: Algorithm requires backtracking. Incorrectly returns no valid combination
   it.skip('Large quantities, few variants → stays fast', () => {
     const target = 4320; // ~10x the base 432 mB case
     const inv = byTypeMap([

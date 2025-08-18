@@ -65,5 +65,6 @@ export function timeIt<T>(fn: () => T): { result: T; ms: number } {
     const result = fn();
     const end = process.hrtime.bigint();
     const ms = Number(end - start) / 1e6;  // convert ns to ms as a JS number
+    // return a plain object with generic type T and elapsed time in ms
     return { result, ms };
 }

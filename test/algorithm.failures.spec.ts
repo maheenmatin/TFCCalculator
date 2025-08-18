@@ -2,21 +2,26 @@ import { calculateMetal } from '@/functions/algorithm';
 import { qm, byTypeMap, bronzeComponents, timeIt } from './helpers';
 import type { SmeltingComponent } from '@/types';
 
-function totalUsed(rows: { mineral: { yield: number }, quantity: number }[]) {
-  return rows.reduce((s, r) => s + r.mineral.yield * r.quantity, 0);
+/**
+ * Computes the total output in mB from a set of used minerals.
+ * @param units - an array of objects containing mineral.yield and quantity
+ * @returns total produced mB from all minerals
+ */
+function totalUsed(units: { mineral: { yield: number }, quantity: number }[]) {
+  return units.reduce((s, u) => s + u.mineral.yield * u.quantity, 0);
 }
 
-describe('calculateMetal — failure & edge cases', () => {
+describe('calculateMetal - failure & edge cases', () => {
   const bronze = bronzeComponents();
 
-  it('No minerals at all → Not enough total material available', () => {
+  it('No minerals at all -> not enough total material available', () => {
     const inv = byTypeMap([]);
     const res = calculateMetal(432, bronze, inv);
     expect(res.success).toBe(false);
     expect(res.message).toContain('Not enough total material available');
   });
 
-  it('Required component key missing in map -> Not enough <type> for minimum requirement', () => {
+  it('Required component key missing in map -> not enough <type> for minimum requirement', () => {
     // Copper present, tin missing entirely
     const inv = byTypeMap([
       ['copper', [qm('Medium Copper', 'copper', 24, 100)]],
@@ -27,6 +32,7 @@ describe('calculateMetal — failure & edge cases', () => {
   });
 
   it('Conflicting percentage windows (mins add to > 100%) -> UNSAT by combination', () => {
+    // Create impossible ratios for smelting component
     const badAlloy: SmeltingComponent[] = [
       { mineral: 'a', min: 60, max: 100 },
       { mineral: 'b', min: 50, max: 100 },
@@ -41,6 +47,7 @@ describe('calculateMetal — failure & edge cases', () => {
   });
 
   it('Conflicting percentage windows (maxes sum < 100%) -> UNSAT by combination', () => {
+    // Create impossible ratios for smelting component
     const badAlloy: SmeltingComponent[] = [
       { mineral: 'a', min: 0,  max: 40 },
       { mineral: 'b', min: 0,  max: 30 },
@@ -67,7 +74,7 @@ describe('calculateMetal — failure & edge cases', () => {
   });
 
   it('Map key case-insensitivity (helpers lower-case keys) -> still succeeds', () => {
-    // byTypeMap lower-cases keys; qm lower-cases produces -> should work
+    // byTypeMap lower-cases keys + qm lower-cases produces -> should work
     const inv = byTypeMap([
       ['Tin',    [qm('Small Cassiterite', 'TIN',    16, 3)]],
       ['Copper', [qm('Medium Copper',     'Copper', 24, 7),
@@ -79,6 +86,8 @@ describe('calculateMetal — failure & edge cases', () => {
   });
 
   it('Component order robustness for a known feasible case', () => {
+    // robustness/invariance check: verifies that a known-feasible bronze request succeeds '
+    // regardless of the order of the alloy components array
     const inv = byTypeMap([
       ['tin',    [qm('Small Cassiterite', 'tin', 16, 3)]],
       ['copper', [qm('Medium Copper', 'copper', 24, 7), qm('Large Copper', 'copper', 36, 6)]],
