@@ -1,4 +1,4 @@
-import type { QuantifiedInputMineral, SmeltingComponent } from '@/types';
+import type { QuantifiedMineral, SmeltingComponent } from '@/types';
 
 /**
  * Builder for QuantifiedInputMineral
@@ -14,7 +14,7 @@ export function qm(
     produces: string,
     yieldUnits: number,
     quantity: number
-): QuantifiedInputMineral {
+): QuantifiedMineral {
     return {
         name,
         // normalize to lowercase so lookups become case-insensitive
@@ -34,9 +34,9 @@ export function qm(
  * lowercasing the keys to avoid mismatches
  */
 export function byTypeMap(
-  entries: Array<[type: string, items: QuantifiedInputMineral[]]>
-): Map<string, QuantifiedInputMineral[]> {
-    const m = new Map<string, QuantifiedInputMineral[]>();
+  entries: Array<[type: string, items: QuantifiedMineral[]]>
+): Map<string, QuantifiedMineral[]> {
+    const m = new Map<string, QuantifiedMineral[]>();
     // normalize to lowercase so lookups become case-insensitive
     for (const [type, arr] of entries) m.set(type.toLowerCase(), arr);
     return m;
