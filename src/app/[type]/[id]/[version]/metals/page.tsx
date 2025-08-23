@@ -4,7 +4,7 @@ import {SmeltingOutput, SmeltingOutputType} from "@/types";
 import {useParams, useRouter} from "next/navigation";
 import {HeadingWithBackButton} from "@/components/HeadingWithBackButton";
 import {SelfCenteringGrid} from "@/components/SelfCenteringGrid";
-import React, {useCallback, useEffect, useState} from "react";
+import React, {useCallback, useEffect, useState, useRef} from "react";
 import {ErrorComponent} from "@/components/ErrorComponent";
 import {LoadingSpinner} from "@/components/LoadingSpinner";
 import {capitaliseFirstLetterOfEachWord} from "@/functions/utils";
@@ -22,6 +22,7 @@ export default function Home() {
 	const [error, setError] = useState<string | null>(null);
 	const [filterType, setFilterType] = useState<CreationSelectionFilter>(CreationSelectionFilter.All);
 	const [searchTerm, setSearchTerm] = useState("");
+	const containerRef = useRef<HTMLDivElement>(null);
 
 	const handleMetalSelect = useCallback((metal : SmeltingOutput) => {
 		router.push(`/${type}/${id}/${version}/${metal.name}`);
@@ -72,6 +73,18 @@ export default function Home() {
 				});
 	}, [type, id, version]);
 
+	useEffect(() => {
+		const handleKeyPress = (event : KeyboardEvent) => {
+			if (event.key === "Enter" && filteredResult.length === 1) {
+				event.preventDefault();
+				handleMetalSelect(filteredResult[0]);
+			}
+		};
+
+		document.addEventListener("keydown", handleKeyPress);
+		return () => document.removeEventListener("keydown", handleKeyPress);
+	}, [filteredResult, handleMetalSelect]);
+
 	const renderMetalButton = useCallback((metal : SmeltingOutput) => {
 		const displayMetalName = capitaliseFirstLetterOfEachWord(metal.name);
 
@@ -94,6 +107,8 @@ export default function Home() {
 					className="container mx-auto px-4 py-8"
 					role="main"
 					aria-label="Metal Selection"
+					ref={containerRef}
+					tabIndex={-1}
 			>
 				<div className="max-w-6xl mx-auto">
 					<HeadingWithBackButton
