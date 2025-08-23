@@ -32,6 +32,10 @@ body {
         @apply text-teal-100;
     }
 
+    .bg-background {
+        @apply bg-[#151515];
+    }
+
     button.text-primary,
     input.text-primary,
     .interactive-text-primary {
