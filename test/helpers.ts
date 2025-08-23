@@ -17,11 +17,9 @@ export function qm(
 ): QuantifiedMineral {
     return {
         name,
-        // normalize to lowercase so lookups become case-insensitive
         produces: produces.toLowerCase(),
         yield: yieldUnits,
         quantity,
-        // provide a harmless default for uses
         uses: ['vessel', 'crucible'] as any,
     };
 }
@@ -37,7 +35,6 @@ export function byTypeMap(
   entries: Array<[type: string, items: QuantifiedMineral[]]>
 ): Map<string, QuantifiedMineral[]> {
     const m = new Map<string, QuantifiedMineral[]>();
-    // normalize to lowercase so lookups become case-insensitive
     for (const [type, arr] of entries) m.set(type.toLowerCase(), arr);
     return m;
 }
@@ -61,10 +58,9 @@ export function bronzeComponents(): SmeltingComponent[] {
  * timers in Node to measure wall time in milliseconds
  */
 export function timeIt<T>(fn: () => T): { result: T; ms: number } {
-    const start = process.hrtime.bigint();  // nanoseconds (BigInt)
+    const start = process.hrtime.bigint(); // nanoseconds (BigInt)
     const result = fn();
     const end = process.hrtime.bigint();
-    const ms = Number(end - start) / 1e6;  // convert ns to ms as a JS number
-    // return a plain object with generic type T and elapsed time in ms
+    const ms = Number(end - start) / 1e6; // convert ns to ms as a JS number
     return { result, ms };
 }
