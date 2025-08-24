@@ -1,5 +1,6 @@
 import React, {useEffect, useRef} from "react";
 import {MagnifyingGlassIcon} from "@phosphor-icons/react";
+import {hasPhysicalKeyboard} from "@/functions/keyboardDetection";
 
 
 type FilterOption = { value : number; label : string }
@@ -61,7 +62,13 @@ export const FilterBar : React.FC<FilterBarProps> = (
 							size={20}
 						/>
 						<div className="absolute left-10 top-1/2 -translate-y-1/2 text-gray-500 text-sm z-10 pointer-events-none">
-							Type <kbd className="border-blue-500 border pt-0.5 pb-0 p-1 rounded">/</kbd> to quick search
+							{hasPhysicalKeyboard() ? (
+									<>
+										Type <kbd className="border-blue-500 border pt-0.5 pb-0 p-1 rounded">/</kbd> to quick search
+									</>
+							) : (
+									 "Search"
+							 )}
 						</div>
 					</div>}
 
