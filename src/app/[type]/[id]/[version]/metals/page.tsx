@@ -11,6 +11,7 @@ import {capitaliseFirstLetterOfEachWord} from "@/functions/utils";
 import {FilterBar} from "@/components/FilterBar";
 import {CreationSelectionFilter} from "@/types/filters";
 import {KeyReturnIcon} from "@phosphor-icons/react";
+import {hasPhysicalKeyboard} from "@/functions/keyboardDetection";
 
 
 export default function Home() {
@@ -101,14 +102,16 @@ export default function Home() {
 					</span>
 					{filteredResult.length === 1 && (
 							<div className="absolute top-2 right-2 flex items-center justify-center transition-transform">
-								<kbd className="border-blue-500 bg-white border pt-0.5 pb-0 p-1 rounded">
-									<KeyReturnIcon
-											size={24}
-											weight="bold"
-											className="text-black"
-											aria-hidden="true"
-									/>
-								</kbd>
+								{hasPhysicalKeyboard() ? (
+										<kbd className="border-blue-500 bg-white border pt-0.5 pb-0.5 p-1 rounded">
+											<KeyReturnIcon
+													size={24}
+													weight="bold"
+													className="text-black"
+													aria-hidden="true"
+											/>
+										</kbd>
+								) : <></>}
 							</div>
 					)}
 				</button>
