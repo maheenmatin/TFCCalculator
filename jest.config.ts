@@ -19,7 +19,6 @@ const createJestConfig = nextJest({
                                   })
 
 const customJestConfig: Config = {
-	setupFilesAfterEnv: ['<rootDir>/jest.setup.ts'],
 	testEnvironment: 'node',
 	collectCoverage: true,
 	coverageReporters: ["json", "lcov", "text", "clover", "html"],

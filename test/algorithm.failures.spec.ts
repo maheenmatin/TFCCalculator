@@ -1,5 +1,5 @@
 import { calculateMetal } from '@/functions/algorithm';
-import { qm, byTypeMap, bronzeComponents, timeIt } from './helpers';
+import { create_quantified_mineral, byTypeMap, bronzeComponents, timeIt } from './helpers';
 import type { SmeltingComponent } from '@/types';
 
 /**
@@ -24,7 +24,7 @@ describe('calculateMetal - failure & edge cases', () => {
   it('Required component key missing in map -> not enough <type> for minimum requirement', () => {
     // Copper present, tin missing entirely
     const inv = byTypeMap([
-      ['copper', [qm('Medium Copper', 'copper', 24, 100)]],
+      ['copper', [create_quantified_mineral('Medium Copper', 'copper', 24, 100)]],
     ]);
     const res = calculateMetal(432, bronze, inv);
     expect(res.success).toBe(false);
@@ -38,8 +38,8 @@ describe('calculateMetal - failure & edge cases', () => {
       { mineral: 'b', min: 50, max: 100 },
     ];
     const inv = byTypeMap([
-      ['a', [qm('A1', 'a', 10, 100)]],
-      ['b', [qm('B1', 'b', 10, 100)]],
+      ['a', [create_quantified_mineral('A1', 'a', 10, 100)]],
+      ['b', [create_quantified_mineral('B1', 'b', 10, 100)]],
     ]);
     const res = calculateMetal(100, badAlloy, inv);
     expect(res.success).toBe(false);
@@ -53,8 +53,8 @@ describe('calculateMetal - failure & edge cases', () => {
       { mineral: 'b', min: 0,  max: 30 },
     ];
     const inv = byTypeMap([
-      ['a', [qm('A1', 'a', 10, 100)]],
-      ['b', [qm('B1', 'b', 10, 100)]],
+      ['a', [create_quantified_mineral('A1', 'a', 10, 100)]],
+      ['b', [create_quantified_mineral('B1', 'b', 10, 100)]],
     ]);
     const res = calculateMetal(100, badAlloy, inv);
     expect(res.success).toBe(false);
@@ -64,8 +64,8 @@ describe('calculateMetal - failure & edge cases', () => {
   it('Boundary acceptance: exact 8% tin is allowed', () => {
     // target 400; tin=32 (8%), copper=368 (92%)
     const inv = byTypeMap([
-      ['tin',    [qm('Tiny Tin',    'tin',    16, 2)]],   // 32
-      ['copper', [qm('Copper 16u',  'copper', 16, 23)]],  // 368
+      ['tin',    [create_quantified_mineral('Tiny Tin',    'tin',    16, 2)]],   // 32
+      ['copper', [create_quantified_mineral('Copper 16u',  'copper', 16, 23)]],  // 368
     ]);
     const res = calculateMetal(400, bronze, inv);
     expect(res.success).toBe(true);
@@ -76,9 +76,9 @@ describe('calculateMetal - failure & edge cases', () => {
   it('Map key case-insensitivity (helpers lower-case keys) -> still succeeds', () => {
     // byTypeMap lower-cases keys + qm lower-cases produces -> should work
     const inv = byTypeMap([
-      ['Tin',    [qm('Small Cassiterite', 'TIN',    16, 3)]],
-      ['Copper', [qm('Medium Copper',     'Copper', 24, 7),
-                  qm('Large Copper',      'cOpPeR', 36, 6)]],
+      ['Tin',    [create_quantified_mineral('Small Cassiterite', 'TIN',    16, 3)]],
+      ['Copper', [create_quantified_mineral('Medium Copper',     'Copper', 24, 7),
+                  create_quantified_mineral('Large Copper',      'cOpPeR', 36, 6)]],
     ]);
     const res = calculateMetal(432, bronze, inv);
     expect(res.success).toBe(true);
@@ -89,8 +89,8 @@ describe('calculateMetal - failure & edge cases', () => {
     // robustness/invariance check: verifies that a known-feasible bronze request succeeds '
     // regardless of the order of the alloy components array
     const inv = byTypeMap([
-      ['tin',    [qm('Small Cassiterite', 'tin', 16, 3)]],
-      ['copper', [qm('Medium Copper', 'copper', 24, 7), qm('Large Copper', 'copper', 36, 6)]],
+      ['tin',    [create_quantified_mineral('Small Cassiterite', 'tin', 16, 3)]],
+      ['copper', [create_quantified_mineral('Medium Copper', 'copper', 24, 7), create_quantified_mineral('Large Copper', 'copper', 36, 6)]],
     ]);
     const bronze1 = bronze;
     const bronze2 = [bronze[1], bronze[0]]; // swap order

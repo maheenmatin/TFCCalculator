@@ -9,7 +9,7 @@ import type { QuantifiedMineral, SmeltingComponent } from '@/types';
  * with "produces" normalized to lowercase
  * and "uses" defaulting to a harmless array
  */
-export function qm(
+export function create_quantified_mineral(
     name: string,
     produces: string,
     yieldUnits: number,
