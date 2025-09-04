@@ -10,6 +10,8 @@ import {LoadingSpinner} from "@/components/LoadingSpinner";
 import {capitaliseFirstLetterOfEachWord} from "@/functions/utils";
 import {FilterBar} from "@/components/FilterBar";
 import {CreationSelectionFilter} from "@/types/filters";
+import {KeyReturnIcon} from "@phosphor-icons/react";
+import {hasPhysicalKeyboard} from "@/functions/keyboardDetection";
 
 
 export default function Home() {
@@ -72,22 +74,49 @@ export default function Home() {
 				});
 	}, [type, id, version]);
 
+	useEffect(() => {
+		const handleKeyPress = (event : KeyboardEvent) => {
+			if (event.key === "Enter" && filteredResult.length === 1) {
+				event.preventDefault();
+				handleMetalSelect(filteredResult[0]);
+			}
+		};
+
+		document.addEventListener("keydown", handleKeyPress);
+		return () => document.removeEventListener("keydown", handleKeyPress);
+	}, [filteredResult, handleMetalSelect]);
+
 	const renderMetalButton = useCallback((metal : SmeltingOutput) => {
 		const displayMetalName = capitaliseFirstLetterOfEachWord(metal.name);
 
 		return (
 				<button
 						key={metal.name}
-						className="w-full aspect-square flex items-center justify-center p-4 rounded-lg shadow-md bg-teal-100 hover:bg-teal-200 transition-colors duration-200"
+						className="w-full aspect-square flex flex-col items-center justify-center p-4 rounded-lg shadow-md
+						bg-teal-100 hover:bg-teal-200 transition-colors duration-200 relative"
 						onClick={() => handleMetalSelect(metal)}
 						aria-label={`Select ${displayMetalName} metal`}
 				>
-            <span className="text-center text-black text-lg font-bold">
-                {displayMetalName}
-            </span>
+					<span className="text-center text-black text-lg font-bold">
+							{displayMetalName}
+					</span>
+					{filteredResult.length === 1 && (
+							<div className="absolute top-2 right-2 flex items-center justify-center transition-transform">
+								{hasPhysicalKeyboard() ? (
+										<kbd className="border-blue-500 bg-white border pt-0.5 pb-0.5 p-1 rounded">
+											<KeyReturnIcon
+													size={24}
+													weight="bold"
+													className="text-black"
+													aria-hidden="true"
+											/>
+										</kbd>
+								) : <></>}
+							</div>
+					)}
 				</button>
 		);
-	}, [handleMetalSelect]);
+	}, [handleMetalSelect, filteredResult.length]);
 
 	return (
 			<main

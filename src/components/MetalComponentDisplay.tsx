@@ -2,13 +2,12 @@ import {ErrorComponent} from "@/components/ErrorComponent";
 import {MineralAccordion} from "@/components/MineralAccordion";
 import {OutputResult} from "@/components/OutputResult";
 import {calculateMetal, MetalProductionResult} from "@/functions/algorithm";
-import {capitaliseFirstLetterOfEachWord}                                        from "@/functions/utils";
+import {capitaliseFirstLetterOfEachWord} from "@/functions/utils";
 import {DesiredOutputTypes, Mineral, QuantifiedMineral, SmeltingComponent} from "@/types";
-import React, {useEffect, useState}                                             from "react";
+import React, {useEffect, useState} from "react";
 import {useParams} from "next/navigation";
 import {ApiResponse as MetalsApiResponse} from "@/app/api/[type]/[id]/[version]/metal/[metal]/route";
 import {ApiResponse as ConstantsApiResponse} from "@/app/api/[type]/[id]/[version]/constants/route";
-
 
 interface MetalDisplayProps {
 	metal?: string;
@@ -21,11 +20,11 @@ export function MetalComponentDisplay({ metal }: Readonly<MetalDisplayProps>) {
 	const [minerals, setMinerals] = useState<Map<string, QuantifiedMineral[]>>(new Map());
 	const [mbConstants, setMbConstants] = useState<Record<string, number> | null>(null);
 	const [unit, setUnit] = useState<DesiredOutputTypes>(DesiredOutputTypes.Ingot);
+	const [calculationUnit, setCalculationUnit] = useState<DesiredOutputTypes>(DesiredOutputTypes.Ingot);
 	const [desiredOutputInUnits, setDesiredOutputInUnits] = useState<number>(0);
 
 	const [isLoading, setIsLoading] = useState<boolean>(true);
 	const [isCalculating, setIsCalculating] = useState<boolean>(false);
-	const [isResultAlteredSinceLastCalculation, setIsResultAlteredSinceLastCalculation] = useState<boolean>(false);
 	const [result, setResult] = useState<MetalProductionResult | null>(null);
 	const [error, setError] = useState<Error | string | null>(null);
 
@@ -70,13 +69,15 @@ export function MetalComponentDisplay({ metal }: Readonly<MetalDisplayProps>) {
 	const handleDesiredTargetChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const value = e.target.value === "" ? 0 : parseInt(e.target.value, 10);
 		setDesiredOutputInUnits(isNaN(value) ? 0 : value);
-		setIsResultAlteredSinceLastCalculation(true);
+	};
+
+	const handleUnitChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+		setUnit(e.target.value as DesiredOutputTypes);
 	};
 
 	const handleMineralQuantityChange = (mineralName: string, e: React.ChangeEvent<HTMLInputElement>) => {
 		const newQty = e.target.value === "" ? 0 : parseInt(e.target.value, 10);
 		setMinerals(prevMinerals => updateMineralQuantity(prevMinerals, mineralName, newQty));
-		setIsResultAlteredSinceLastCalculation(true);
 	};
 
 	const updateMineralQuantity = (
@@ -110,6 +111,7 @@ export function MetalComponentDisplay({ metal }: Readonly<MetalDisplayProps>) {
 		}
 
 		setIsCalculating(true);
+		setCalculationUnit(unit);
 		await new Promise(resolve => setTimeout(resolve, 0));
 
 		// TODO: Decouple this somehow into a more generic reusable method of some form?
@@ -135,7 +137,6 @@ export function MetalComponentDisplay({ metal }: Readonly<MetalDisplayProps>) {
 			console.error("Error calculating:", err);
 		} finally {
 			setIsCalculating(false);
-			setIsResultAlteredSinceLastCalculation(false);
 		}
 	};
 
@@ -151,7 +152,7 @@ export function MetalComponentDisplay({ metal }: Readonly<MetalDisplayProps>) {
 
 	const isReadyToShowOutputs: boolean =
 		desiredOutputInUnits !== 0
-		&& !isResultAlteredSinceLastCalculation
+		&& result != null
 		&& !error;
 
 	return (
@@ -177,7 +178,7 @@ export function MetalComponentDisplay({ metal }: Readonly<MetalDisplayProps>) {
 						/>
 						<select
 							value={unit}
-							onChange={(e) => setUnit(e.target.value as unknown as DesiredOutputTypes)}
+							onChange={handleUnitChange}
 							className="w-24 p-2 rounded-r border border-l-0 border-gray-300 bg-white text-gray-700"
 							aria-label="unit"
 						>
@@ -192,7 +193,7 @@ export function MetalComponentDisplay({ metal }: Readonly<MetalDisplayProps>) {
 			<ErrorComponent error={error} />
 			{isReadyToShowOutputs
 					&& mbConstants != null
-					&& <OutputResult output={result} unit={unit} conversions={mbConstants} />
+					&& <OutputResult output={result} unit={calculationUnit} conversions={mbConstants} />
 			}
 
 			{isReadyToShowInputs && <div className="bg-white text-black rounded-lg shadow p-6">
