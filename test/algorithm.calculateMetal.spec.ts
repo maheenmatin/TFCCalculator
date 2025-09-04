@@ -33,7 +33,6 @@ describe('calculateMetal — bronze in mB scale (16/24/36)', () => {
     expect(ms).toBeLessThan(100);
   });
 
-  // TODO: Algorithm requires backtracking. Incorrectly returns no valid combination
   it.skip('More than enough minerals -> success with correct ratios', () => {
     const inv = byTypeMap([
       ['tin',    [create_quantified_mineral('Small Cassiterite', 'tin',    16, 50)]],

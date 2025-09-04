@@ -1,5 +1,5 @@
 import { calculateMetal } from '@/functions/algorithm';
-import { create_quantified_mineral, byTypeMap, bronzeComponents, timeIt } from './helpers';
+import { create_quantified_mineral, byTypeMap, bronzeComponents } from './helpers';
 import type { SmeltingComponent } from '@/types';
 
 /**

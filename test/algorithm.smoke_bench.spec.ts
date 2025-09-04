@@ -7,7 +7,6 @@ const bronze = bronzeComponents();
 const HEAVY = process.env.HEAVY === '1';
 
 describe('calculateMetal - smoke & micro-bench', () => {
-  // TODO: Algorithm requires backtracking. Incorrectly returns no valid combination
   it.skip('Large quantities, few variants -> stays fast', () => {
     const target = 4320; // ~10x the base 432 mB case
     const inv = byTypeMap([
