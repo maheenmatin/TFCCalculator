@@ -3,6 +3,14 @@
  * https://jestjs.io/docs/configuration
  */
 
+// --- Polyfill for TextEncoder/TextDecoder needed during config evaluation ---
+import { TextEncoder, TextDecoder } from 'util';
+// @ts-ignore
+(global as any).TextEncoder = TextEncoder;
+// @ts-ignore
+(global as any).TextDecoder = TextDecoder;
+// ---------------------------------------------------------------------------
+
 import type { Config } from 'jest'
 import nextJest from 'next/jest'
 
@@ -11,8 +19,7 @@ const createJestConfig = nextJest({
                                   })
 
 const customJestConfig: Config = {
-	setupFilesAfterEnv: ['<rootDir>/jest.config.ts'],
-	testEnvironment: 'jest-environment-jsdom',
+	testEnvironment: 'node',
 	collectCoverage: true,
 	coverageReporters: ["json", "lcov", "text", "clover", "html"],
 	coverageDirectory: "coverage",
