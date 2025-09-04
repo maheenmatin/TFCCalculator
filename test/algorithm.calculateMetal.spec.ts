@@ -53,9 +53,9 @@ describe('calculateMetal — bronze in mB scale (16/24/36)', () => {
     // Sanity check: copper between 88-92%
     const copper = res.usedMinerals.filter(u => u.mineral.produces === 'copper')
       .reduce((s, u) => s + u.mineral.yield * u.quantity, 0);
-    const pctCopper = (tin / res.outputMb) * 100;
-    expect(pctCopper).toBeGreaterThanOrEqual(8);
-    expect(pctCopper).toBeLessThanOrEqual(12);
+    const pctCopper = (copper / res.outputMb) * 100;
+    expect(pctCopper).toBeGreaterThanOrEqual(88);
+    expect(pctCopper).toBeLessThanOrEqual(92);
   });
 
   it('Irrelevant minerals present -> still succeeds @ 432 mB', () => {
