@@ -1,13 +1,11 @@
-import { calculateMetal } from '@/functions/algorithm';
+import { calculateSmeltingOutput } from '@/functions/algorithm';
+import { OutputCode } from '@/functions/algorithm.new';
 import { create_quantified_mineral, byTypeMap, bronzeComponents, timeIt } from './helpers';
 
 const bronze = bronzeComponents();
-// Run heavy tests with below:
-// HEAVY=1 NODE_OPTIONS=--max-old-space-size=4096 jest -w 1 test/algorithm.smoke_bench.spec.ts
-const HEAVY = process.env.HEAVY === '1';
 
 describe('calculateMetal - smoke & micro-bench', () => {
-  it.skip('Large quantities, few variants -> stays fast', () => {
+  it('Large quantities, few variants -> stays fast', () => {
     const target = 4320; // ~10x the base 432 mB case
     const inv = byTypeMap([
       ['tin',    [create_quantified_mineral('Small Tin', 'tin', 16, 200)]], // 3200 mB tin
@@ -15,14 +13,14 @@ describe('calculateMetal - smoke & micro-bench', () => {
                   create_quantified_mineral('Large Cu',  'copper', 36, 300)]], // 20400 mB copper
     ]);
 
-    const { result, ms } = timeIt(() => calculateMetal(target, bronze, inv));
-    expect(result.success).toBe(true);
+    const { result, ms } = timeIt(() => calculateSmeltingOutput(target, bronze, inv));
+    expect(result.status).toBe(OutputCode.SUCCESS);
     expect(ms).toBeLessThan(400);
     // eslint-disable-next-line no-console
     console.info(`[bench] large-qty few-variants: ${ms.toFixed(1)} ms`);
   });
 
-  (HEAVY ? it : it.skip)('Many variants per type (large, fragmented inventory)', () => {
+  it('Many variants per type (large, fragmented inventory)', () => {
     const target = 1440;
     const tinVars = Array.from({ length: 18 }, (_, i) =>
       create_quantified_mineral(`Tin v${i}`, 'tin', 16, 5 + (i % 4))
@@ -35,14 +33,14 @@ describe('calculateMetal - smoke & micro-bench', () => {
       ['copper', cuVars],
     ]);
 
-    const { result, ms } = timeIt(() => calculateMetal(target, bronze, inv));
-    expect(result.success).toBe(true);
+    const { result, ms } = timeIt(() => calculateSmeltingOutput(target, bronze, inv));
+    expect(result.status).toBe(OutputCode.SUCCESS);
     expect(ms).toBeLessThan(600);
     // eslint-disable-next-line no-console
     console.info(`[bench] many-variants: ${ms.toFixed(1)} ms`);
   });
 
-  (HEAVY ? it : it.skip)('Large + many combined (stress test)', () => {
+  it('Large + many combined (stress test)', () => {
     const target = 2880;
     const tinVars = Array.from({ length: 16 }, (_, i) =>
       create_quantified_mineral(`Tin v${i}`, 'tin', 16, 30 + (i % 7))
@@ -55,8 +53,8 @@ describe('calculateMetal - smoke & micro-bench', () => {
       ['copper', cuVars],
     ]);
 
-    const { result, ms } = timeIt(() => calculateMetal(target, bronze, inv));
-    expect(result.success).toBe(true);
+    const { result, ms } = timeIt(() => calculateSmeltingOutput(target, bronze, inv));
+    expect(result.status).toBe(OutputCode.SUCCESS);
     expect(ms).toBeLessThan(1200);
     // eslint-disable-next-line no-console
     console.info(`[bench] large+many: ${ms.toFixed(1)} ms`);

@@ -1,7 +1,7 @@
 import {ErrorComponent} from "@/components/ErrorComponent";
 import {MineralAccordion} from "@/components/MineralAccordion";
 import {OutputResult} from "@/components/OutputResult";
-import {calculateMetal, MetalProductionResult} from "@/functions/algorithm";
+import {calculateSmeltingOutput, MetalProductionResult} from "@/functions/algorithm";
 import {capitaliseFirstLetterOfEachWord} from "@/functions/utils";
 import {DesiredOutputTypes, Mineral, QuantifiedMineral, SmeltingComponent} from "@/types";
 import React, {useEffect, useState} from "react";
@@ -131,7 +131,7 @@ export function MetalComponentDisplay({ metal }: Readonly<MetalDisplayProps>) {
 		const desiredOutputInMb = desiredOutputInUnits * (mbConstants[unit] ?? 1)
 
 		try {
-			setResult(calculateMetal(desiredOutputInMb, components, mineralWithQuantities));
+			setResult(calculateSmeltingOutput(desiredOutputInMb, components, mineralWithQuantities));
 		} catch (err) {
 			setError(`Failed to calculate! ${err}`);
 			console.error("Error calculating:", err);
