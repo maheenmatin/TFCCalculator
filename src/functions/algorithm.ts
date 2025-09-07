@@ -1,17 +1,5 @@
-import { SmeltingComponent, Mineral, QuantifiedMineral } from "@/types";
+import { SmeltingComponent, QuantifiedMineral } from "@/types";
 import { CalculationOutput, Flags, FlagValues, OutputCode } from "./algorithm.new";
-
-export interface MineralWithQuantity {
-	mineral: Mineral;
-	quantity: number;
-}
-
-export interface MetalProductionResult {
-	outputMb: number;
-	usedMinerals: QuantifiedMineral[];
-	success: boolean;
-	message?: string;
-}
 
 /* ------------------------------ Utilities ------------------------------ */
 
@@ -22,16 +10,14 @@ const normalize = (s: string) => s.trim().toLowerCase();
  *
  * @param inventoryMap Map with component as key and all minerals producing it as value.
  */
-function normalizeInvMap(
-  inventoryMap: Map<string, QuantifiedMineral[]>
-): Map<string, QuantifiedMineral[]> {
-  const out = new Map<string, QuantifiedMineral[]>();
-  for (const [key, arr] of inventoryMap) {
-    const normKey = normalize(key);
-    const prev = out.get(normKey) ?? [];
-    out.set(normKey, prev.concat(arr));
-  }
-  return out;
+function normalizeInvMap(inventoryMap: Map<string, QuantifiedMineral[]>): Map<string, QuantifiedMineral[]> {
+	const out = new Map<string, QuantifiedMineral[]>();
+	for (const [key, arr] of inventoryMap) {
+		const normKey = normalize(key);
+		const prev = out.get(normKey);
+		out.set(normKey, prev ? prev.concat(arr) : arr);
+	}
+	return out;
 }
 
 /**
@@ -40,13 +26,15 @@ function normalizeInvMap(
  * @param arr Sorted candidate list.
  */
 function hasTarget(arr: number[], x: number): boolean {
-  let lo = 0, hi = arr.length - 1;
-  while (lo <= hi) {
-    const mid = (lo + hi) >>> 1;
-    if (arr[mid] === x) return true;
-    if (arr[mid] < x) lo = mid + 1; else hi = mid - 1;
-  }
-  return false;
+	let lo = 0,
+		hi = arr.length - 1;
+	while (lo <= hi) {
+		const mid = (lo + hi) >>> 1;
+		if (arr[mid] === x) return true;
+		if (arr[mid] < x) lo = mid + 1;
+		else hi = mid - 1;
+	}
+	return false;
 }
 
 /**
@@ -71,7 +59,7 @@ type Chunk = {
 };
 
 /**
- * Use binary decomposition to split one QuantifiedMineral into into ~log2(q) chunks.
+ * Use binary decomposition to split one QuantifiedMineral into ~log2(q) chunks.
  * Optionally clamp quantity by an upper bound (e.g. cap / yield).
  *
  * @returns array of Chunk objects.
@@ -272,14 +260,19 @@ function getMax(arr: number[]): number {
 }
 
 /* --------------------------------- Public API -------------------------------- */
+type NormalizedComponent = {
+	component: string; // normalized component name
+	minPct: number;
+	maxPct: number;
+};
 
-export function calculateSmeltingOutput(
+function earlyFeasibilityChecks(
 	targetMb: number,
-	components: SmeltingComponent[],
-	availableMinerals: Map<string, QuantifiedMineral[]>,
+	normalizedComponents: NormalizedComponent[],
+	normalizedInv: Map<string, QuantifiedMineral[]>,
 	_flags?: Flags, // currently unused
 	_flagValues?: FlagValues // currently unused
-): CalculationOutput {
+): CalculationOutput | null {
 	// Screen for bad inputs
 	if (!Number.isFinite(targetMb) || targetMb <= 0 || !Number.isInteger(targetMb)) {
 		return {
@@ -289,21 +282,11 @@ export function calculateSmeltingOutput(
 			statusContext: "targetMb must be a positive integer",
 		};
 	}
-	if (!components?.length) {
+	if (!normalizedComponents?.length) {
 		return { status: OutputCode.BAD_REQUEST, amountMb: 0, usedMinerals: [], statusContext: "components are required" };
 	}
 
-	// Normalize component keys for lookups
-	const normalizedComponents = components.map((c) => ({
-		component: normalize(c.mineral),
-		minPct: c.min,
-		maxPct: c.max,
-	}));
-
-	// Normalize inventory keys and combine entries with the same normalized key
-	const normalizedInv = normalizeInvMap(availableMinerals);
-
-	// Early feasibility check: total available mB must be >= targetMb
+	// Total available mB must be >= targetMb
 	let totalAvailableFromRecipe = 0;
 	for (const { component } of normalizedComponents) {
 		totalAvailableFromRecipe += totalAvailableForComponent(component, normalizedInv);
@@ -317,7 +300,7 @@ export function calculateSmeltingOutput(
 		};
 	}
 
-	// Early feasibility check: total available mB for each Component must be >= minPct
+	// Total available mB for each Component must be >= minPct
 	for (const { component, minPct } of normalizedComponents) {
 		const minMb = Math.ceil((minPct / 100) * targetMb);
 		const available = totalAvailableForComponent(component, normalizedInv);
@@ -330,6 +313,29 @@ export function calculateSmeltingOutput(
 			};
 		}
 	}
+
+	return null; // early checks passed
+}
+
+export function calculateSmeltingOutput(
+	targetMb: number,
+	components: SmeltingComponent[],
+	availableMinerals: Map<string, QuantifiedMineral[]>,
+	_flags?: Flags, // currently unused
+	_flagValues?: FlagValues // currently unused
+): CalculationOutput {
+	// Normalize component keys for lookups
+	const normalizedComponents = components.map((c) => ({
+		component: normalize(c.mineral),
+		minPct: c.min,
+		maxPct: c.max,
+	}));
+
+	// Normalize inventory keys and combine entries with the same normalized key
+	const normalizedInv = normalizeInvMap(availableMinerals);
+
+	const earlyResult = earlyFeasibilityChecks(targetMb, normalizedComponents, normalizedInv, _flags, _flagValues);
+	if (earlyResult) return earlyResult;
 
 	// Build per-component DP + candidate lists
 	const plans: PerComponentPlan[] = [];
@@ -398,10 +404,10 @@ export function calculateSmeltingOutput(
 	const chosen = pickOneSumPerComponent(plans, targetMb);
 	if (!chosen) {
 		return {
-				status: OutputCode.UNFEASIBLE,
-				statusContext: "Could not find valid combination of materials",
-				amountMb: 0,
-				usedMinerals: [],
+			status: OutputCode.UNFEASIBLE,
+			statusContext: "Could not find valid combination of materials",
+			amountMb: 0,
+			usedMinerals: [],
 		};
 	}
 
