@@ -496,7 +496,7 @@ function buildAllComponentDP(
 	return plans;
 }
 
-function calculateSmeltingOutput(
+export function calculateSmeltingOutput(
 	targetMb: number,
 	components: SmeltingComponent[],
 	availableMinerals: Map<string, QuantifiedMineral[]>,
