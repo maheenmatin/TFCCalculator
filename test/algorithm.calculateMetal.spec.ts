@@ -1,5 +1,4 @@
-import { OutputCalculator } from '@/functions/algorithm';
-import { OutputCode } from '@/functions/algorithm.new';
+import { OutputCalculator, OutputCode } from '@/functions/algorithm';
 import { SmeltingComponent } from '@/types';
 import { create_quantified_mineral, byTypeMap, bronzeComponents, totalUsed, timeIt } from './helpers';
 

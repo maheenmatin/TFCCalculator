@@ -388,6 +388,7 @@ type NormalizedComponent = {
 	maxPct: number;
 };
 
+/** Exit algorithm early where possible to avoid unnecessary work */
 function earlyFeasibilityChecks(
 	targetMb: number,
 	normalizedComponents: NormalizedComponent[],
@@ -443,26 +444,12 @@ function earlyFeasibilityChecks(
 	return null; // early checks passed
 }
 
-function calculateSmeltingOutput(
+/** Build DP tables (including candidate lists) for all components */
+function buildAllComponentDP(
 	targetMb: number,
-	components: SmeltingComponent[],
-	availableMinerals: Map<string, QuantifiedMineral[]>,
-	_flags?: Flags, // currently unused
-	_flagValues?: FlagValues // currently unused
-): CalculationOutput {
-	// Normalize component keys for lookups
-	const normalizedComponents = components.map((c) => ({
-		component: normalize(c.mineral),
-		minPct: c.min,
-		maxPct: c.max,
-	}));
-
-	// Normalize inventory keys and combine entries with the same normalized key
-	const normalizedInv = normalizeInvMap(availableMinerals);
-
-	const earlyResult = earlyFeasibilityChecks(targetMb, normalizedComponents, normalizedInv, _flags, _flagValues);
-	if (earlyResult) return earlyResult;
-
+	normalizedComponents: NormalizedComponent[],
+	normalizedInv: Map<string, QuantifiedMineral[]>
+): PerComponentPlan[] | null {
 	// Build per-component DP + candidate lists
 	const plans: PerComponentPlan[] = [];
 
@@ -486,20 +473,13 @@ function calculateSmeltingOutput(
 		if (minMb <= cap) {
 			const lo = Math.max(0, minMb);
 			const hi = Math.min(cap, maxMb);
-			for (let s = lo; s <= hi; s++) {
-				if (dp.reachable[s]) candidates.push(s);
+			for (let mb = lo; mb <= hi; mb++) {
+				if (dp.reachable[mb]) candidates.push(mb);
 			}
 		}
 
-		// If no candidates, valid combination is impossible
-		if (candidates.length === 0) {
-			return {
-				status: OutputCode.UNFEASIBLE,
-				statusContext: "Could not find valid combination of materials",
-				amountMb: 0,
-				usedMinerals: [],
-			};
-		}
+		// If no candidates for a component, valid combination is impossible
+		if (candidates.length === 0) return null;
 
 		// Deduplicate and sort candidates
 		candidates.sort((a, b) => a - b);
@@ -512,6 +492,39 @@ function calculateSmeltingOutput(
 			dp,
 			candidates: dedup,
 		});
+	}
+	return plans;
+}
+
+function calculateSmeltingOutput(
+	targetMb: number,
+	components: SmeltingComponent[],
+	availableMinerals: Map<string, QuantifiedMineral[]>,
+	_flags?: Flags, // currently unused
+	_flagValues?: FlagValues // currently unused
+): CalculationOutput {
+	// Normalize component keys for lookups
+	const normalizedComponents = components.map((c) => ({
+		component: normalize(c.mineral),
+		minPct: c.min,
+		maxPct: c.max,
+	}));
+
+	// Normalize inventory keys and combine entries with the same normalized key
+	const normalizedInv = normalizeInvMap(availableMinerals);
+
+	const earlyResult = earlyFeasibilityChecks(targetMb, normalizedComponents, normalizedInv, _flags, _flagValues);
+	if (earlyResult) return earlyResult;
+
+	// Build DP tables (including candidate lists) for all components
+	const plans = buildAllComponentDP(targetMb, normalizedComponents, normalizedInv);
+	if (!plans) {
+		return {
+			status: OutputCode.UNFEASIBLE,
+			statusContext: "Could not find valid combination of materials",
+			amountMb: 0,
+			usedMinerals: [],
+		};
 	}
 
 	// Global window sanity check
