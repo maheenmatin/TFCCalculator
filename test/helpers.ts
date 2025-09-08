@@ -53,6 +53,16 @@ export function bronzeComponents(): SmeltingComponent[] {
 }
 
 /**
+ * Computes the total output in mB from a set of used minerals.
+ * 
+ * @param units - an array of objects containing mineral.yield and quantity
+ * @returns total produced mB from all minerals
+ */
+export function totalUsed(units: { yield: number, quantity: number }[]) {
+  return units.reduce((s, u) => s + u.yield * u.quantity, 0);
+}
+
+/**
  * Timing helper for micro-benchmarks
  *
  * Smoke tests will record rough timings. This uses high-res

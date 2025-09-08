@@ -1,20 +1,16 @@
-import { calculateSmeltingOutput } from '@/functions/algorithm';
+import { OutputCalculator } from '@/functions/algorithm';
 import { OutputCode } from '@/functions/algorithm.new';
-import type { SmeltingComponent } from '@/types';
-import { create_quantified_mineral, byTypeMap, bronzeComponents, timeIt } from './helpers';
+import { SmeltingComponent } from '@/types';
+import { create_quantified_mineral, byTypeMap, bronzeComponents, totalUsed, timeIt } from './helpers';
 
-/**
- * Computes the total output in mB from a set of used minerals.
- * @param units - an array of objects containing mineral.yield and quantity
- * @returns total produced mB from all minerals
- */
-function totalUsed(units: { yield: number, quantity: number }[]) {
-  return units.reduce((s, u) => s + u.yield * u.quantity, 0);
-}
+const bronze: SmeltingComponent[] = bronzeComponents();
+let sut: OutputCalculator;
 
-describe('calculateMetal — bronze in mB scale (16/24/36)', () => {
-  const bronze: SmeltingComponent[] = bronzeComponents();
+beforeAll(() => {
+  sut = new OutputCalculator();
+});
 
+describe('OutputCalculator — bronze in mB scale (16/24/36)', () => {
   it('Exact minerals -> success @ 432 mB', () => {
     // tin: 3×16 = 48; copper: 7×24 + 6×36 = 384; total = 432
     const inv = byTypeMap([
@@ -24,7 +20,7 @@ describe('calculateMetal — bronze in mB scale (16/24/36)', () => {
     ]);
 
     const { result, ms } = timeIt(() =>
-      calculateSmeltingOutput(432, bronze, inv)
+      sut.calculateSmeltingOutput(432, bronze, inv)
     );
     expect(result.status).toBe(OutputCode.SUCCESS);
     expect(result.amountMb).toBe(432);
@@ -41,7 +37,7 @@ describe('calculateMetal — bronze in mB scale (16/24/36)', () => {
                   create_quantified_mineral('Large Copper',      'copper', 36, 60)]],
     ]);
 
-    const res = calculateSmeltingOutput(432, bronze, inv);
+    const res = sut.calculateSmeltingOutput(432, bronze, inv);
     expect(res.status).toBe(OutputCode.SUCCESS);
     // Sanity check: tin between 8–12%
     const tin = res.usedMinerals.filter(u => u.produces === 'tin')
@@ -69,7 +65,7 @@ describe('calculateMetal — bronze in mB scale (16/24/36)', () => {
       ['lead',   [create_quantified_mineral('Lead Ore', 'lead', 48, 3)]],
     ]);
 
-    const res = calculateSmeltingOutput(432, bronze, inv);
+    const res = sut.calculateSmeltingOutput(432, bronze, inv);
     expect(res.status).toBe(OutputCode.SUCCESS);
     expect(res.amountMb).toBe(432);
   });
@@ -81,7 +77,7 @@ describe('calculateMetal — bronze in mB scale (16/24/36)', () => {
                   create_quantified_mineral('Large Copper',  'copper', 36, 6)]], // 384 mB copper
     ]);
     // 32 + 384 = 416 < 432 -> total mB insufficient
-    const res = calculateSmeltingOutput(432, bronze, inv);
+    const res = sut.calculateSmeltingOutput(432, bronze, inv);
     expect(res.status).toBe(OutputCode.INSUFFICIENT_TOTAL_MB);
     expect(res.statusContext).toContain('Not enough total material available');
   });
@@ -94,7 +90,7 @@ describe('calculateMetal — bronze in mB scale (16/24/36)', () => {
       // For 432 mB bronze, we need at least 380mB copper (88% of 432)
       // Check for minimum required copper fails
     ]);
-    const res = calculateSmeltingOutput(432, bronze, inv);
+    const res = sut.calculateSmeltingOutput(432, bronze, inv);
     expect(res.status).toBe(OutputCode.INSUFFICIENT_SPECIFIC_MINERAL_MB);
     expect(res.statusContext?.toLowerCase()).toContain('not enough copper');
   });
@@ -107,7 +103,7 @@ describe('calculateMetal — bronze in mB scale (16/24/36)', () => {
       // For bronze window, tin must be between 8% and 12% of total -> [34.56, 51.84]
       // only 48 mB tin is valid for 8-12%. However, 384 mB copper is required, but impossible
     ]);
-    const res = calculateSmeltingOutput(432, bronze, inv);
+    const res = sut.calculateSmeltingOutput(432, bronze, inv);
     expect(res.status).toBe(OutputCode.UNFEASIBLE);
     expect(res.statusContext).toContain('Could not find valid combination of materials');
   });

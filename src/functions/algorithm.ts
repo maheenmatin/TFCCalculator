@@ -1,5 +1,117 @@
-import { SmeltingComponent, QuantifiedMineral } from "@/types";
-import { CalculationOutput, Flags, FlagValues, OutputCode } from "./algorithm.new";
+import {QuantifiedMineral, SmeltingComponent} from "@/types";
+
+/* ------------------------------ Contract ------------------------------ */
+
+/**
+ * Flags for enabling and disabling functionality.
+ * Defined as an enum flag.
+ * @see FlagValues
+ */
+export enum Flags {
+	/**
+	 * Enables logic for finding the closest alternative that can be made.
+	 *
+	 * For e.g. If the user requested 4 ingots valued at 400mB, but can only make 300mB as determined by the algorithm,
+	 * this result would be sent back as a success instead.
+	 *
+	 * Requires the {@link intervalMb} value to be present in {@link FlagValues}.
+	 */
+	CLOSEST_ALTERNATIVE = 1,
+}
+
+/**
+ * Values for enabled flags.
+ * Each flag documentation defines which flag value is mandatory.
+ * @see Flag
+ */
+export interface FlagValues {
+	/**
+	 * The size of specified target output type.
+	 *
+	 * For e.g. a modpack where an ingot is 100mB would define the interval as 100mB.
+	 */
+	intervalMb? : number;
+}
+
+/**
+ * Result of the calculation.
+ */
+export interface CalculationOutput {
+	/**
+	 * The status of the calculation.
+	 * Some statuses may output additional context in {@link statusContext}.
+	 * @see statusContext
+	 */
+	status : OutputCode;
+	/**
+	 * Additional context of the status output.
+	 */
+	statusContext? : string;
+	/**
+	 * The amount that has been produced.
+	 * This may be different from the targetMb parameter in {@link calculateSmeltingOutput} if flags have been applied.
+	 * @see Flag
+	 */
+	amountMb : number;
+	/**
+	 * The collection of used minerals to produce the outputs, with their quantities.
+	 */
+	usedMinerals : QuantifiedMineral[];
+}
+
+/**
+ * Status of the calculation.
+ * Some statuses may provide additional context via `statusContext`.
+ */
+export enum OutputCode {
+	/**
+	 * It is feasible to create the desired output.
+	 */
+	SUCCESS,
+	/**
+	 * Request has missing values or contains invalid input from the caller.
+	 */
+	BAD_REQUEST,
+	/**
+	 * Insufficient amount of minerals in total to achieve desired amount.
+	 */
+	INSUFFICIENT_TOTAL_MB,
+	/**
+	 * Insufficient amount of {@link statusContext} specified mineral to
+	 * meet minimum component criteria for the desired amount.
+	 */
+	INSUFFICIENT_SPECIFIC_MINERAL_MB,
+	/**
+	 * Enough resources exist, but it is impossible to create desired
+	 * amount taking into account all flags.
+	 */
+	UNFEASIBLE
+}
+
+/**
+ * Interface contract defining output calculation methods.
+ */
+export interface IOutputCalculator {
+	/**
+	 * Calculate a smelting output feasibility based on the component constraints,
+	 * targeting a production of a certain amount of millibuckets.
+	 *
+	 * Method should not fail or error.
+	 *
+	 * @param targetMb The amount to produce in millibuckets as part of the calculation.
+	 * @param components The components required.
+	 * @param availableMinerals Collection of all available minerals.
+	 * @param flags Flags to enable functionality as part of the calculation flow.
+	 * @param flagValues Values for the given flags.
+	 */
+	calculateSmeltingOutput(
+			targetMb : number,
+			components : SmeltingComponent[],
+			availableMinerals : Map<string, QuantifiedMineral[]>,
+			flags? : Flags,
+			flagValues? : FlagValues
+	) : CalculationOutput;
+}
 
 /* ------------------------------ Utilities ------------------------------ */
 
@@ -24,6 +136,7 @@ function normalizeInvMap(inventoryMap: Map<string, QuantifiedMineral[]>): Map<st
  * Run binary search on a sorted candidate list.
  *
  * @param arr Sorted candidate list.
+ * @param x Target to search for.
  */
 function hasTarget(arr: number[], x: number): boolean {
 	let lo = 0,
@@ -53,9 +166,12 @@ function totalAvailableForComponent(component: string, invByComponent: Map<strin
 /*----------------------- Binary decomposition (chunks) -----------------------*/
 
 type Chunk = {
-	weight: number; // total mB this chunk contributes (qm.yield × qty)
-	qm: QuantifiedMineral; // which mineral this chunk comes from
-	qty: number; // chunkSize: how many units of the mineral this chunk represents
+	/** Total mB this chunk contributes (qm.yield × qty) */
+	weight: number;
+	/** Which mineral this chunk comes from */
+	qm: QuantifiedMineral;
+	/** chunkSize: how many units of the mineral this chunk represents */
+	qty: number;
 };
 
 /**
@@ -86,12 +202,18 @@ function splitChunks(qm: QuantifiedMineral, clampUnitsTo?: number): Chunk[] {
 /*---------------- Per-component Subset Sum DP with reconstruction ----------------*/
 
 type ComponentDP = {
-	component: string; // e.g. copper, tin
-	cap: number; // max mB we need to consider for this component
-	reachable: Uint8Array; // reachable[s] === 1 -> exact s mB is achievable
-	prevSum: Int32Array; // prevSum[s] -> sum before adding last chunk to reach s
-	lastChunkIndex: Int32Array; // lastChunkIndex[s] -> index of last chunk used to reach s
-	chunks: Chunk[]; // chunk list used by DP
+  /** The component to process*/
+  component: string;
+  /** Max mB we need to consider for this component */
+  cap: number;
+  /** reachable[s] === 1 -> exact s mB is achievable */
+  reachable: Uint8Array;
+  /** prevSum[s] -> sum before adding last chunk to reach s */
+  prevSum: Int32Array;
+  /** lastChunkIndex[s] -> index of last chunk used to reach s */
+  lastChunkIndex: Int32Array;
+  /** Chunk list used by DP */
+  chunks: Chunk[];
 };
 
 /**
@@ -283,7 +405,11 @@ function earlyFeasibilityChecks(
 		};
 	}
 	if (!normalizedComponents?.length) {
-		return { status: OutputCode.BAD_REQUEST, amountMb: 0, usedMinerals: [], statusContext: "components are required" };
+		return { 
+			status: OutputCode.BAD_REQUEST, 
+			amountMb: 0, 
+			usedMinerals: [], 
+			statusContext: "components are required" };
 	}
 
 	// Total available mB must be >= targetMb
@@ -317,7 +443,7 @@ function earlyFeasibilityChecks(
 	return null; // early checks passed
 }
 
-export function calculateSmeltingOutput(
+function calculateSmeltingOutput(
 	targetMb: number,
 	components: SmeltingComponent[],
 	availableMinerals: Map<string, QuantifiedMineral[]>,
@@ -428,4 +554,16 @@ export function calculateSmeltingOutput(
 		amountMb: targetMb,
 		usedMinerals: Array.from(byName.values()),
 	};
+}
+
+export class OutputCalculator implements IOutputCalculator {
+  calculateSmeltingOutput(
+    targetMb: number,
+    components: SmeltingComponent[],
+    availableMinerals: Map<string, QuantifiedMineral[]>,
+    flags?: Flags,
+    flagValues?: FlagValues
+  ): CalculationOutput {
+    return calculateSmeltingOutput(targetMb, components, availableMinerals, flags, flagValues);
+  }
 }

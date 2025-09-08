@@ -1,10 +1,16 @@
-import { calculateSmeltingOutput } from '@/functions/algorithm';
+import { OutputCalculator } from '@/functions/algorithm';
 import { OutputCode } from '@/functions/algorithm.new';
+import { SmeltingComponent } from '@/types';
 import { create_quantified_mineral, byTypeMap, bronzeComponents, timeIt } from './helpers';
 
-const bronze = bronzeComponents();
+const bronze: SmeltingComponent[] = bronzeComponents();
+let sut: OutputCalculator;
 
-describe('calculateMetal - smoke & micro-bench', () => {
+beforeAll(() => {
+  sut = new OutputCalculator();
+});
+
+describe('OutputCalculator - smoke & micro-bench', () => {
   it('Large quantities, few variants -> stays fast', () => {
     const target = 4320; // ~10x the base 432 mB case
     const inv = byTypeMap([
@@ -13,7 +19,7 @@ describe('calculateMetal - smoke & micro-bench', () => {
                   create_quantified_mineral('Large Cu',  'copper', 36, 300)]], // 20400 mB copper
     ]);
 
-    const { result, ms } = timeIt(() => calculateSmeltingOutput(target, bronze, inv));
+    const { result, ms } = timeIt(() => sut.calculateSmeltingOutput(target, bronze, inv));
     expect(result.status).toBe(OutputCode.SUCCESS);
     expect(ms).toBeLessThan(400);
     // eslint-disable-next-line no-console
@@ -33,7 +39,7 @@ describe('calculateMetal - smoke & micro-bench', () => {
       ['copper', cuVars],
     ]);
 
-    const { result, ms } = timeIt(() => calculateSmeltingOutput(target, bronze, inv));
+    const { result, ms } = timeIt(() => sut.calculateSmeltingOutput(target, bronze, inv));
     expect(result.status).toBe(OutputCode.SUCCESS);
     expect(ms).toBeLessThan(600);
     // eslint-disable-next-line no-console
@@ -53,7 +59,7 @@ describe('calculateMetal - smoke & micro-bench', () => {
       ['copper', cuVars],
     ]);
 
-    const { result, ms } = timeIt(() => calculateSmeltingOutput(target, bronze, inv));
+    const { result, ms } = timeIt(() => sut.calculateSmeltingOutput(target, bronze, inv));
     expect(result.status).toBe(OutputCode.SUCCESS);
     expect(ms).toBeLessThan(1200);
     // eslint-disable-next-line no-console

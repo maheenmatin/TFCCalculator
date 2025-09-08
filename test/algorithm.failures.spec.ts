@@ -1,23 +1,19 @@
-import { calculateSmeltingOutput } from '@/functions/algorithm';
+import { OutputCalculator } from '@/functions/algorithm';
 import { OutputCode } from '@/functions/algorithm.new';
-import { create_quantified_mineral, byTypeMap, bronzeComponents } from './helpers';
-import type { SmeltingComponent } from '@/types';
+import { SmeltingComponent } from '@/types';
+import { create_quantified_mineral, byTypeMap, bronzeComponents, totalUsed } from './helpers';
 
-/**
- * Computes the total output in mB from a set of used minerals.
- * @param units - an array of objects containing mineral.yield and quantity
- * @returns total produced mB from all minerals
- */
-function totalUsed(units: { yield: number, quantity: number }[]) {
-  return units.reduce((s, u) => s + u.yield * u.quantity, 0);
-}
+const bronze: SmeltingComponent[] = bronzeComponents();
+let sut: OutputCalculator;
 
-describe('calculateMetal - failure & edge cases', () => {
-  const bronze = bronzeComponents();
+beforeAll(() => {
+  sut = new OutputCalculator();
+});
 
+describe('OutputCalculator - failure & edge cases', () => {
   it('No minerals at all -> not enough total material available', () => {
     const inv = byTypeMap([]);
-    const res = calculateSmeltingOutput(432, bronze, inv);
+    const res = sut.calculateSmeltingOutput(432, bronze, inv);
     expect(res.status).toBe(OutputCode.INSUFFICIENT_TOTAL_MB);
     expect(res.statusContext).toContain('Not enough total material available');
   });
@@ -27,7 +23,7 @@ describe('calculateMetal - failure & edge cases', () => {
     const inv = byTypeMap([
       ['copper', [create_quantified_mineral('Medium Copper', 'copper', 24, 100)]],
     ]);
-    const res = calculateSmeltingOutput(432, bronze, inv);
+    const res = sut.calculateSmeltingOutput(432, bronze, inv);
     expect(res.status).toBe(OutputCode.INSUFFICIENT_SPECIFIC_MINERAL_MB);
     expect(res.statusContext?.toLowerCase()).toContain('not enough tin');
   });
@@ -42,7 +38,7 @@ describe('calculateMetal - failure & edge cases', () => {
       ['a', [create_quantified_mineral('A1', 'a', 10, 100)]],
       ['b', [create_quantified_mineral('B1', 'b', 10, 100)]],
     ]);
-    const res = calculateSmeltingOutput(100, badAlloy, inv);
+    const res = sut.calculateSmeltingOutput(100, badAlloy, inv);
     expect(res.status).toBe(OutputCode.UNFEASIBLE);
     expect(res.statusContext).toContain('Could not find valid combination of materials');
   });
@@ -57,7 +53,7 @@ describe('calculateMetal - failure & edge cases', () => {
       ['a', [create_quantified_mineral('A1', 'a', 10, 100)]],
       ['b', [create_quantified_mineral('B1', 'b', 10, 100)]],
     ]);
-    const res = calculateSmeltingOutput(100, badAlloy, inv);
+    const res = sut.calculateSmeltingOutput(100, badAlloy, inv);
     expect(res.status).toBe(OutputCode.UNFEASIBLE);
     expect(res.statusContext).toContain('Could not find valid combination of materials');
   });
@@ -68,7 +64,7 @@ describe('calculateMetal - failure & edge cases', () => {
       ['tin',    [create_quantified_mineral('Tiny Tin',    'tin',    16, 2)]],   // 32
       ['copper', [create_quantified_mineral('Copper 16u',  'copper', 16, 23)]],  // 368
     ]);
-    const res = calculateSmeltingOutput(400, bronze, inv);
+    const res = sut.calculateSmeltingOutput(400, bronze, inv);
     expect(res.status).toBe(OutputCode.SUCCESS);
     expect(res.amountMb).toBe(400);
     expect(totalUsed(res.usedMinerals)).toBe(400);
@@ -81,7 +77,7 @@ describe('calculateMetal - failure & edge cases', () => {
       ['Copper', [create_quantified_mineral('Medium Copper',     'Copper', 24, 7),
                   create_quantified_mineral('Large Copper',      'cOpPeR', 36, 6)]],
     ]);
-    const res = calculateSmeltingOutput(432, bronze, inv);
+    const res = sut.calculateSmeltingOutput(432, bronze, inv);
     expect(res.status).toBe(OutputCode.SUCCESS);
     expect(res.amountMb).toBe(432);
   });
@@ -95,7 +91,7 @@ describe('calculateMetal - failure & edge cases', () => {
     ]);
     const bronze1 = bronze;
     const bronze2 = [bronze[1], bronze[0]]; // swap order
-    expect(calculateSmeltingOutput(432, bronze1, inv).status).toBe(OutputCode.SUCCESS);
-    expect(calculateSmeltingOutput(432, bronze2, inv).status).toBe(OutputCode.SUCCESS);
+    expect(sut.calculateSmeltingOutput(432, bronze1, inv).status).toBe(OutputCode.SUCCESS);
+    expect(sut.calculateSmeltingOutput(432, bronze2, inv).status).toBe(OutputCode.SUCCESS);
   });
 });

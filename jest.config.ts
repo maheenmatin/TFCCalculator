@@ -3,23 +3,16 @@
  * https://jestjs.io/docs/configuration
  */
 
-// --- Polyfill for TextEncoder/TextDecoder needed during config evaluation ---
-import { TextEncoder, TextDecoder } from 'util';
-// @ts-ignore
-(global as any).TextEncoder = TextEncoder;
-// @ts-ignore
-(global as any).TextDecoder = TextDecoder;
-// ---------------------------------------------------------------------------
-
-import type { Config } from 'jest'
-import nextJest from 'next/jest'
+import type { Config } from "jest";
+import nextJest from "next/jest";
 
 const createJestConfig = nextJest({
-	                                  dir: './',
-                                  })
+	dir: "./",
+});
 
 const customJestConfig: Config = {
-	testEnvironment: 'node',
+	testEnvironment: "node",
+	setupFilesAfterEnv: ["<rootDir>/jest.setup.ts"],
 	collectCoverage: true,
 	coverageReporters: ["json", "lcov", "text", "clover", "html"],
 	coverageDirectory: "coverage",
@@ -29,15 +22,12 @@ const customJestConfig: Config = {
 	slowTestThreshold: 3,
 	bail: 5,
 	moduleNameMapper: {
-		'^@/(.*)$': '<rootDir>/src/$1',
-		'^@test/(.*)$': '<rootDir>/test/$1',
+		"^@/(.*)$": "<rootDir>/src/$1",
+		"^@test/(.*)$": "<rootDir>/test/$1",
 	},
-	transform: {
-		'^.+\\.ts?$': 'ts-jest',
-	},
-}
+};
 
-export default createJestConfig(customJestConfig)
+export default createJestConfig(customJestConfig);
 
 // All imported modules in your tests should be mocked automatically
 // automock: false,
@@ -47,3 +37,4 @@ export default createJestConfig(customJestConfig)
 
 // Reset the module registry before running each individual test
 // resetModules: false,
+
