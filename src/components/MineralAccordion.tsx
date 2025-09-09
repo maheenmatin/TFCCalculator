@@ -15,7 +15,7 @@ export function MineralAccordion({ title, minerals, onQuantityChange, onInputKey
 	return (
 			<div className="bg-gray-100 rounded-lg mb-4">
 				<button
-						className="w-full p-4 text-left flex justify-between items-center text-black bg-teal-100 hover:bg-teal-200 rounded-lg"
+						className="w-full p-4 text-left flex justify-between items-center text-black bg-teal-200 hover:bg-teal-300 rounded-lg"
 						onClick={() => setIsOpen(!isOpen)}
 				>
 					<span className="font-semibold">{title.toUpperCase()}</span>
