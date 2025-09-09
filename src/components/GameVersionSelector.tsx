@@ -106,7 +106,7 @@ export function GameVersionSelector() {
 					<select
 						value={selectedType}
 						onChange={handleTypeChange}
-						className="w-full sm:w-32 p-2 rounded border border-teal-500 bg-transparent text-teal-100"
+						className="w-full sm:w-32 p-2 rounded border border-teal-500 bg-black text-teal-100"
 						aria-label="Select type"
 					>
 						<option value="modpack">Modpack</option>
@@ -116,7 +116,7 @@ export function GameVersionSelector() {
 					<select
 						value={selectedDisplayName ?? ""}
 						onChange={handleBaseGameVersionChange}
-						className="w-full p-2 rounded border border-teal-500 bg-transparent text-teal-100"
+						className="w-full p-2 rounded border border-teal-500 bg-black text-teal-100"
 						aria-label="Select modpack/mod"
 					>
 						{Object.keys(currentItems).map((displayName) => (
@@ -129,7 +129,7 @@ export function GameVersionSelector() {
 					<select
 						value={selectedVersion ?? ""}
 						onChange={handleVersionChange}
-						className="w-full p-2 rounded border border-teal-500 bg-transparent text-teal-100"
+						className="w-full p-2 rounded border border-teal-500 bg-black text-teal-100"
 						aria-label="Select version"
 					>
 						{currentVersion.map((baseGameVersion) => (
