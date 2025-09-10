@@ -3,6 +3,7 @@
 import { GameVersionSelector } from "@/components/GameVersionSelector";
 import { useEffect } from "react";
 import GitHubButton from "react-github-btn";
+import {CaretDownIcon} from "@phosphor-icons/react";
 
 export default function Home() {
 	useEffect(() => {
@@ -32,8 +33,13 @@ export default function Home() {
 						<GameVersionSelector />
 					</div>
 				</div>
-				<div className="flex mb-10">
-					<svg className="transition-transform duration-300 ease-out [.scroll-down_&]:scale-y-[-1]" enable-background="new 0 0 48 48" height="48px" id="Layer_1" version="1.1" viewBox="0 0 48 48" width="24px" ><g id="Layer_4"><polygon fill="#46ecd5" points="47.993,14.121 45.872,12 45.863,12.009 43.752,9.896 24.008,29.641 4.248,9.881 0.007,14.125    0.013,14.13 0.009,14.134 21.679,35.803 21.664,35.816 23.967,38.119 23.98,38.105 23.994,38.119 25.021,37.093 25.029,37.104    47.993,14.141 47.982,14.131  "/></g></svg>
+				<div>
+					<CaretDownIcon
+							className="flex mb-10
+								transition-transform duration-300 ease-out
+								[.scroll-down_&]:scale-y-[-1]"
+							size={36}
+					/>
 				</div>
 			</div>
 
